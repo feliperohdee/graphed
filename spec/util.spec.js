@@ -4,7 +4,7 @@ const {
 	invertDirection,
 	pickEdgeData,
 	validate
-} = require('../util');
+} = require('../lib/util');
 
 const expect = chai.expect;
 

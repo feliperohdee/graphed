@@ -1,5 +1,7 @@
 const Redis = require('smallorange-redis-client');
-const RedisStore = require('../RedisStore');
+const {
+	RedisStore
+} = require('../');
 
 class App {
 	constructor() {

@@ -115,7 +115,7 @@
 			Edge,
 			Node,
 			RedisStore
-		} = require('smallorange-redis-edge-graph');
+		} = require('smallorange-graph');
 
 		class App {
 			constructor() {

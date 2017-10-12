@@ -7,7 +7,9 @@ const {
 } = require('rxjs');
 
 const app = require('../testing');
-const RedisStore = require('../RedisStore');
+const {
+	RedisStore
+} = require('../');
 
 chai.use(sinonChai);
 
@@ -1115,7 +1117,7 @@ describe('RedisStore.js', () => {
 					namespace: app.namespace,
 					entity: 'entity-2',
 					fromNode: '1',
-					distance: [,0.8],
+					distance: [, 0.8],
 					direction: 'OUT'
 				})
 				.toArray()
