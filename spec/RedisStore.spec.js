@@ -62,6 +62,20 @@ describe('RedisStore.js', () => {
 					fromNode: '1',
 					namespace: app.namespace,
 					toNode: '2'
+				}),
+				store.setNodes({
+					namespace: app.namespace,
+					values: [{
+						data: {
+							a: 1
+						},
+						id: '0',
+					}, {
+						data: {
+							a: 1
+						},
+						id: '1',
+					}]
 				})
 			)
 			.subscribe(null, null, done);
@@ -75,6 +89,18 @@ describe('RedisStore.js', () => {
 				}),
 				store.deleteEdges({
 					fromNode: '1',
+					namespace: app.namespace
+				}),
+				store.deleteNode({
+					id: '0',
+					namespace: app.namespace
+				}),
+				store.deleteNode({
+					id: '1',
+					namespace: app.namespace
+				}),
+				store.deleteNode({
+					id: '2',
 					namespace: app.namespace
 				})
 			)
@@ -1589,6 +1615,240 @@ describe('RedisStore.js', () => {
 						namespace: 'graph-1',
 						toNode: '0'
 					}]);
+				}, null, done);
+		});
+	});
+
+	describe('setNode', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.setNode()).to.throw('data, id, namespace are missing or wrong.');
+		});
+
+		it('should return settled', done => {
+			store.setNode({
+					data: {
+						a: 1
+					},
+					id: '0',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal({
+						data: {
+							a: 1
+						},
+						namespace: 'graph-1',
+						id: '0'
+					});
+				}, null, done);
+		});
+	});
+
+	describe('setNodes', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.setNodes()).to.throw('namespace, values are missing or wrong.');
+		});
+
+		it('should return settled', done => {
+			store.setNodes({
+					namespace: app.namespace,
+					values: [{
+						data: {
+							a: 1
+						},
+						id: '0',
+					}, {
+						data: {
+							a: 1
+						},
+						id: '1',
+					}]
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal([{
+						data: {
+							a: 1
+						},
+						id: '0',
+						namespace: 'graph-1'
+					}, {
+						data: {
+							a: 1
+						},
+						id: '1',
+						namespace: 'graph-1'
+					}]);
+				}, null, done);
+		});
+
+		it('should return settled (without array)', done => {
+			store.setNodes({
+					namespace: app.namespace,
+					values: {
+						data: {
+							a: 1
+						},
+						id: '0',
+					}
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal([{
+						data: {
+							a: 1
+						},
+						id: '0',
+						namespace: 'graph-1'
+					}]);
+				}, null, done);
+		});
+	});
+
+	describe('getNode', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.getNode()).to.throw('id, namespace are missing or wrong.');
+		});
+
+		it('should return', done => {
+			store.getNode({
+					id: '0',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal({
+						data: {
+							a: 1
+						},
+						namespace: 'graph-1',
+						id: '0'
+					});
+				}, null, done);
+		});
+
+		it('should null if inexistent', done => {
+			store.getNode({
+					id: '3',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.be.null;
+				}, null, done);
+		});
+	});
+
+	describe('getNodes', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.getNodes()).to.throw('ids, namespace are missing or wrong.');
+		});
+
+		it('should return', done => {
+			store.getNodes({
+					ids: ['0', '2', '1'],
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal([{
+						data: {
+							a: 1
+						},
+						id: '0',
+						namespace: 'graph-1'
+					}, null, {
+						data: {
+							a: 1
+						},
+						id: '1',
+						namespace: 'graph-1'
+					}]);
+				}, null, done);
+		});
+
+		it('should return (without array)', done => {
+			store.getNodes({
+					ids: '0',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal([{
+						data: {
+							a: 1
+						},
+						id: '0',
+						namespace: 'graph-1'
+					}]);
+				}, null, done);
+		});
+
+	});
+
+	describe('updateNode', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.updateNode()).to.throw('data, id, namespace are missing or wrong.');
+		});
+
+		it('should return settled', done => {
+			store.updateNode({
+					data: {
+						a: 2
+					},
+					id: '0',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal({
+						data: {
+							a: 2
+						},
+						namespace: 'graph-1',
+						id: '0'
+					});
+				}, null, done);
+		});
+
+		it('should return settled if inexistent', done => {
+			store.updateNode({
+					data: {
+						a: 2
+					},
+					id: '2',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal({
+						data: {
+							a: 2
+						},
+						namespace: 'graph-1',
+						id: '2'
+					});
+				}, null, done);
+		});
+	});
+
+	describe('deleteNode', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.deleteNode()).to.throw('id, namespace are missing or wrong.');
+		});
+
+		it('should return settled', done => {
+			store.deleteNode({
+					id: '0',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal({
+						namespace: 'graph-1',
+						id: '0'
+					});
+				}, null, done);
+		});
+
+		it('should return null if inexistent', done => {
+			store.deleteNode({
+					id: '2',
+					namespace: app.namespace
+				})
+				.subscribe(response => {
+					expect(response).to.be.null;
 				}, null, done);
 		});
 	});

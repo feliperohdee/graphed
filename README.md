@@ -4,31 +4,31 @@
 
 ## Node API
 		delete({
-			node: string
+			id: string
 		}): Observable<object>;
 
 		get({
-			node: string
+			id: string
 		}): Observable<object>;
 
 		multiGet({
-			nodes: Array<string>
+			ids: Array<string>
 		}): Observable<Array<object>>;
 
 		set({
-			node: string,
+			id: string,
 			data: object
 		}): Observable<object>;
 
 		multiSet({
 			values: Array<{
-				node: string,
+				id: string,
 				data?: object
 			}>,
 		}): Observable<Array<object>>;
 
-		patch({
-			node: string,
+		update({
+			id: string,
 			data: object
 		}): Observable<object>;
 

@@ -23,7 +23,7 @@ describe('Edge.js', () => {
 	before(() => {
 		node = new Node({
 			namespace: app.namespace,
-			redis: app.redis,
+			store: app.store
 		});
 
 		edge = new Edge({
@@ -35,7 +35,7 @@ describe('Edge.js', () => {
 	beforeEach(() => {
 		node = new Node({
 			namespace: app.namespace,
-			redis: app.redis,
+			store: app.store
 		});
 
 		edge = new Edge({
@@ -139,28 +139,6 @@ describe('Edge.js', () => {
 			expect(edge.incrementEdgeByDistance).not.to.be.undefined;
 			expect(edge.setEdgeByDistance).not.to.be.undefined;
 			expect(edge.setEdgeByTimestamp).not.to.be.undefined;
-		});
-	});
-
-	describe('validateStore', () => {
-		it('should return store if valid', () => {
-			expect(edge.validateStore(app.store)).to.equal(app.store);
-		});
-
-		it('should throw if required keys doesn\'t matches', () => {
-			const missing = [
-				'countEdges',
-				'deleteEdge',
-				'deleteEdges',
-				'getEdges',
-				'getEdgesByDistance',
-				'getEdgesByTimestamp',
-				'incrementEdgeByDistance',
-				'setEdgeByDistance',
-				'setEdgeByTimestamp'
-			];
-
-			expect(() => edge.validateStore(_.omit(app.store, missing))).to.throw(`Invalid store, missing ${missing.join(', ')}`);
 		});
 	});
 
@@ -1596,13 +1574,13 @@ describe('Edge.js', () => {
 							data: {
 								age: 3
 							},
-							node: '3'
+							id: '3'
 						}),
 						node.set({
 							data: {
 								age: 4
 							},
-							node: '4'
+							id: '4'
 						})
 					)
 					.subscribe(null, null, done);
@@ -1611,10 +1589,10 @@ describe('Edge.js', () => {
 			after(done => {
 				Observable.forkJoin(
 						node.delete({
-							node: '3'
+							id: '3'
 						}),
 						node.delete({
-							node: '4'
+							id: '4'
 						})
 					)
 					.subscribe(null, null, done);

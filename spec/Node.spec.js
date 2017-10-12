@@ -21,36 +21,36 @@ describe('Node.js', () => {
 	before(() => {
 		node = new Node({
 			namespace: app.namespace,
-			redis: app.redis
+			store: app.store
 		});
 	});
 
 	beforeEach(() => {
 		node = new Node({
 			namespace: app.namespace,
-			redis: app.redis
+			store: app.store
 		});
 	});
 
 	describe('constructor', () => {
-		it('should throw if no namespace', () => {
-			expect(() => new Node({
-				redis: app.redis
-			})).to.throw('namespace is missing.');
-		});
-
-		it('should throw if no redis', () => {
-			expect(() => new Node({
-				namespace: app.namespace
-			})).to.throw('redis is missing.');
+		it('should throw if invalid', () => {
+			expect(() => new Node()).to.throw('namespace, store are missing or wrong.');
 		});
 
 		it('should have namespace', () => {
 			expect(node.namespace).to.be.a('string');
 		});
 
-		it('should have redis', () => {
-			expect(node.redis).to.be.an('object');
+		it('should have store', () => {
+			expect(node.store).to.be.an('object');
+		});
+
+		it('should validate store', () => {
+			expect(() => new Node({
+				namespace: app.namespace,
+				node,
+				store: _.omit(app.store, ['deleteNode', 'getNode'])
+			})).to.throw('Invalid store, missing deleteNode, getNode');
 		});
 	});
 
@@ -58,12 +58,12 @@ describe('Node.js', () => {
 		beforeEach(done => {
 			Observable.forkJoin(
 					node.set({
-						node: '1',
-						data: {}
+						data: {},
+						id: '1'
 					}),
 					node.set({
-						node: '2',
-						data: {}
+						data: {},
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
@@ -72,19 +72,19 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
 		});
 
-		it('should throw if no node', done => {
+		it('should throw if no id', done => {
 			node.delete()
 				.subscribe(null, err => {
-					expect(err.message).to.equal('node is missing.');
+					expect(err.message).to.equal('id is missing.');
 					done();
 				});
 		});
@@ -92,28 +92,28 @@ describe('Node.js', () => {
 		it('should delete', done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1'
+						id: '1'
 					});
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2'
+						id: '2'
 					});
 				}, null, done);
 		});
 
 		it('should not delete', done => {
 			node.delete({
-					node: '3'
+					id: '3'
 				})
 				.subscribe(response => {
 					expect(response).to.be.null;
@@ -125,14 +125,14 @@ describe('Node.js', () => {
 		beforeEach(done => {
 			Observable.forkJoin(
 					node.set({
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
 						}
 					}),
 					node.set({
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -145,19 +145,19 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
 		});
 
-		it('should throw if no node', done => {
+		it('should throw if no id', done => {
 			node.get()
 				.subscribe(null, err => {
-					expect(err.message).to.equal('node is missing.');
+					expect(err.message).to.equal('id is missing.');
 					done();
 				});
 		});
@@ -165,16 +165,16 @@ describe('Node.js', () => {
 		it('should get', done => {
 			Observable.forkJoin(
 					node.get({
-						node: '1'
+						id: '1'
 					}),
 					node.get({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
@@ -183,7 +183,7 @@ describe('Node.js', () => {
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -194,7 +194,7 @@ describe('Node.js', () => {
 
 		it('should not get', done => {
 			node.get({
-					node: '3'
+					id: '3'
 				})
 				.subscribe(response => {
 					expect(response).to.be.null;
@@ -206,14 +206,14 @@ describe('Node.js', () => {
 		beforeEach(done => {
 			Observable.forkJoin(
 					node.set({
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
 						}
 					}),
 					node.set({
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -226,19 +226,19 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
 		});
 
-		it('should throw if no nodes', done => {
+		it('should throw if no ids', done => {
 			node.multiGet()
 				.subscribe(null, err => {
-					expect(err.message).to.equal('nodes are missing.');
+					expect(err.message).to.equal('ids are missing.');
 					done();
 				});
 		});
@@ -248,19 +248,19 @@ describe('Node.js', () => {
 					nodes: true
 				})
 				.subscribe(null, err => {
-					expect(err.message).to.equal('nodes are missing.');
+					expect(err.message).to.equal('ids are missing.');
 					done();
 				});
 		});
 
 		it('should multi get', done => {
 			node.multiGet({
-					nodes: ['1', '2', '3']
+					ids: ['1', '2', '3']
 				})
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
@@ -269,7 +269,7 @@ describe('Node.js', () => {
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -282,7 +282,7 @@ describe('Node.js', () => {
 
 		it('should not get', done => {
 			node.get({
-					node: '3'
+					id: '3'
 				})
 				.subscribe(response => {
 					expect(response).to.be.null;
@@ -294,19 +294,19 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
 		});
 
-		it('should throw if no node', done => {
+		it('should throw if no id', done => {
 			node.set()
 				.subscribe(null, err => {
-					expect(err.message).to.equal('node is missing.');
+					expect(err.message).to.equal('id is missing.');
 					done();
 				});
 		});
@@ -314,14 +314,14 @@ describe('Node.js', () => {
 		it('should set', done => {
 			Observable.forkJoin(
 					node.set({
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
 						}
 					}),
 					node.set({
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -331,7 +331,7 @@ describe('Node.js', () => {
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
@@ -340,7 +340,7 @@ describe('Node.js', () => {
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -354,10 +354,10 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
@@ -374,13 +374,13 @@ describe('Node.js', () => {
 		it('should multi set', done => {
 			node.multiSet({
 					values: [{
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
 						}
 					}, {
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -390,7 +390,7 @@ describe('Node.js', () => {
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11'
@@ -399,7 +399,7 @@ describe('Node.js', () => {
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -409,10 +409,10 @@ describe('Node.js', () => {
 		});
 	});
 
-	describe('patch', () => {
+	describe('update', () => {
 		beforeEach(done => {
 			node.set({
-					node: '1',
+					id: '1',
 					data: {
 						data1: 'data1',
 						data11: 'data11'
@@ -424,33 +424,33 @@ describe('Node.js', () => {
 		after(done => {
 			Observable.forkJoin(
 					node.delete({
-						node: '1'
+						id: '1'
 					}),
 					node.delete({
-						node: '2'
+						id: '2'
 					})
 				)
 				.subscribe(null, null, done);
 		});
 
-		it('should throw if no node', done => {
-			node.patch()
+		it('should throw if no id', done => {
+			node.update()
 				.subscribe(null, err => {
-					expect(err.message).to.equal('node is missing.');
+					expect(err.message).to.equal('id is missing.');
 					done();
 				});
 		});
 
-		it('should patch', done => {
+		it('should update', done => {
 			Observable.forkJoin(
-					node.patch({
-						node: '1',
+					node.update({
+						id: '1',
 						data: {
 							data111: 'data111'
 						}
 					}),
-					node.patch({
-						node: '2',
+					node.update({
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'
@@ -460,7 +460,7 @@ describe('Node.js', () => {
 				.subscribe(response => {
 					expect(response[0]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '1',
+						id: '1',
 						data: {
 							data1: 'data1',
 							data11: 'data11',
@@ -470,7 +470,7 @@ describe('Node.js', () => {
 
 					expect(response[1]).to.deep.equal({
 						namespace: 'graph-1',
-						node: '2',
+						id: '2',
 						data: {
 							data2: 'data2',
 							data22: 'data22'

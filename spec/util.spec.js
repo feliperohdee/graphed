@@ -1,9 +1,12 @@
 const _ = require('lodash');
 const chai = require('chai');
+
+const app = require('../testing');
 const {
 	invertDirection,
 	pickEdgeData,
-	validate
+	validate,
+	validateStore
 } = require('../lib/util');
 
 const expect = chai.expect;
@@ -102,6 +105,40 @@ describe('util.js', () => {
 				a: 'string',
 				b: 4
 			});
+		});
+	});
+
+	describe('validateStore', () => {
+		it('should return store if valid', () => {
+			expect(validateStore(app.store)).to.equal(app.store);
+		});
+
+		it('should throw if required keys doesn\'t matches', () => {
+			const requiredStoreKeys = [
+				'countEdges',
+				'deleteEdge',
+				'deleteEdges',
+				'getEdges',
+				'getEdgesByDistance',
+				'getEdgesByTimestamp',
+				'incrementEdgeByDistance',
+				'setEdgeByDistance',
+				'setEdgeByTimestamp'
+			];
+
+			const missing = [
+				'countEdges',
+				'deleteEdge',
+				'deleteEdges',
+				'getEdges',
+				'getEdgesByDistance',
+				'getEdgesByTimestamp',
+				'incrementEdgeByDistance',
+				'setEdgeByDistance',
+				'setEdgeByTimestamp'
+			];
+
+			expect(() => validateStore(_.omit(app.store, missing), requiredStoreKeys)).to.throw(`Invalid store, missing ${missing.join(', ')}`);
 		});
 	});
 });

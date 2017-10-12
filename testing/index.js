@@ -11,7 +11,6 @@ class App {
 			}
 		});
 
-		this.redis = redis;
 		this.store = new RedisStore({
 			redis
 		});
