@@ -1,0 +1,34 @@
+{
+  "name": "smallorange-graph",
+  "version": "1.0.0",
+  "description": "Minimum graph's data structure implemented with pluggable stores (redis, memory, ...)",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "rxjs": "^5.4.3",
+    "smallorange-data-loader": "^1.0.6",
+    "smallorange-redis-client": "^1.0.23"
+  },
+  "devDependencies": {
+    "chai": "^4.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2",
+    "sinon": "^2.3.2",
+    "sinon-chai": "^2.10.0"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test ./node_modules/.bin/_mocha spec --recursive --watch --timeout 5000",
+    "coverage": "NODE_ENV=test ./node_modules/.bin/istanbul cover -x 'spec/**' -x 'testing/**' ./node_modules/.bin/_mocha -- 'spec' --recursive --timeout 5000",
+    "deploy": "npm version patch -m 'Bump %s' && git push origin master && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feliperohdee/smallorange-redis-edge-graph.git"
+  },
+  "author": "Felipe Rohde",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/feliperohdee/smallorange-redis-edge-graph/issues"
+  },
+  "homepage": "https://smallorange.co"
+}
