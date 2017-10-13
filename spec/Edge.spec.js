@@ -1943,7 +1943,7 @@ describe('Edge.js', () => {
 				}, null, done);
 		});
 
-		it('should descrement edges distance', done => {
+		it('should decrement edges distance', done => {
 			edge.link({
 					entity: 'entity',
 					fromNode: '1',
@@ -2018,6 +2018,26 @@ describe('Edge.js', () => {
 					expect(firstEdge.distance).to.equal(0.9);
 					expect(firstEdge.timestamp).to.be.a('number');
 					expect(secondEdge.distance).to.equal(0.9);
+					expect(secondEdge.timestamp).to.be.a('number');
+				}, null, done);
+		});
+
+		it('should increment edges distance', done => {
+			edge.link({
+					distance: -1,
+					entity: 'entity',
+					fromNode: '1',
+					toNode: '2'
+				})
+				.subscribe(response => {
+					const [
+						firstEdge,
+						secondEdge
+					] = response;
+
+					expect(firstEdge.distance).to.equal(1.000000000000001);
+					expect(firstEdge.timestamp).to.be.a('number');
+					expect(secondEdge.distance).to.equal(1.000000000000001);
 					expect(secondEdge.timestamp).to.be.a('number');
 				}, null, done);
 		});
