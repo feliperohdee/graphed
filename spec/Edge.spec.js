@@ -879,7 +879,7 @@ describe('Edge.js', () => {
 					.toArray()
 				)
 				.subscribe(([
-					fromNode1, 
+					fromNode1,
 					fromNode2
 				]) => {
 					expect(fromNode1).to.deep.contain({
@@ -1483,30 +1483,32 @@ describe('Edge.js', () => {
 
 	describe('closest', () => {
 		before(done => {
-			edge.link({
-					entity: 'entity',
-					fromNode: '1',
-					toNode: '2'
-				})
-				.concatMap(() => edge.link({
-					absoluteDistance: 0.999999999999998,
-					entity: 'entity',
-					fromNode: '1',
-					toNode: '3'
-				}))
-				.concatMap(() => edge.link({
-					entity: 'entity',
-					direction: 'OUT',
-					fromNode: '2',
-					toNode: '3'
-				}))
-				.concatMap(() => edge.link({
-					absoluteDistance: 0.999999999999998,
-					entity: 'entity',
-					direction: 'OUT',
-					fromNode: '2',
-					toNode: '4'
-				}))
+			Observable.forkJoin(
+					edge.link({
+						entity: 'entity',
+						fromNode: '1',
+						toNode: '2'
+					}),
+					edge.link({
+						absoluteDistance: 0.999999999999998,
+						entity: 'entity',
+						fromNode: '1',
+						toNode: '3'
+					}),
+					edge.link({
+						entity: 'entity',
+						direction: 'OUT',
+						fromNode: '2',
+						toNode: '3'
+					}),
+					edge.link({
+						absoluteDistance: 0.999999999999998,
+						entity: 'entity',
+						direction: 'OUT',
+						fromNode: '2',
+						toNode: '4'
+					})
+				)
 				.subscribe(null, null, done);
 		});
 
