@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feliperohdee/smallorange-redis-edge-graph.git"
+    "url": "git+https://github.com/feliperohdee/smallorange-graph.git"
   },
   "author": "Felipe Rohde",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/feliperohdee/smallorange-redis-edge-graph/issues"
+    "url": "https://github.com/feliperohdee/smallorange-graph/issues"
   },
   "homepage": "https://smallorange.co"
 }
