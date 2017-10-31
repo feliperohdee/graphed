@@ -1664,6 +1664,10 @@ describe('RedisStore.js', () => {
 	});
 
 	describe('mergeEdge', () => {
+		it('should throw if invalid', () => {
+			expect(() => store.mergeEdge()).to.throw('namespace, fromNode, newNode are missing or wrong.');
+		});
+
 		it('should not change if newNode is same', done => {
 			Observable.forkJoin(
 					store.getEdges({

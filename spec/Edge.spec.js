@@ -139,6 +139,7 @@ describe('Edge.js', () => {
 			expect(edge.getAllByDistance).not.to.be.undefined;
 			expect(edge.getAllByTimestamp).not.to.be.undefined;
 			expect(edge.incrementEdgeByDistance).not.to.be.undefined;
+			expect(edge.mergeEdge).not.to.be.undefined;
 			expect(edge.setEdgeByDistance).not.to.be.undefined;
 			expect(edge.setEdgeByTimestamp).not.to.be.undefined;
 		});
@@ -149,16 +150,20 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '0'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '3'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -504,13 +509,16 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '3'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -620,10 +628,12 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -729,10 +739,12 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -1039,10 +1051,12 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -1518,16 +1532,20 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '3'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '4'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -1824,10 +1842,12 @@ describe('Edge.js', () => {
 			Observable.forkJoin(
 					edge.deleteByNode({
 						fromNode: '1'
-					}),
+					})
+					.toArray(),
 					edge.deleteByNode({
 						fromNode: '2'
 					})
+					.toArray()
 				)
 				.subscribe(null, null, done);
 		});
@@ -2130,6 +2150,156 @@ describe('Edge.js', () => {
 		});
 	});
 
+	describe('merge', () => {
+		before(done => {
+			Observable.forkJoin(
+					edge.link({
+						absoluteDistance: 0.9,
+						entity: 'entity',
+						fromNode: '0',
+						toNode: '1'
+					}),
+					edge.link({
+						absoluteDistance: 0.9,
+						direction: 'OUT',
+						entity: 'entity',
+						fromNode: '0',
+						toNode: '1'
+					}),
+					edge.link({
+						absoluteDistance: 0.9,
+						entity: 'entity',
+						fromNode: '2',
+						toNode: '1'
+					})
+				)
+				.subscribe(null, null, done);
+		});
+
+		after(done => {
+			Observable.forkJoin(
+					edge.deleteByNode({
+						fromNode: '0'
+					})
+					.toArray(),
+					edge.deleteByNode({
+						fromNode: '1'
+					})
+					.toArray(),
+					edge.deleteByNode({
+						fromNode: '2'
+					})
+					.toArray()
+				)
+				.subscribe(null, null, done);
+		});
+
+		it('should throw if wrong fromNode', done => {
+			edge.merge()
+				.subscribe(null, err => {
+					expect(err.message).to.equal('fromNode is missing.');
+					done();
+				});
+		});
+
+		it('should throw if wrong newNode', done => {
+			edge.merge({
+					fromNode: '1'
+				})
+				.subscribe(null, err => {
+					expect(err.message).to.equal('newNode is missing.');
+					done();
+				});
+		});
+
+		it('should merge', done => {
+			edge.merge({
+					fromNode: '0',
+					newNode: '2'
+				})
+				.toArray()
+				.subscribe(response => {
+					expect(response.length).to.equal(8);
+
+					expect(response).to.containSubset([{
+						direction: null,
+						distance: 0.8,
+						entity: 'entity',
+						fromNode: '2',
+						namespace: 'graph-1',
+						toNode: '1',
+						type: 'byDistance'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: null,
+						distance: 0.8,
+						entity: 'entity',
+						fromNode: '1',
+						namespace: 'graph-1',
+						toNode: '2',
+						type: 'byDistance'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: 'OUT',
+						distance: 0.9,
+						entity: 'entity',
+						fromNode: '2',
+						namespace: 'graph-1',
+						toNode: '1',
+						type: 'byDistance'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: 'IN',
+						distance: 0.9,
+						entity: 'entity',
+						fromNode: '1',
+						namespace: 'graph-1',
+						toNode: '2',
+						type: 'byDistance'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: null,
+						entity: 'entity',
+						fromNode: '2',
+						namespace: 'graph-1',
+						toNode: '1',
+						type: 'byTimestamp'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: null,
+						entity: 'entity',
+						fromNode: '1',
+						namespace: 'graph-1',
+						toNode: '2',
+						type: 'byTimestamp'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: 'OUT',
+						entity: 'entity',
+						fromNode: '2',
+						namespace: 'graph-1',
+						toNode: '1',
+						type: 'byTimestamp'
+					}, ]);
+
+					expect(response).to.containSubset([{
+						direction: 'IN',
+						entity: 'entity',
+						fromNode: '1',
+						namespace: 'graph-1',
+						toNode: '2',
+						type: 'byTimestamp'
+					}, ]);
+				}, null, done);
+		});
+	});
+
 	describe('traverse', () => {
 		it('should return empty if no jobs', done => {
 			edge.traverse()
@@ -2187,19 +2357,24 @@ describe('Edge.js', () => {
 				Observable.forkJoin(
 						edge.deleteByNode({
 							fromNode: '0'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '1'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '2'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '3'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '4'
 						})
+						.toArray()
 					)
 					.subscribe(null, null, done);
 			});
@@ -2583,19 +2758,24 @@ describe('Edge.js', () => {
 				Observable.forkJoin(
 						edge.deleteByNode({
 							fromNode: '0'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '1'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '2'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '3'
-						}),
+						})
+						.toArray(),
 						edge.deleteByNode({
 							fromNode: '4'
 						})
+						.toArray()
 					)
 					.subscribe(null, null, done);
 			});
