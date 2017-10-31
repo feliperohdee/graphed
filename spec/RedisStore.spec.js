@@ -2,6 +2,7 @@ const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
+const chaiSubset = require('chai-subset');
 const {
 	Observable
 } = require('rxjs');
@@ -11,6 +12,7 @@ const {
 	RedisStore
 } = require('../');
 
+chai.use(chaiSubset);
 chai.use(sinonChai);
 
 const expect = chai.expect;
@@ -86,23 +88,33 @@ describe('RedisStore.js', () => {
 				store.deleteEdges({
 					fromNode: '0',
 					namespace: app.namespace
-				}),
+				})
+				.toArray(),
 				store.deleteEdges({
 					fromNode: '1',
 					namespace: app.namespace
-				}),
+				})
+				.toArray(),
+				store.deleteEdges({
+					fromNode: '2',
+					namespace: app.namespace
+				})
+				.toArray(),
 				store.deleteNode({
 					id: '0',
 					namespace: app.namespace
-				}),
+				})
+				.toArray(),
 				store.deleteNode({
 					id: '1',
 					namespace: app.namespace
-				}),
+				})
+				.toArray(),
 				store.deleteNode({
 					id: '2',
 					namespace: app.namespace
 				})
+				.toArray(),
 			)
 			.subscribe(null, null, done);
 	});
@@ -543,59 +555,59 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(12);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 
 					return store._getEdgesKeys({
@@ -618,41 +630,41 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(8);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 
 					return store._getEdgesKeys({
@@ -682,23 +694,23 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(4);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 
 					return store._getEdgesKeys({
@@ -731,23 +743,23 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(4);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 
 					return store._getEdgesKeys({
@@ -781,62 +793,67 @@ describe('RedisStore.js', () => {
 				})
 				.toArray()
 				.subscribe(response => {
+					const withDistance = _.filter(response, item => item.distance);
+					const withTimestamp = _.filter(response, item => item.timestamp);
+
 					expect(response.length).to.equal(12);
+					expect(withDistance.length).to.equal(6);
+					expect(withTimestamp.length).to.equal(6);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 				}, null, done);
 		});
@@ -851,41 +868,41 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(8);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '0',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 				}, null, done);
 		});
@@ -901,23 +918,23 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(4);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: null,
 							entity: 'entity',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '0',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 					});
 				}, null, done);
 		});
@@ -933,23 +950,23 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(4);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 				}, null, done);
 		});
@@ -966,23 +983,23 @@ describe('RedisStore.js', () => {
 					expect(response.length).to.equal(4);
 
 					_.each(['byDistance', 'byTimestamp'], type => {
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'OUT',
 							entity: 'entity-2',
 							fromNode: '1',
 							namespace: 'graph-1',
 							toNode: '2',
 							type
-						});
+						}]);
 
-						expect(response).to.deep.include({
+						expect(response).to.containSubset([{
 							direction: 'IN',
 							entity: 'entity-2',
 							fromNode: '2',
 							namespace: 'graph-1',
 							toNode: '1',
 							type
-						});
+						}]);
 					});
 				}, null, done);
 		});
@@ -1590,6 +1607,33 @@ describe('RedisStore.js', () => {
 				}, null, done);
 		});
 
+		it('should return inserted edges without increment', done => {
+			store.incrementEdgeByDistance({
+					namespace: app.namespace,
+					entity: 'entity',
+					fromNode: '0',
+					toNode: '1',
+					distance: 0
+				})
+				.subscribe(response => {
+					expect(response).to.deep.equal([{
+						direction: null,
+						distance: 1,
+						entity: 'entity',
+						fromNode: '0',
+						namespace: 'graph-1',
+						toNode: '1'
+					}, {
+						direction: null,
+						distance: 1,
+						entity: 'entity',
+						fromNode: '1',
+						namespace: 'graph-1',
+						toNode: '0'
+					}]);
+				}, null, done);
+		});
+
 		it('should return inserted edges with direction', done => {
 			store.incrementEdgeByDistance({
 					namespace: app.namespace,
@@ -1615,6 +1659,144 @@ describe('RedisStore.js', () => {
 						namespace: 'graph-1',
 						toNode: '0'
 					}]);
+				}, null, done);
+		});
+	});
+
+	describe('mergeEdge', () => {
+		it('should not change if newNode is same', done => {
+			Observable.forkJoin(
+					store.getEdges({
+						namespace: app.namespace,
+						fromNode: '1'
+					})
+					.toArray(),
+					store.mergeEdge({
+						namespace: app.namespace,
+						fromNode: '1',
+						newNode: '1'
+					})
+					.toArray()
+				)
+				.subscribe(response => {
+					expect(response[1].length).to.equal(response[0].length);
+					expect(response[1]).to.deep.include(response[0][0]);
+					expect(response[1]).to.deep.include(response[0][1]);
+					expect(response[1]).to.deep.include(response[0][2]);
+					expect(response[1]).to.deep.include(response[0][3]);
+					expect(response[1]).to.deep.include(response[0][4]);
+					expect(response[1]).to.deep.include(response[0][5]);
+					expect(response[1]).to.deep.include(response[0][6]);
+					expect(response[1]).to.deep.include(response[0][7]);
+				}, null, done);
+		});
+
+		it('should update fromNode', done => {
+			Observable.forkJoin(
+					store.getEdges({
+						namespace: app.namespace,
+						fromNode: '1'
+					})
+					.toArray(),
+					store.mergeEdge({
+						namespace: app.namespace,
+						fromNode: '1',
+						newNode: '2'
+					})
+					.toArray()
+				)
+				.subscribe(response => {
+					expect(response[1].length).to.equal(response[0].length);
+					expect(response[1]).to.deep.include(_.extend(response[0][0], {
+						fromNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][1], {
+						toNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][2], {
+						fromNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][3], {
+						toNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][4], {
+						fromNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][5], {
+						toNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][6], {
+						fromNode: '2'
+					}));
+					expect(response[1]).to.deep.include(_.extend(response[0][7], {
+						toNode: '2'
+					}));
+				}, null, done);
+		});
+
+		it('should return empty if inexistent', done => {
+			store.mergeEdge({
+					namespace: app.namespace,
+					fromNode: 'inexistent',
+					newNode: '1'
+				})
+				.toArray()
+				.subscribe(response => {
+					expect(response).to.deep.equal([]);
+				}, null, done);
+		});
+
+		it('should increment distances proportionally and set last timestamp', done => {
+			Observable.forkJoin(
+					store.setEdgeByDistance({
+						distance: 0.9,
+						entity: 'entity',
+						namespace: app.namespace,
+						fromNode: '1',
+						toNode: '2',
+					}),
+					store.setEdgeByTimestamp({
+						entity: 'entity',
+						namespace: app.namespace,
+						fromNode: '1',
+						toNode: '2',
+						timestamp: 20
+					}),
+					store.setEdgeByDistance({
+						distance: 0.9,
+						entity: 'entity',
+						namespace: app.namespace,
+						fromNode: '3',
+						toNode: '2',
+					}),
+					store.setEdgeByTimestamp({
+						entity: 'entity',
+						namespace: app.namespace,
+						fromNode: '3',
+						toNode: '2',
+						timestamp: 10
+					})
+				)
+				.mergeMap(() => store.mergeEdge({
+					namespace: app.namespace,
+					fromNode: '3',
+					newNode: '1'
+				}))
+				.toArray()
+				.subscribe(response => {
+					const byDistance = _.filter(response, {
+						type: 'byDistance'
+					});
+
+					expect(byDistance[0].distance).to.equal(0.8);
+					expect(byDistance[1].distance).to.equal(0.8);
+
+					const byTimestamp = _.filter(response, {
+						type: 'byTimestamp'
+					});
+
+					expect(byTimestamp[0].timestamp).to.equal(20);
+					expect(byTimestamp[1].timestamp).to.equal(20);
 				}, null, done);
 		});
 	});

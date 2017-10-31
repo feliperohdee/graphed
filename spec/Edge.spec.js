@@ -2,6 +2,7 @@ const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
+const chaiSubset = require('chai-subset');
 const {
 	Observable
 } = require('rxjs');
@@ -12,6 +13,7 @@ const {
 	Node
 } = require('../');
 
+chai.use(chaiSubset);
 chai.use(sinonChai);
 
 const expect = chai.expect;
@@ -755,113 +757,113 @@ describe('Edge.js', () => {
 					.toArray()
 				)
 				.subscribe(([fromNode1, fromNode2]) => {
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -882,41 +884,41 @@ describe('Edge.js', () => {
 					fromNode1,
 					fromNode2
 				]) => {
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode1).to.deep.contain({
+					expect(fromNode1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
 					expect(fromNode2).to.deep.equal([]);
 				}, null, done);
@@ -940,77 +942,77 @@ describe('Edge.js', () => {
 				.subscribe(([fromNode1, fromNode2]) => {
 					expect(fromNode1).to.deep.equal([]);
 
-					expect(fromNode2).not.to.deep.contain({
+					expect(fromNode2).not.to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).not.to.deep.contain({
+					expect(fromNode2).not.to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(fromNode2).not.to.deep.contain({
+					expect(fromNode2).not.to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).not.to.deep.contain({
+					expect(fromNode2).not.to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(fromNode2).to.deep.contain({
+					expect(fromNode2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 	});
@@ -1068,113 +1070,113 @@ describe('Edge.js', () => {
 					operation1,
 					operation2
 				]) => {
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -1199,41 +1201,41 @@ describe('Edge.js', () => {
 				]) => {
 					expect(operation1).to.deep.equal([]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -1254,59 +1256,59 @@ describe('Edge.js', () => {
 					operation1,
 					operation2
 				]) => {
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -1327,59 +1329,59 @@ describe('Edge.js', () => {
 					operation1,
 					operation2
 				]) => {
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'IN',
 						entity: 'entity',
 						fromNode: '3',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -1400,59 +1402,59 @@ describe('Edge.js', () => {
 					operation1,
 					operation2
 				]) => {
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation1).to.deep.include({
+					expect(operation1).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '1',
 						namespace: 'graph-1',
 						toNode: '2',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: null,
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '1',
 						type: 'byTimestamp'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byDistance'
-					});
+					}]);
 
-					expect(operation2).to.deep.include({
+					expect(operation2).to.containSubset([{
 						direction: 'OUT',
 						entity: 'entity',
 						fromNode: '2',
 						namespace: 'graph-1',
 						toNode: '3',
 						type: 'byTimestamp'
-					});
+					}]);
 				}, null, done);
 		});
 
@@ -1982,7 +1984,7 @@ describe('Edge.js', () => {
 				}, null, done);
 		});
 
-		it('should not decrement edges distance', done => {
+		it('should not decrement edges distance (without previous edge)', done => {
 			edge.link({
 					distance: 0,
 					entity: 'entity',
@@ -1995,9 +1997,35 @@ describe('Edge.js', () => {
 						secondEdge
 					] = response;
 
-					expect(firstEdge.distance).to.equal(0);
+					expect(firstEdge.distance).to.equal(1);
 					expect(firstEdge.timestamp).to.be.a('number');
-					expect(secondEdge.distance).to.equal(0);
+					expect(secondEdge.distance).to.equal(1);
+					expect(secondEdge.timestamp).to.be.a('number');
+				}, null, done);
+		});
+
+		it('should not decrement edges distance', done => {
+			edge.link({
+					distance: 5,
+					entity: 'entity',
+					fromNode: '1',
+					toNode: '2'
+				})
+				.mergeMap(() => edge.link({
+					distance: 0,
+					entity: 'entity',
+					fromNode: '1',
+					toNode: '2'
+				}))
+				.subscribe(response => {
+					const [
+						firstEdge,
+						secondEdge
+					] = response;
+
+					expect(firstEdge.distance).to.equal(0.999999999999995);
+					expect(firstEdge.timestamp).to.be.a('number');
+					expect(secondEdge.distance).to.equal(0.999999999999995);
 					expect(secondEdge.timestamp).to.be.a('number');
 				}, null, done);
 		});
