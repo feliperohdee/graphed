@@ -317,7 +317,7 @@ describe('RedisStore.js', () => {
 			expect(() => store._getEdgesKeysByDistance()).to.throw('namespace is missing or wrong.');
 		});
 
-		it('should get edge keys', done => {
+		it.only('should get edge keys', done => {
 			store._getEdgesKeysByDistance({
 					namespace: app.namespace,
 					type: 'byTimestamp' // false
