@@ -18,7 +18,7 @@ chai.use(sinonChai);
 const expect = chai.expect;
 const store = app.store;
 
-describe('RedisStore.js', () => {
+describe.only('RedisStore.js', () => {
 	beforeEach(done => {
 		Observable.forkJoin(
 				store.setEdgeByDistance({
@@ -137,12 +137,6 @@ describe('RedisStore.js', () => {
 			})).to.equal('graph-1:e.t');
 
 			expect(store._composeId({
-				direction: '*',
-				namespace: app.namespace,
-				type: 'byTimestamp'
-			})).to.equal('graph-1:e.t*');
-
-			expect(store._composeId({
 				fromNode: 'fromNode',
 				namespace: app.namespace,
 				type: 'byTimestamp'
@@ -164,23 +158,9 @@ describe('RedisStore.js', () => {
 			})).to.equal('graph-1:e.t:fromNode:entity:direction');
 
 			expect(store._composeId({
-				direction: '*',
-				entity: 'entity',
-				fromNode: 'fromNode',
-				namespace: app.namespace,
-				type: 'byTimestamp'
-			})).to.equal('graph-1:e.t:fromNode:entity*');
-
-			expect(store._composeId({
 				namespace: app.namespace,
 				type: 'byDistance'
 			})).to.equal('graph-1:e.d');
-
-			expect(store._composeId({
-				direction: '*',
-				namespace: app.namespace,
-				type: 'byDistance'
-			})).to.equal('graph-1:e.d*');
 
 			expect(store._composeId({
 				fromNode: 'fromNode',
@@ -202,14 +182,6 @@ describe('RedisStore.js', () => {
 				namespace: app.namespace,
 				type: 'byDistance'
 			})).to.equal('graph-1:e.d:fromNode:entity:direction');
-
-			expect(store._composeId({
-				direction: '*',
-				entity: 'entity',
-				fromNode: 'fromNode',
-				namespace: app.namespace,
-				type: 'byDistance'
-			})).to.equal('graph-1:e.d:fromNode:entity*');
 		});
 	});
 
@@ -317,7 +289,7 @@ describe('RedisStore.js', () => {
 			expect(() => store._getEdgesKeysByDistance()).to.throw('namespace is missing or wrong.');
 		});
 
-		it.only('should get edge keys', done => {
+		it('should get edge keys', done => {
 			store._getEdgesKeysByDistance({
 					namespace: app.namespace,
 					type: 'byTimestamp' // false
