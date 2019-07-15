@@ -7,7 +7,7 @@ class App {
 	constructor() {
 		const redis = new Redis({
 			connection: {
-				port: 6380
+				port: 6379
 			}
 		});
 

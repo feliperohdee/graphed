@@ -119,6 +119,294 @@ describe('Edge.js', () => {
         });
     });
 
+    describe('allAll', () => {
+		afterEach(done => {
+			Observable.forkJoin(
+					edge.deleteByNode({
+						fromNode: '0'
+					})
+					.toArray(),
+					edge.deleteByNode({
+						fromNode: '1'
+					})
+					.toArray(),
+					edge.deleteByNode({
+						fromNode: '2'
+					})
+					.toArray(),
+					edge.deleteByNode({
+						fromNode: '3'
+					})
+					.toArray()
+				)
+				.subscribe(null, null, done);
+		});
+
+		it('should throw if wrong direction', done => {
+			edge.allAll({
+					direction: 'OTHER'
+				})
+				.subscribe(null, err => {
+					expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
+					done();
+				});
+		});
+
+		it('should throw if wrong distance', done => {
+			edge.allAll({
+					distance: 'string'
+				})
+				.subscribe(null, err => {
+					expect(err.message).to.equal('distance should be a number or function with signature "(collectionSize, index): number".');
+					done();
+				});
+		});
+
+		it('should throw if no entity', done => {
+			edge.allAll()
+				.subscribe(null, err => {
+					expect(err.message).to.equal('entity is missing.');
+					done();
+				});
+		});
+
+		it('should add multiple edges', done => {
+			edge.allAll({
+					collection: ['0', '1', '2', '3'],
+					distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
+						return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+					},
+					entity: 'entity'
+				})
+				.toArray()
+				.subscribe(response => {
+					expect(_.size(response)).to.equal(6);
+
+					expect(response[0][0]).to.deep.contain({
+						fromNode: '0',
+						distance: 0.999999999999997,
+						toNode: '1'
+					});
+
+					expect(response[1][0]).to.deep.contain({
+						fromNode: '0',
+						distance: 0.999999999999998,
+						toNode: '2'
+					});
+
+					expect(response[2][0]).to.deep.contain({
+						fromNode: '0',
+						distance: 0.999999999999999,
+						toNode: '3'
+					});
+
+					expect(response[3][0]).to.deep.contain({
+						fromNode: '1',
+						distance: 0.999999999999997,
+						toNode: '2'
+					});
+
+					expect(response[4][0]).to.deep.contain({
+						fromNode: '1',
+						distance: 0.999999999999998,
+						toNode: '3'
+					});
+
+					expect(response[5][0]).to.deep.contain({
+						fromNode: '2',
+						distance: 0.999999999999997,
+						toNode: '3'
+					});
+				}, null, done);
+		});
+
+		it('should add multiple edges with direction', done => {
+			edge.allAll({
+					collection: ['0', '1', '2', '3'],
+					direction: 'OUT',
+					distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
+						return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+					},
+					entity: 'entity'
+				})
+				.toArray()
+				.subscribe(response => {
+					expect(_.size(response)).to.equal(12);
+
+					expect(response[0][0]).to.deep.contain({
+						fromNode: '0',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '1'
+					});
+
+					expect(response[0][1]).to.deep.contain({
+						fromNode: '1',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '0'
+					});
+
+					expect(response[1][0]).to.deep.contain({
+						fromNode: '0',
+						direction: 'OUT',
+						distance: 0.999999999999998,
+						toNode: '2'
+					});
+
+					expect(response[1][1]).to.deep.contain({
+						fromNode: '2',
+						direction: 'IN',
+						distance: 0.999999999999998,
+						toNode: '0'
+					});
+
+					expect(response[2][0]).to.deep.contain({
+						fromNode: '0',
+						direction: 'OUT',
+						distance: 0.999999999999999,
+						toNode: '3'
+					});
+
+					expect(response[2][1]).to.deep.contain({
+						fromNode: '3',
+						direction: 'IN',
+						distance: 0.999999999999999,
+						toNode: '0'
+					});
+
+					// 
+					expect(response[3][0]).to.deep.contain({
+						fromNode: '1',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '0'
+					});
+
+					expect(response[3][1]).to.deep.contain({
+						fromNode: '0',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '1'
+					});
+
+					expect(response[4][0]).to.deep.contain({
+						fromNode: '1',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '2'
+					});
+
+					expect(response[4][1]).to.deep.contain({
+						fromNode: '2',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '1'
+					});
+
+					expect(response[5][0]).to.deep.contain({
+						fromNode: '1',
+						direction: 'OUT',
+						distance: 0.999999999999998,
+						toNode: '3'
+					});
+
+					expect(response[5][1]).to.deep.contain({
+						fromNode: '3',
+						direction: 'IN',
+						distance: 0.999999999999998,
+						toNode: '1'
+					});
+
+					// 
+					expect(response[6][0]).to.deep.contain({
+						fromNode: '2',
+						direction: 'OUT',
+						distance: 0.999999999999998,
+						toNode: '0'
+					});
+
+					expect(response[6][1]).to.deep.contain({
+						fromNode: '0',
+						direction: 'IN',
+						distance: 0.999999999999998,
+						toNode: '2'
+					});
+
+					expect(response[7][0]).to.deep.contain({
+						fromNode: '2',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '1'
+					});
+
+					expect(response[7][1]).to.deep.contain({
+						fromNode: '1',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '2'
+					});
+
+					expect(response[8][0]).to.deep.contain({
+						fromNode: '2',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '3'
+					});
+
+					expect(response[8][1]).to.deep.contain({
+						fromNode: '3',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '2'
+					});
+
+					// 
+					expect(response[9][0]).to.deep.contain({
+						fromNode: '3',
+						direction: 'OUT',
+						distance: 0.999999999999999,
+						toNode: '0'
+					});
+
+					expect(response[9][1]).to.deep.contain({
+						fromNode: '0',
+						direction: 'IN',
+						distance: 0.999999999999999,
+						toNode: '3'
+					});
+
+					expect(response[10][0]).to.deep.contain({
+						fromNode: '3',
+						direction: 'OUT',
+						distance: 0.999999999999998,
+						toNode: '1'
+					});
+
+					expect(response[10][1]).to.deep.contain({
+						fromNode: '1',
+						direction: 'IN',
+						distance: 0.999999999999998,
+						toNode: '3'
+					});
+
+					expect(response[11][0]).to.deep.contain({
+						fromNode: '3',
+						direction: 'OUT',
+						distance: 0.999999999999997,
+						toNode: '2'
+					});
+
+					expect(response[11][1]).to.deep.contain({
+						fromNode: '2',
+						direction: 'IN',
+						distance: 0.999999999999997,
+						toNode: '3'
+					});
+				}, null, done);
+		});
+	});
+
     describe('count', () => {
         before(done => {
             Observable.forkJoin(
