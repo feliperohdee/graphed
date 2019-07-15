@@ -29,18 +29,14 @@ describe('util.js', () => {
 				forbidden: 'forbidden',
 				fromNode: 'fromNode',
 				namespace: 'namespace',
-				toNode: 'toNode',
-				timestamp: 'timestamp',
-				type: 'type'
+				toNode: 'toNode'
 			})).to.deep.equal({
 				direction: 'direction',
 				distance: 'distance',
 				entity: 'entity',
 				fromNode: 'fromNode',
 				namespace: 'namespace',
-				toNode: 'toNode',
-				timestamp: 'timestamp',
-				type: 'type'
+				toNode: 'toNode'
 			});
 		});
 
@@ -52,23 +48,17 @@ describe('util.js', () => {
 				forbidden: 'forbidden',
 				fromNode: 'fromNode',
 				namespace: 'namespace',
-				toNode: 'toNode',
-				timestamp: 'timestamp',
-				type: 'type'
+				toNode: 'toNode'
 			}, {
 				namespace: 'namespace 2',
-				toNode: 'toNode 2',
-				timestamp: 'timestamp 2',
-				type: 'type 2'
+				toNode: 'toNode 2'
 			})).to.deep.equal({
 				direction: 'direction',
 				distance: 'distance',
 				entity: 'entity',
 				fromNode: 'fromNode',
 				namespace: 'namespace 2',
-				toNode: 'toNode 2',
-				timestamp: 'timestamp 2',
-				type: 'type 2'
+				toNode: 'toNode 2'
 			});
 		});
 	});
@@ -120,10 +110,8 @@ describe('util.js', () => {
 				'deleteEdges',
 				'getEdges',
 				'getEdgesByDistance',
-				'getEdgesByTimestamp',
-				'incrementEdgeByDistance',
-				'setEdgeByDistance',
-				'setEdgeByTimestamp'
+				'incrementEdge',
+				'setEdge'
 			];
 
 			const missing = [
@@ -132,10 +120,8 @@ describe('util.js', () => {
 				'deleteEdges',
 				'getEdges',
 				'getEdgesByDistance',
-				'getEdgesByTimestamp',
-				'incrementEdgeByDistance',
-				'setEdgeByDistance',
-				'setEdgeByTimestamp'
+				'incrementEdge',
+				'setEdge'
 			];
 
 			expect(() => validateStore(_.omit(app.store, missing), requiredStoreKeys)).to.throw(`Invalid store, missing ${missing.join(', ')}`);

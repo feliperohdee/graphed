@@ -33,14 +33,6 @@
 		}): Observable<object>;
 
 ## Edge API
-		allAll({
-			collection: Array<string>,
-			direction?: string
-			distance?: (collectionSize, fromNodeIndex, toNodeIndex) => number, 
-			entity? string,
-			noTimestamp?: boolean
-		}): Observable<object>;
-
 		count({
 			direction?: string
 			entity? string,
@@ -61,7 +53,6 @@
 		}): Observable<object>;
 
 		allByNode({
-			by?: 'distance' | 'timestamp',
 			direction?: string
 			entity? string,
 			fromNode: string,
@@ -71,15 +62,13 @@
 		}): Observable<object>;
 
 		closest({
-			by?: 'distance' | 'timestamp',
 			desc?: boolean,
 			direction?: string
 			distance?: [min?: number, max?: number], // with RedisStore
 			entity? string,
 			filter? string,
 			fromNode: string,
-			limit: [min?: number, max?: number],
-			timestamp: [min?: number, max?: number] // with RedisStore
+			limit: [min?: number, max?: number]
 		}): Observable<object>;
 
 		link({
@@ -88,7 +77,6 @@
 			distance?: number,
 			entity? string,
 			fromNode: string,
-			noTimestamp?: boolean,
 			toNode: string
 		}): Observable<object>;
 
@@ -100,7 +88,6 @@
 				distance?: number,
 				entity? string,
 				fromNode: string,
-				noTimestamp?: boolean,
 				toNode: string
 			}>,
 			maxPath: number,
@@ -129,12 +116,6 @@
 
 				this.store = store;
 				this.namespace = 'graph-1';
-				
-				this.node = new Node({
-					namespace: 'graphName',
-					store
-				});
-
 				this.edge = new Edge({
 					namespace: 'graphName',
 					node: this.node,

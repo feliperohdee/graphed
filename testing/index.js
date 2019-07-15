@@ -14,7 +14,7 @@ class App {
 		this.store = new RedisStore({
 			redis
 		});
-		this.namespace = 'graph-1';
+		this.namespace = 'spec';
 	}
 }
 
