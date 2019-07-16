@@ -511,10 +511,6 @@ sinon@^2.3.2:
     text-encoding "0.6.4"
     type-detect "^4.0.0"
 
-smallorange-data-loader@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/smallorange-data-loader/-/smallorange-data-loader-1.0.6.tgz#b70348795ac7d797508641592d091ae66bb69e7c"
-
 smallorange-redis-client@^1.0.23:
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/smallorange-redis-client/-/smallorange-redis-client-1.0.25.tgz#ab63fe3fc97dacfe40a3d2cd26d81f8f2e3f7a6c"
