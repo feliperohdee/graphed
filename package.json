@@ -4,8 +4,10 @@
   "description": "Minimum graph's data structure implemented with pluggable stores (redis, memory, ...)",
   "main": "index.js",
   "dependencies": {
+    "aws-sdk": "^2.493.0",
     "lodash": "^4.17.14",
     "rxjs": "^5.4.3",
+    "smallorange-dynamodb-client": "^1.1.8",
     "smallorange-redis-client": "^1.0.23"
   },
   "devDependencies": {

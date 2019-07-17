@@ -7,7 +7,7 @@ const {
     Observable
 } = require('rxjs');
 
-const app = require('../testing');
+const app = require('../testing/redis');
 const {
     Edge
 } = require('../');
@@ -114,7 +114,6 @@ describe('Edge.js', () => {
             expect(edge.deleteEdges).not.to.be.undefined;
             expect(edge.getAll).not.to.be.undefined;
             expect(edge.getAllByDistance).not.to.be.undefined;
-            expect(edge.incrementEdge).not.to.be.undefined;
             expect(edge.setEdge).not.to.be.undefined;
         });
     });

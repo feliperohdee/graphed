@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const chai = require('chai');
 
-const app = require('../testing');
+const app = require('../testing/redis');
 const {
 	invertDirection,
 	pickEdgeData,
@@ -110,7 +110,6 @@ describe('util.js', () => {
 				'deleteEdges',
 				'getEdges',
 				'getEdgesByDistance',
-				'incrementEdge',
 				'setEdge'
 			];
 
@@ -120,7 +119,6 @@ describe('util.js', () => {
 				'deleteEdges',
 				'getEdges',
 				'getEdgesByDistance',
-				'incrementEdge',
 				'setEdge'
 			];
 

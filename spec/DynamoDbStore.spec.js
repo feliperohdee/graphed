@@ -7,9 +7,9 @@ const {
     Observable
 } = require('rxjs');
 
-const app = require('../testing/redis');
+const app = require('../testing/dynamoDb');
 const {
-    RedisStore
+    DynamoDBStore
 } = require('../');
 
 chai.use(chaiSubset);
@@ -18,7 +18,7 @@ chai.use(sinonChai);
 const expect = chai.expect;
 const store = app.store;
 
-describe('RedisStore.js', () => {
+describe('DynamoDBStore.js', () => {
     beforeEach(done => {
         Observable.forkJoin(
                 store.setEdge({
@@ -47,132 +47,116 @@ describe('RedisStore.js', () => {
             .subscribe(null, null, done);
     });
 
-    afterEach(done => {
-        Observable.forkJoin(
-                store.deleteEdges({
-                    fromNode: '0',
-                    namespace: app.namespace
-                })
-                .toArray(),
-                store.deleteEdges({
-                    fromNode: '1',
-                    namespace: app.namespace
-                })
-                .toArray(),
-                store.deleteEdges({
-                    fromNode: '2',
-                    namespace: app.namespace
-                })
-                .toArray()
-            )
+    // afterEach(done => {
+    //     Observable.forkJoin(
+    //             store.deleteEdges({
+    //                 fromNode: '0',
+    //                 namespace: app.namespace
+    //             })
+    //             .toArray(),
+    //             store.deleteEdges({
+    //                 fromNode: '1',
+    //                 namespace: app.namespace
+    //             })
+    //             .toArray(),
+    //             store.deleteEdges({
+    //                 fromNode: '2',
+    //                 namespace: app.namespace
+    //             })
+    //             .toArray()
+    //         )
+    //         .subscribe(null, null, done);
+    // });
+
+    after(done => {
+        app.store.clear({
+                namespace: app.namespace
+            })
             .subscribe(null, null, done);
     });
 
     describe('constructor', () => {
-        it('should throw if no redis provided', () => {
-            expect(() => new RedisStore({})).to.throw('noRedisError');
+        it('should throw if no dynamodb provided', () => {
+            expect(() => new DynamoDBStore({})).to.throw('noDynamoDbError');
         });
 
-        it('should have redis', () => {
-            expect(store.redis).to.be.an('object');
+        it('should throw if no tableName provided', () => {
+            expect(() => new DynamoDBStore({
+                dynamoDb: app.dynamoDb
+            })).to.throw('noTableNameError');
+        });
+    });
+
+    describe('_composeBase', () => {
+        it('should compose index with keys', () => {
+            expect(store._composeBase({
+                namespace: app.namespace,
+                fromNode: 'fromNode'
+            })).to.equal('spec:fromNode');
+
+            expect(store._composeBase({
+                namespace: app.namespace,
+                entity: 'entity',
+                fromNode: 'fromNode'
+            })).to.equal('spec:fromNode:entity');
+
+            expect(store._composeBase({
+                namespace: app.namespace,
+                direction: 'direction',
+                entity: 'entity',
+                fromNode: 'fromNode'
+            })).to.equal('spec:fromNode:entity:direction');
         });
     });
 
     describe('_composeId', () => {
         it('should compose id with keys', () => {
             expect(store._composeId({
-                namespace: app.namespace
-            })).to.equal('spec');
-
-            expect(store._composeId({
-                fromNode: 'fromNode',
-                namespace: app.namespace
-            })).to.equal('spec:fromNode');
+                fromNode: 'fromNode'
+            })).to.equal('fromNode');
 
             expect(store._composeId({
                 entity: 'entity',
-                fromNode: 'fromNode',
-                namespace: app.namespace
-            })).to.equal('spec:fromNode:entity');
+                fromNode: 'fromNode'
+            })).to.equal('fromNode:entity');
+
+            expect(store._composeId({
+                direction: 'direction',
+                entity: 'entity',
+                fromNode: 'fromNode'
+            })).to.equal('fromNode:entity:direction');
 
             expect(store._composeId({
                 direction: 'direction',
                 entity: 'entity',
                 fromNode: 'fromNode',
-                namespace: app.namespace
-            })).to.equal('spec:fromNode:entity:direction');
+                toNode: 'toNode'
+            })).to.equal('fromNode:entity:direction:toNode');
         });
     });
 
     describe('_parseId', () => {
         it('should parse id', () => {
-            expect(store._parseId('spec:fromNode')).to.deep.equal({
-                direction: null,
-                entity: undefined,
+            expect(store._parseId('fromNode:entity:OUT:toNode')).to.deep.equal({
+                direction: 'OUT',
+                entity: 'entity',
                 fromNode: 'fromNode',
-                namespace: 'spec'
+                toNode: 'toNode'
             });
-        });
-    });
 
-    describe('_getEdgesKeys', () => {
-        it('should throw if invalid', () => {
-            expect(() => store._getEdgesKeys()).to.throw('namespace is missing or wrong.');
-        });
+            expect(store._parseId('fromNode:entity:IN:toNode')).to.deep.equal({
+                direction: 'IN',
+                entity: 'entity',
+                fromNode: 'fromNode',
+                toNode: 'toNode'
+            });
 
-        it('should get edge keys', done => {
-            store._getEdgesKeys({
-                    namespace: app.namespace
-                })
-                .toArray()
-                .subscribe(response => {
-                    expect(response.length).to.equal(5);
-                    expect(response).to.deep.include('spec:0:entity');
-                    expect(response).to.deep.include('spec:1:entity-2:OUT');
-                    expect(response).to.deep.include('spec:1:entity');
-                    expect(response).to.deep.include('spec:2:entity-2:IN');
-                    expect(response).to.deep.include('spec:2:entity');
-                }, null, done);
-        });
-
-        it('should get edge keys by fromNode', done => {
-            store._getEdgesKeys({
-                    fromNode: '1',
-                    namespace: app.namespace
-                })
-                .toArray()
-                .subscribe(response => {
-                    expect(response.length).to.equal(2);
-                    expect(response).to.deep.include('spec:1:entity-2:OUT');
-                    expect(response).to.deep.include('spec:1:entity');
-                }, null, done);
-        });
-
-        it('should get edge keys by fromNode and entity', done => {
-            store._getEdgesKeys({
-                    fromNode: '1',
-                    entity: 'entity-2',
-                    namespace: app.namespace
-                })
-                .toArray()
-                .subscribe(response => {
-                    expect(response.length).to.equal(1);
-                    expect(response).to.deep.include('spec:1:entity-2:OUT');
-                }, null, done);
-        });
-
-        it('should get edge keys by fromNode, entity and direction', done => {
-            store._getEdgesKeys({
-                    fromNode: '1',
-                    entity: 'entity-2',
-                    direction: 'OUT',
-                    namespace: app.namespace
-                })
-                .toArray()
-                .subscribe(response => {
-                    expect(response.length).to.equal(1);
-                    expect(response).to.deep.include('spec:1:entity-2:OUT');
-                }, null, done);
+            expect(store._parseId('fromNode:entity:toNode')).to.deep.equal({
+                direction: null,
+                entity: 'entity',
+                fromNode: 'fromNode',
+                toNode: 'toNode'
+            });
         });
     });
 
@@ -211,7 +195,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     });
                 }, null, done);
@@ -230,13 +214,13 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
                 }, null, done);
@@ -271,7 +255,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -279,7 +263,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -287,7 +271,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -295,7 +279,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -303,7 +287,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -311,7 +295,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -338,7 +322,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -346,7 +330,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -354,7 +338,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -362,7 +346,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -392,7 +376,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -400,7 +384,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -431,7 +415,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -439,7 +423,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -473,7 +457,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -481,7 +465,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -489,7 +473,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -497,7 +481,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -505,7 +489,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -513,7 +497,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -531,7 +515,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -539,7 +523,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
 
@@ -547,7 +531,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -555,7 +539,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -574,7 +558,7 @@ describe('RedisStore.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
 
@@ -582,7 +566,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -601,7 +585,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -609,7 +593,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -629,7 +613,7 @@ describe('RedisStore.js', () => {
                         direction: 'OUT',
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
 
@@ -637,7 +621,7 @@ describe('RedisStore.js', () => {
                         direction: 'IN',
                         entity: 'entity-2',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -667,11 +651,11 @@ describe('RedisStore.js', () => {
                 .subscribe(null, null, done);
         });
 
-        it('should throw if invalid', () => {
+        it.only('should throw if invalid', () => {
             expect(() => store.getEdgesByDistance()).to.throw('entity, fromNode, namespace are missing or wrong.');
         });
 
-        it('should throw if wrong distance', done => {
+        it.only('should throw if wrong distance', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity',
@@ -684,7 +668,7 @@ describe('RedisStore.js', () => {
                 });
         });
 
-        it('should throw if wrong limit', done => {
+        it.only('should throw if wrong limit', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity',
@@ -697,7 +681,7 @@ describe('RedisStore.js', () => {
                 });
         });
 
-        it('should get edges', done => {
+        it.only('should get edges', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity-2',
@@ -711,21 +695,21 @@ describe('RedisStore.js', () => {
                         distance: 0.8,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '3'
                     }, {
                         direction: 'OUT',
                         distance: 0.9,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '4'
                     }, {
                         direction: 'OUT',
                         distance: 1,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -746,21 +730,21 @@ describe('RedisStore.js', () => {
                         distance: 1,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }, {
                         direction: 'OUT',
                         distance: 0.9,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '4'
                     }, {
                         direction: 'OUT',
                         distance: 0.8,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '3'
                     }]);
                 }, null, done);
@@ -781,7 +765,7 @@ describe('RedisStore.js', () => {
                         distance: 1,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -802,7 +786,7 @@ describe('RedisStore.js', () => {
                         distance: 0.8,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '3'
                     }]);
                 }, null, done);
@@ -823,14 +807,14 @@ describe('RedisStore.js', () => {
                         distance: 0.8,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '3'
                     }, {
                         direction: 'OUT',
                         distance: 0.9,
                         entity: 'entity-2',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '4'
                     }]);
                 }, null, done);
@@ -882,14 +866,14 @@ describe('RedisStore.js', () => {
                         distance: 1,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 1,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
                 }, null, done);
@@ -910,14 +894,14 @@ describe('RedisStore.js', () => {
                         distance: 1,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '1'
                     }, {
                         direction: 'IN',
                         distance: 1,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace: app.namespace,
                         toNode: '0'
                     }]);
                 }, null, done);
@@ -930,7 +914,7 @@ describe('RedisStore.js', () => {
                         entity: 'entity',
                         fromNode: '0',
                         toNode: '1',
-                        distance: -0.1
+                        distance: -.1
                     }, true)
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
@@ -938,14 +922,14 @@ describe('RedisStore.js', () => {
                             distance: 0.9,
                             entity: 'entity',
                             fromNode: '0',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '1'
                         }, {
                             direction: null,
                             distance: 0.9,
                             entity: 'entity',
                             fromNode: '1',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '0'
                         }]);
                     }, null, done);
@@ -965,14 +949,14 @@ describe('RedisStore.js', () => {
                             distance: 1,
                             entity: 'entity',
                             fromNode: '0',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '1'
                         }, {
                             direction: null,
                             distance: 1,
                             entity: 'entity',
                             fromNode: '1',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '0'
                         }]);
                     }, null, done);
@@ -984,23 +968,23 @@ describe('RedisStore.js', () => {
                         entity: 'entity',
                         fromNode: '0',
                         toNode: '1',
-                        distance: -0.1,
+                        distance: -.1,
                         direction: 'OUT'
                     }, true)
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
                             direction: 'OUT',
-                            distance: 0.9,
+                            distance: .9,
                             entity: 'entity',
                             fromNode: '0',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '1'
                         }, {
                             direction: 'IN',
-                            distance: 0.9,
+                            distance: .9,
                             entity: 'entity',
                             fromNode: '1',
-                            namespace: 'spec',
+                            namespace: app.namespace,
                             toNode: '0'
                         }]);
                     }, null, done);
