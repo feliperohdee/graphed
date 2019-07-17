@@ -1,7 +1,7 @@
 {
   "name": "smallorange-graph",
-  "version": "1.0.4",
-  "description": "Minimum graph's data structure implemented with pluggable stores (redis, memory, ...)",
+  "version": "1.0.5",
+  "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...)",
   "main": "index.js",
   "dependencies": {
     "aws-sdk": "^2.493.0",
