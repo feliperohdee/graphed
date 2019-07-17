@@ -1,5 +1,5 @@
 const Edge = require('./lib/Edge');
-const DynamoDBStore = require('./lib/DynamoDBStore');
+const DynamoDBStore = require('./lib/DynamoDbStore');
 const RedisStore = require('./lib/RedisStore');
 const util = require('./lib/util');
 

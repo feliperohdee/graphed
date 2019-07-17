@@ -1,6 +1,6 @@
 {
   "name": "smallorange-graph",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...)",
   "main": "index.js",
   "dependencies": {
