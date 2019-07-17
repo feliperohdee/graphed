@@ -47,26 +47,26 @@ describe('DynamoDBStore.js', () => {
             .subscribe(null, null, done);
     });
 
-    // afterEach(done => {
-    //     Observable.forkJoin(
-    //             store.deleteEdges({
-    //                 fromNode: '0',
-    //                 namespace: app.namespace
-    //             })
-    //             .toArray(),
-    //             store.deleteEdges({
-    //                 fromNode: '1',
-    //                 namespace: app.namespace
-    //             })
-    //             .toArray(),
-    //             store.deleteEdges({
-    //                 fromNode: '2',
-    //                 namespace: app.namespace
-    //             })
-    //             .toArray()
-    //         )
-    //         .subscribe(null, null, done);
-    // });
+    afterEach(done => {
+        Observable.forkJoin(
+                store.deleteEdges({
+                    fromNode: '0',
+                    namespace: app.namespace
+                })
+                .toArray(),
+                store.deleteEdges({
+                    fromNode: '1',
+                    namespace: app.namespace
+                })
+                .toArray(),
+                store.deleteEdges({
+                    fromNode: '2',
+                    namespace: app.namespace
+                })
+                .toArray()
+            )
+            .subscribe(null, null, done);
+    });
 
     after(done => {
         app.store.clear({
@@ -93,12 +93,23 @@ describe('DynamoDBStore.js', () => {
                 namespace: app.namespace,
                 fromNode: 'fromNode'
             })).to.equal('spec:fromNode');
+            
+            expect(store._composeBase({
+                namespace: app.namespace,
+                fromNode: 'fromNode'
+            }, true)).to.equal('spec:fromNode:~');
 
             expect(store._composeBase({
                 namespace: app.namespace,
                 entity: 'entity',
                 fromNode: 'fromNode'
             })).to.equal('spec:fromNode:entity');
+            
+            expect(store._composeBase({
+                namespace: app.namespace,
+                entity: 'entity',
+                fromNode: 'fromNode'
+            }, true)).to.equal('spec:fromNode:entity:~');
 
             expect(store._composeBase({
                 namespace: app.namespace,
@@ -114,11 +125,20 @@ describe('DynamoDBStore.js', () => {
             expect(store._composeId({
                 fromNode: 'fromNode'
             })).to.equal('fromNode');
+            
+            expect(store._composeId({
+                fromNode: 'fromNode'
+            }, true)).to.equal('fromNode:~');
 
             expect(store._composeId({
                 entity: 'entity',
                 fromNode: 'fromNode'
             })).to.equal('fromNode:entity');
+            
+            expect(store._composeId({
+                entity: 'entity',
+                fromNode: 'fromNode'
+            }, true)).to.equal('fromNode:entity:~');
 
             expect(store._composeId({
                 direction: 'direction',
@@ -151,7 +171,7 @@ describe('DynamoDBStore.js', () => {
                 toNode: 'toNode'
             });
 
-            expect(store._parseId('fromNode:entity:toNode')).to.deep.equal({
+            expect(store._parseId('fromNode:entity:~:toNode')).to.deep.equal({
                 direction: null,
                 entity: 'entity',
                 fromNode: 'fromNode',
@@ -299,13 +319,12 @@ describe('DynamoDBStore.js', () => {
                         toNode: '1'
                     }]);
 
-                    return store._getEdgesKeys({
+                    return store.fetch({
                         namespace: app.namespace
                     });
                 })
-                .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(0);
+                    expect(response.data.length).to.equal(0);
                 }, null, done);
         });
 
@@ -350,15 +369,14 @@ describe('DynamoDBStore.js', () => {
                         toNode: '1'
                     }]);
 
-                    return store._getEdgesKeys({
+                    return store.fetch({
                         namespace: app.namespace
                     });
                 })
-                .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
-                    expect(response).to.deep.include('spec:0:entity');
-                    expect(response).to.deep.include('spec:2:entity');
+                    expect(response.data.length).to.equal(2);
+                    expect(response.data[0].base).to.deep.include('spec:0:entity');
+                    expect(response.data[1].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
 
@@ -371,7 +389,6 @@ describe('DynamoDBStore.js', () => {
                 .toArray()
                 .mergeMap(response => {
                     expect(response.length).to.equal(2);
-
                     expect(response).to.containSubset([{
                         direction: 'OUT',
                         entity: 'entity-2',
@@ -388,16 +405,15 @@ describe('DynamoDBStore.js', () => {
                         toNode: '1'
                     }]);
 
-                    return store._getEdgesKeys({
+                    return store.fetch({
                         namespace: app.namespace
                     });
                 })
-                .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(3);
-                    expect(response).to.deep.include('spec:0:entity');
-                    expect(response).to.deep.include('spec:1:entity');
-                    expect(response).to.deep.include('spec:2:entity');
+                    expect(response.data.length).to.equal(4);
+                    expect(response.data[0].base).to.deep.include('spec:0:entity');
+                    expect(response.data[2].base).to.deep.include('spec:1:entity');
+                    expect(response.data[3].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
 
@@ -427,16 +443,15 @@ describe('DynamoDBStore.js', () => {
                         toNode: '1'
                     }]);
 
-                    return store._getEdgesKeys({
+                    return store.fetch({
                         namespace: app.namespace
                     });
                 })
-                .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(3);
-                    expect(response).to.deep.include('spec:0:entity');
-                    expect(response).to.deep.include('spec:1:entity');
-                    expect(response).to.deep.include('spec:2:entity');
+                    expect(response.data.length).to.equal(4);
+                    expect(response.data[0].base).to.deep.include('spec:0:entity');
+                    expect(response.data[2].base).to.deep.include('spec:1:entity');
+                    expect(response.data[3].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
     });
@@ -651,11 +666,11 @@ describe('DynamoDBStore.js', () => {
                 .subscribe(null, null, done);
         });
 
-        it.only('should throw if invalid', () => {
+        it('should throw if invalid', () => {
             expect(() => store.getEdgesByDistance()).to.throw('entity, fromNode, namespace are missing or wrong.');
         });
 
-        it.only('should throw if wrong distance', done => {
+        it('should throw if wrong distance', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity',
@@ -668,20 +683,20 @@ describe('DynamoDBStore.js', () => {
                 });
         });
 
-        it.only('should throw if wrong limit', done => {
+        it('should throw if wrong limit', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity',
-                    limit: 1,
+                    limit: [1],
                     fromNode: '1'
                 })
                 .subscribe(null, err => {
-                    expect(err.message).to.equal('limit should be an array like [offset: number, count: number].');
+                    expect(err.message).to.equal('limit should be an number.');
                     done();
                 });
         });
 
-        it.only('should get edges', done => {
+        it('should get edges', done => {
             store.getEdgesByDistance({
                     namespace: app.namespace,
                     entity: 'entity-2',
@@ -825,24 +840,24 @@ describe('DynamoDBStore.js', () => {
                     namespace: app.namespace,
                     entity: 'entity-2',
                     fromNode: '1',
-                    limit: [0, 1],
+                    limit: 1,
                     direction: 'OUT'
                 })
                 .toArray()
                 .mergeMap(response => {
-                    expect(response[0].toNode).to.equal('3');
+                    expect(response.length).to.equal(1);
 
                     return store.getEdgesByDistance({
                         namespace: app.namespace,
                         entity: 'entity-2',
                         fromNode: '1',
-                        limit: [1, 1],
+                        limit: 2,
                         direction: 'OUT'
                     });
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response[0].toNode).to.equal('4');
+                    expect(response.length).to.equal(2);
                 }, null, done);
         });
     });
