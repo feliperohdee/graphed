@@ -126,7 +126,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(5);
+                    expect(_.size(response)).to.equal(5);
                     expect(response).to.deep.include('spec:0:entity');
                     expect(response).to.deep.include('spec:1:entity-2:OUT');
                     expect(response).to.deep.include('spec:1:entity');
@@ -142,7 +142,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.deep.include('spec:1:entity-2:OUT');
                     expect(response).to.deep.include('spec:1:entity');
                 }, null, done);
@@ -156,7 +156,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(1);
+                    expect(_.size(response)).to.equal(1);
                     expect(response).to.deep.include('spec:1:entity-2:OUT');
                 }, null, done);
         });
@@ -170,7 +170,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(1);
+                    expect(_.size(response)).to.equal(1);
                     expect(response).to.deep.include('spec:1:entity-2:OUT');
                 }, null, done);
         });
@@ -266,7 +266,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .mergeMap(response => {
-                    expect(response.length).to.equal(6);
+                    expect(_.size(response)).to.equal(6);
                     expect(response).to.containSubset([{
                         direction: null,
                         entity: 'entity',
@@ -321,7 +321,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(0);
+                    expect(_.size(response)).to.equal(0);
                 }, null, done);
         });
 
@@ -332,7 +332,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .mergeMap(response => {
-                    expect(response.length).to.equal(4);
+                    expect(_.size(response)).to.equal(4);
 
                     expect(response).to.containSubset([{
                         direction: null,
@@ -372,7 +372,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.deep.include('spec:0:entity');
                     expect(response).to.deep.include('spec:2:entity');
                 }, null, done);
@@ -386,7 +386,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .mergeMap(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
 
                     expect(response).to.containSubset([{
                         direction: 'OUT',
@@ -410,7 +410,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(3);
+                    expect(_.size(response)).to.equal(3);
                     expect(response).to.deep.include('spec:0:entity');
                     expect(response).to.deep.include('spec:1:entity');
                     expect(response).to.deep.include('spec:2:entity');
@@ -426,7 +426,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .mergeMap(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: 'OUT',
                         entity: 'entity-2',
@@ -449,7 +449,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(3);
+                    expect(_.size(response)).to.equal(3);
                     expect(response).to.deep.include('spec:0:entity');
                     expect(response).to.deep.include('spec:1:entity');
                     expect(response).to.deep.include('spec:2:entity');
@@ -468,7 +468,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(6);
+                    expect(_.size(response)).to.equal(6);
                     expect(response).to.containSubset([{
                         direction: null,
                         entity: 'entity',
@@ -526,7 +526,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(4);
+                    expect(_.size(response)).to.equal(4);
                     expect(response).to.containSubset([{
                         direction: null,
                         entity: 'entity',
@@ -569,7 +569,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: null,
                         entity: 'entity',
@@ -596,7 +596,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: 'OUT',
                         entity: 'entity-2',
@@ -624,7 +624,7 @@ describe('RedisStore.js', () => {
                 })
                 .toArray()
                 .subscribe(response => {
-                    expect(response.length).to.equal(2);
+                    expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: 'OUT',
                         entity: 'entity-2',
