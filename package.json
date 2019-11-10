@@ -1,6 +1,6 @@
 {
     "name": "graphed",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...)",
     "main": "index.js",
     "dependencies": {

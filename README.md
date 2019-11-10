@@ -1,6 +1,4 @@
-[![CircleCI](https://circleci.com/gh/feliperohdee/smallorange-redis-edge-graph.svg?style=svg)](https://circleci.com/gh/feliperohdee/smallorange-graph)
-
-# Small Orange Graph
+# Graphed
 
 ## Node API
 		delete({
@@ -95,31 +93,3 @@
 			remoteClosest: function,
 			remoteClosestIndex: number
 		}): Observable<object>;
-
-## Sample
-		const Redis = require('smallorange-redis-client');
-		const {
-			Edge,
-			Node,
-			RedisStore
-		} = require('smallorange-graph');
-
-		class App {
-			constructor() {
-				const store = new RedisStore({
-					redis: new Redis({
-						connection: {
-							port: 6380
-						}
-					})
-				});
-
-				this.store = store;
-				this.namespace = 'graph-1';
-				this.edge = new Edge({
-					namespace: 'graphName',
-					node: this.node,
-					store
-				});
-			}
-		}
