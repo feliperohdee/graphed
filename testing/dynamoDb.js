@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const {
     DynamoDB
-} = require('smallorange-dynamodb-client');
+} = require('rxjs-dynamodb-client');
 const {
     DynamoDBStore
 } = require('../');
