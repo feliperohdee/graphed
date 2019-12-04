@@ -16,7 +16,7 @@ chai.use(sinonChai);
 
 const expect = chai.expect;
 
-describe('Edge.js', () => {
+describe('models/Edge.js', () => {
     let edge;
 
     before(() => {

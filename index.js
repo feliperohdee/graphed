@@ -1,6 +1,6 @@
-const Edge = require('./lib/Edge');
-const DynamoDBStore = require('./lib/DynamoDbStore');
-const util = require('./lib/util');
+const Edge = require('./models/Edge');
+const DynamoDBStore = require('./models/DynamoDbStore');
+const util = require('./models/util');
 
 module.exports = {
 	Edge,

@@ -14,7 +14,7 @@ chai.use(chaiSubset);
 const expect = chai.expect;
 const store = app.store;
 
-describe('DynamoDBStore.js', () => {
+describe('models/DynamoDBStore.js', () => {
     beforeEach(done => {
         rx.forkJoin(
                 store.setEdge({

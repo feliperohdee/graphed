@@ -7,11 +7,11 @@ const {
 	pickEdgeData,
 	validate,
 	validateStore
-} = require('../lib/util');
+} = require('../models/util');
 
 const expect = chai.expect;
 
-describe('util.js', () => {
+describe('models/util.js', () => {
 	describe('invertDirection', () => {
 		it('should invert directions', () => {
 			expect(invertDirection('OUT')).to.equal('IN');
