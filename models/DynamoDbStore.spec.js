@@ -79,13 +79,13 @@ describe('models/DynamoDBStore.js', () => {
 
     describe('constructor', () => {
         it('should throw if no dynamodb provided', () => {
-            expect(() => new DynamoDBStore({})).to.throw('noDynamoDbError');
+            expect(() => new DynamoDBStore({})).to.throw('"dynamoDb" is required');
         });
 
         it('should throw if no tableName provided', () => {
             expect(() => new DynamoDBStore({
                 dynamoDb: app.dynamoDb
-            })).to.throw('noTableNameError');
+            })).to.throw('"tableName" is required');
         });
     });
 
@@ -183,8 +183,12 @@ describe('models/DynamoDBStore.js', () => {
     });
 
     describe('countEdges', () => {
-        it('should throw if invalid', () => {
-            expect(() => store.countEdges()).to.throw('entity, fromNode, namespace are missing or wrong.');
+        it('should throw if invalid', done => {
+            store.countEdges()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required');
+                    done();
+                });
         });
 
         it('should return count', done => {
@@ -201,8 +205,12 @@ describe('models/DynamoDBStore.js', () => {
     });
 
     describe('deleteEdge', () => {
-        it('should throw if invalid', () => {
-            expect(() => store.deleteEdge()).to.throw('entity, fromNode, namespace, toNode are missing or wrong.');
+        it('should throw if invalid', done => {
+            store.deleteEdge()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required. "toNode" is required');
+                    done();
+                });
         });
 
         it('should return deleted edge', done => {
@@ -262,8 +270,12 @@ describe('models/DynamoDBStore.js', () => {
     });
 
     describe('deleteEdges', () => {
-        it('should throw if invalid', () => {
-            expect(() => store.deleteEdges()).to.throw('namespace is missing or wrong.');
+        it('should throw if invalid', done => {
+            store.deleteEdges()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"namespace" is required');
+                    done();
+                });
         });
 
         it('should delete all edges', done => {
@@ -467,8 +479,12 @@ describe('models/DynamoDBStore.js', () => {
     });
 
     describe('getEdges', () => {
-        it('should throw if invalid', () => {
-            expect(() => store.getEdges()).to.throw('namespace is missing or wrong.');
+        it('should throw if invalid', done => {
+            store.getEdges()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"namespace" is required');
+                    done();
+                });
         });
 
         it('should get all edges', done => {
@@ -686,8 +702,12 @@ describe('models/DynamoDBStore.js', () => {
                 .subscribe(null, null, done);
         });
 
-        it('should throw if invalid', () => {
-            expect(() => store.getEdgesByDistance()).to.throw('entity, fromNode, namespace are missing or wrong.');
+        it('should throw if invalid', done => {
+            store.getEdgesByDistance()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required');
+                    done();
+                });
         });
 
         it('should throw if wrong distance', done => {
@@ -698,20 +718,7 @@ describe('models/DynamoDBStore.js', () => {
                     fromNode: '1'
                 })
                 .subscribe(null, err => {
-                    expect(err.message).to.equal('distance should be an array like [min?: number, max?: number].');
-                    done();
-                });
-        });
-
-        it('should throw if wrong limit', done => {
-            store.getEdgesByDistance({
-                    namespace: app.namespace,
-                    entity: 'entity',
-                    limit: [1],
-                    fromNode: '1'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('limit should be an number.');
+                    expect(err.message).to.equal('"distance" must be an array');
                     done();
                 });
         });
@@ -877,7 +884,7 @@ describe('models/DynamoDBStore.js', () => {
                     rxop.toArray(),
                     rxop.mergeMap(response => {
                         expect(_.size(response)).to.equal(1);
-    
+
                         return store.getEdgesByDistance({
                             namespace: app.namespace,
                             entity: 'entity-2',
@@ -895,8 +902,12 @@ describe('models/DynamoDBStore.js', () => {
     });
 
     describe('setEdge', () => {
-        it('should throw if invalid', () => {
-            expect(() => store.setEdge()).to.throw('distance, entity, fromNode, namespace, toNode are missing or wrong.');
+        it('should throw if invalid', done => {
+            store.setEdge()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('"distance" is required. "entity" is required. "fromNode" is required. "namespace" is required. "toNode" is required');
+                    done();
+                });
         });
 
         it('should return inserted edges', done => {

@@ -24,45 +24,7 @@ const pickEdgeData = (...args) => {
 	]);
 };
 
-const validate = (args = {}, required = {
-	namespace: true
-}) => {
-	const errors = _.reduce(required, (reduction, value, key) => {
-		if (value === true && _.isUndefined(args[key])) {
-			return reduction.concat(key);
-		} else if (typeof value === 'string' && typeof args[key] !== value) {
-			return reduction.concat(key);
-		}
-
-		return reduction;
-	}, []);
-
-	if (_.size(errors)) {
-		throw new Error(`${errors.join(', ')} ${_.size(errors) === 1 ? 'is' : 'are'} missing or wrong.`);
-	}
-
-	return args;
-};
-
-const validateStore = (store, requiredKeys = []) => {
-	const missingKeys = _.reduce(requiredKeys, (reduction, key) => {
-		if (!store[key]) {
-			return reduction.concat(key);
-		}
-
-		return reduction;
-	}, []);
-
-	if (_.size(missingKeys)) {
-		throw new Error(`Invalid store, missing ${missingKeys.join(', ')}`);
-	}
-
-	return store;
-};
-
 module.exports = {
 	invertDirection,
-	pickEdgeData,
-	validate,
-	validateStore
+	pickEdgeData
 };

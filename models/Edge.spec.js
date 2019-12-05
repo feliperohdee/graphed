@@ -34,79 +34,6 @@ describe('models/Edge.js', () => {
     });
 
     describe('constructor', () => {
-        it('should throw if invalid', () => {
-            expect(() => new Edge()).to.throw('namespace, store are missing or wrong.');
-        });
-
-        it('should throw if defaultDirection wrong', () => {
-            expect(() => new Edge({
-                defaultDirection: 'OTHER',
-                namespace: app.namespace,
-                store: app.store
-            })).to.throw('defaultDirection should be "IN" or "OUT", not "OTHER".');
-        });
-
-        it('should have decrementPath by default', () => {
-            expect(edge.decrementPath).to.equal(1 / (10 ** 15));
-        });
-
-        it('should have custom decrementPath', () => {
-            edge = new Edge({
-                decrementPath: 10,
-                namespace: app.namespace,
-                store: app.store
-            });
-
-            expect(edge.decrementPath).to.equal(10);
-        });
-
-        it('should defaultDirection be undefined by default', () => {
-            expect(edge.defaultDirection).to.be.undefined;
-        });
-
-        it('should have custom defaultDirection', () => {
-            edge = new Edge({
-                defaultDirection: 'IN',
-                namespace: app.namespace,
-                store: app.store
-            });
-
-            expect(edge.defaultDirection).to.equal('IN');
-        });
-
-        it('should defaultEntity be undefined by default', () => {
-            expect(edge.defaultEntity).to.be.undefined;
-        });
-
-        it('should have custom defaultEntity', () => {
-            edge = new Edge({
-                defaultEntity: 'entity',
-                namespace: app.namespace,
-                store: app.store
-            });
-
-            expect(edge.defaultEntity).to.equal('entity');
-        });
-
-        it('should have namespace', () => {
-            expect(edge.namespace).to.be.a('string');
-        });
-
-        it('should node be undefined by default', () => {
-            expect(edge.node).to.be.undefined;
-        });
-
-        it('should have store', () => {
-            expect(edge.store).to.be.an('object');
-        });
-
-        it('should validate store', () => {
-            expect(() => new Edge({
-                namespace: app.namespace,
-                store: _.omit(app.store, ['countEdges', 'deleteEdge'])
-            })).to.throw('Invalid store, missing countEdges, deleteEdge');
-        });
-
         it('should have store based functions', () => {
             expect(edge.countEdges).not.to.be.undefined;
             expect(edge.deleteEdge).not.to.be.undefined;
@@ -146,34 +73,6 @@ describe('models/Edge.js', () => {
                     )
                 )
                 .subscribe(null, null, done);
-        });
-
-        it('should throw if wrong direction', done => {
-            edge.allAll({
-                    direction: 'OTHER'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
-                    done();
-                });
-        });
-
-        it('should throw if wrong distance', done => {
-            edge.allAll({
-                    distance: 'string'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('distance should be a number or function with signature "(collectionSize, index): number".');
-                    done();
-                });
-        });
-
-        it('should throw if no entity', done => {
-            edge.allAll()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('entity is missing.');
-                    done();
-                });
         });
 
         it('should add multiple edges', done => {
@@ -419,474 +318,6 @@ describe('models/Edge.js', () => {
         });
     });
 
-    describe('count', () => {
-        before(done => {
-            rx.forkJoin(
-                    edge.link({
-                        entity: 'entity',
-                        fromNode: '1',
-                        toNode: '2'
-                    }),
-                    edge.link({
-                        entity: 'entity',
-                        fromNode: '1',
-                        toNode: '3'
-                    }),
-                    edge.link({
-                        entity: 'entity',
-                        direction: 'OUT',
-                        fromNode: '2',
-                        toNode: '3'
-                    })
-                )
-                .subscribe(null, null, done);
-        });
-
-        after(done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '2'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '3'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(null, null, done);
-        });
-
-        it('should throw if wrong direction', done => {
-            edge.count({
-                    direction: 'OTHER'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
-                    done();
-                });
-        });
-
-        it('should throw if no entity', done => {
-            edge.count()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('entity is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.count({
-                    entity: 'entity'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
-        });
-
-        it('should return elements count', done => {
-            rx.forkJoin(
-                    edge.count({
-                        entity: 'entity',
-                        fromNode: '1'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'OUT',
-                        fromNode: '1'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'IN',
-                        fromNode: '1'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        fromNode: '2'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'OUT',
-                        fromNode: '2'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'IN',
-                        fromNode: '2'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        fromNode: '3'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'OUT',
-                        fromNode: '3'
-                    }),
-                    edge.count({
-                        entity: 'entity',
-                        direction: 'IN',
-                        fromNode: '3'
-                    })
-                )
-                .subscribe(response => {
-                    expect(response).to.deep.equal([
-                        2, 0, 0,
-                        1, 1, 0,
-                        1, 0, 1
-                    ]);
-                }, null, done);
-        });
-    });
-
-    describe('delete', () => {
-        beforeEach(done => {
-            rx.forkJoin(
-                    edge.link({
-                        entity: 'entity',
-                        fromNode: '1',
-                        toNode: '2'
-                    }),
-                    edge.link({
-                        entity: 'entity',
-                        direction: 'OUT',
-                        fromNode: '2',
-                        toNode: '3'
-                    })
-                )
-                .subscribe(null, null, done);
-        });
-
-        after(done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '2'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(null, null, done);
-        });
-
-        it('should throw if wrong direction', done => {
-            edge.delete({
-                    direction: 'OTHER'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
-                    done();
-                });
-        });
-
-        it('should throw if no entity', done => {
-            edge.delete()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('entity is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.delete({
-                    entity: 'entity'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no toNode', done => {
-            edge.delete({
-                    entity: 'entity',
-                    fromNode: '1'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('toNode is missing.');
-                    done();
-                });
-        });
-
-        describe('with direction', () => {
-            it('should delete a edge', done => {
-                edge.delete({
-                        direction: 'OUT',
-                        entity: 'entity',
-                        fromNode: '2',
-                        toNode: '3'
-                    })
-                    .subscribe(response => {
-                        expect(response.fromNode).to.deep.equal('2');
-                    }, null, done);
-            });
-
-            it('should delete two edges', done => {
-                edge.delete({
-                        direction: 'OUT',
-                        entity: 'entity',
-                        fromNode: '2',
-                        inverse: true,
-                        toNode: '3'
-                    })
-                    .subscribe(([
-                        edge1,
-                        edge2
-                    ]) => {
-                        expect(edge1.fromNode).to.deep.equal('2');
-                        expect(edge1.toNode).to.deep.equal('3');
-                        expect(edge2.fromNode).to.deep.equal('3');
-                        expect(edge2.toNode).to.deep.equal('2');
-                    }, null, done);
-            });
-        });
-
-        describe('without direction', () => {
-            it('should delete a edge', done => {
-                edge.delete({
-                        entity: 'entity',
-                        fromNode: '1',
-                        toNode: '2'
-                    })
-                    .subscribe(response => {
-                        expect(response.fromNode).to.deep.equal('1');
-                    }, null, done);
-            });
-
-            it('should delete two edges', done => {
-                edge.delete({
-                        entity: 'entity',
-                        fromNode: '1',
-                        inverse: true,
-                        toNode: '2'
-                    })
-                    .subscribe(([
-                        edge1,
-                        edge2
-                    ]) => {
-                        expect(edge1.fromNode).to.deep.equal('1');
-                        expect(edge1.toNode).to.deep.equal('2');
-                        expect(edge2.fromNode).to.deep.equal('2');
-                        expect(edge2.toNode).to.deep.equal('1');
-                    }, null, done);
-            });
-        });
-    });
-
-    describe('deleteByNode', () => {
-        beforeEach(done => {
-            rx.forkJoin(
-                    edge.link({
-                        entity: 'entity',
-                        fromNode: '1',
-                        toNode: '2'
-                    }),
-                    edge.link({
-                        entity: 'entity',
-                        direction: 'IN',
-                        fromNode: '2',
-                        toNode: '3'
-                    })
-                )
-                .subscribe(null, null, done);
-        });
-
-        after(done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '2'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(null, null, done);
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.deleteByNode()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
-        });
-
-        it('should delete by fromNode', done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '3'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(([
-                    fromNode1,
-                    fromNode3
-                ]) => {
-                    expect(fromNode1).to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '1',
-                        namespace: 'spec',
-                        toNode: '2'
-                    }]);
-
-                    expect(fromNode1).to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '2',
-                        namespace: 'spec',
-                        toNode: '1'
-                    }]);
-
-                    expect(fromNode3).to.containSubset([{
-                        direction: 'IN',
-                        entity: 'entity',
-                        fromNode: '2',
-                        namespace: 'spec',
-                        toNode: '3'
-                    }]);
-
-                    expect(fromNode3).to.containSubset([{
-                        direction: 'OUT',
-                        entity: 'entity',
-                        fromNode: '3',
-                        namespace: 'spec',
-                        toNode: '2'
-                    }]);
-                }, null, done);
-        });
-
-        it('should delete by fromNode and entity', done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1',
-                        entity: 'entity'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '2',
-                        entity: 'inexistent'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(([
-                    fromNode1,
-                    fromNode2
-                ]) => {
-                    expect(fromNode1).to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '1',
-                        namespace: 'spec',
-                        toNode: '2'
-                    }]);
-
-                    expect(fromNode1).to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '2',
-                        namespace: 'spec',
-                        toNode: '1'
-                    }]);
-
-                    expect(fromNode2).to.deep.equal([]);
-                }, null, done);
-        });
-
-        it('should delete by fromNode, entity and direction', done => {
-            rx.forkJoin(
-                    edge.deleteByNode({
-                        fromNode: '1',
-                        entity: 'entity',
-                        direction: 'IN'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    edge.deleteByNode({
-                        fromNode: '2',
-                        entity: 'entity',
-                        direction: 'IN'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(([
-                    fromNode1,
-                    fromNode2
-                ]) => {
-                    expect(fromNode1).to.deep.equal([]);
-
-                    expect(fromNode2).not.to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '2',
-                        namespace: 'spec',
-                        toNode: '1'
-                    }]);
-
-                    expect(fromNode2).not.to.containSubset([{
-                        direction: null,
-                        entity: 'entity',
-                        fromNode: '1',
-                        namespace: 'spec',
-                        toNode: '2'
-                    }]);
-
-                    expect(fromNode2).to.containSubset([{
-                        direction: 'IN',
-                        entity: 'entity',
-                        fromNode: '2',
-                        namespace: 'spec',
-                        toNode: '3'
-                    }]);
-
-                    expect(fromNode2).to.containSubset([{
-                        direction: 'OUT',
-                        entity: 'entity',
-                        fromNode: '3',
-                        namespace: 'spec',
-                        toNode: '2'
-                    }]);
-                }, null, done);
-        });
-    });
-
     describe('allByNode', () => {
         before(done => {
             rx.forkJoin(
@@ -921,14 +352,6 @@ describe('models/Edge.js', () => {
                     )
                 )
                 .subscribe(null, null, done);
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.allByNode()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
         });
 
         it('should fetch all by node', done => {
@@ -1249,123 +672,486 @@ describe('models/Edge.js', () => {
                 .subscribe(null, null, done);
         });
 
-        it('should throw if wrong direction', done => {
+        it('should get closest nodes', done => {
             edge.closest({
-                    direction: 'OTHER'
+                    entity: 'entity',
+                    fromNode: '1'
                 })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
-                    done();
-                });
-        });
-
-        it('should throw if no entity', done => {
-            edge.closest()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('entity is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.closest({
-                    entity: 'entity'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
-        });
-
-        describe('by distance', () => {
-            it('should get closest nodes', done => {
-                edge.closest({
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(response[0]).to.deep.equal({
+                        direction: null,
+                        distance: 0.999999999999998,
                         entity: 'entity',
+                        fromNode: '1',
+                        namespace: app.namespace,
+                        toNode: '3'
+                    });
+
+                    expect(response[1]).to.deep.equal({
+                        direction: null,
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: app.namespace,
+                        toNode: '2'
+                    });
+                }, null, done);
+        });
+
+        it('should get closest nodes with direction', done => {
+            edge.closest({
+                    direction: 'OUT',
+                    entity: 'entity',
+                    fromNode: '2'
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(response[0]).to.deep.equal({
+                        direction: 'OUT',
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: app.namespace,
+                        toNode: '4'
+                    });
+
+                    expect(response[1]).to.deep.equal({
+                        direction: 'OUT',
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: app.namespace,
+                        toNode: '3'
+                    });
+                }, null, done);
+        });
+
+        it('should get closest nodes desc', done => {
+            edge.closest({
+                    desc: true,
+                    entity: 'entity',
+                    fromNode: '1'
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(response[1]).to.deep.equal({
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: app.namespace,
+                        toNode: '3'
+                    });
+
+                    expect(response[0]).to.deep.equal({
+                        direction: null,
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: app.namespace,
+                        toNode: '2'
+                    });
+                }, null, done);
+        });
+    });
+
+    describe('count', () => {
+        before(done => {
+            rx.forkJoin(
+                    edge.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    }),
+                    edge.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '3'
+                    }),
+                    edge.link({
+                        entity: 'entity',
+                        direction: 'OUT',
+                        fromNode: '2',
+                        toNode: '3'
+                    })
+                )
+                .subscribe(null, null, done);
+        });
+
+        after(done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '2'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '3'
+                    })
+                    .pipe(
+                        rxop.toArray()
                     )
-                    .subscribe(response => {
-                        expect(response[0]).to.deep.equal({
-                            direction: null,
-                            distance: 0.999999999999998,
-                            entity: 'entity',
-                            fromNode: '1',
-                            namespace: app.namespace,
-                            toNode: '3'
-                        });
+                )
+                .subscribe(null, null, done);
+        });
 
-                        expect(response[1]).to.deep.equal({
-                            direction: null,
-                            distance: 0.999999999999999,
-                            entity: 'entity',
-                            fromNode: '1',
-                            namespace: app.namespace,
-                            toNode: '2'
-                        });
-                    }, null, done);
-            });
-
-            it('should get closest nodes with direction', done => {
-                edge.closest({
-                        direction: 'OUT',
+        it('should return elements count', done => {
+            rx.forkJoin(
+                    edge.count({
                         entity: 'entity',
+                        fromNode: '1'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'OUT',
+                        fromNode: '1'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'IN',
+                        fromNode: '1'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        fromNode: '2'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'OUT',
+                        fromNode: '2'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'IN',
+                        fromNode: '2'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        fromNode: '3'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'OUT',
+                        fromNode: '3'
+                    }),
+                    edge.count({
+                        entity: 'entity',
+                        direction: 'IN',
+                        fromNode: '3'
+                    })
+                )
+                .subscribe(response => {
+                    expect(response).to.deep.equal([
+                        2, 0, 0,
+                        1, 1, 0,
+                        1, 0, 1
+                    ]);
+                }, null, done);
+        });
+    });
+
+    describe('delete', () => {
+        beforeEach(done => {
+            rx.forkJoin(
+                    edge.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    }),
+                    edge.link({
+                        entity: 'entity',
+                        direction: 'OUT',
+                        fromNode: '2',
+                        toNode: '3'
+                    })
+                )
+                .subscribe(null, null, done);
+        });
+
+        after(done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
+                        fromNode: '1'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edge.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
-                        expect(response[0]).to.deep.equal({
-                            direction: 'OUT',
-                            distance: 0.999999999999998,
-                            entity: 'entity',
-                            fromNode: '2',
-                            namespace: app.namespace,
-                            toNode: '4'
-                        });
+                )
+                .subscribe(null, null, done);
+        });
 
-                        expect(response[1]).to.deep.equal({
-                            direction: 'OUT',
-                            distance: 0.999999999999999,
-                            entity: 'entity',
-                            fromNode: '2',
-                            namespace: app.namespace,
-                            toNode: '3'
-                        });
+        describe('with direction', () => {
+            it('should delete a edge', done => {
+                edge.delete({
+                        direction: 'OUT',
+                        entity: 'entity',
+                        fromNode: '2',
+                        toNode: '3'
+                    })
+                    .subscribe(response => {
+                        expect(response.fromNode).to.deep.equal('2');
                     }, null, done);
             });
 
-            it('should get closest nodes desc', done => {
-                edge.closest({
-                        desc: true,
+            it('should delete two edges', done => {
+                edge.delete({
+                        direction: 'OUT',
                         entity: 'entity',
+                        fromNode: '2',
+                        inverse: true,
+                        toNode: '3'
+                    })
+                    .subscribe(([
+                        edge1,
+                        edge2
+                    ]) => {
+                        expect(edge1.fromNode).to.deep.equal('2');
+                        expect(edge1.toNode).to.deep.equal('3');
+                        expect(edge2.fromNode).to.deep.equal('3');
+                        expect(edge2.toNode).to.deep.equal('2');
+                    }, null, done);
+            });
+        });
+
+        describe('without direction', () => {
+            it('should delete a edge', done => {
+                edge.delete({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    })
+                    .subscribe(response => {
+                        expect(response.fromNode).to.deep.equal('1');
+                    }, null, done);
+            });
+
+            it('should delete two edges', done => {
+                edge.delete({
+                        entity: 'entity',
+                        fromNode: '1',
+                        inverse: true,
+                        toNode: '2'
+                    })
+                    .subscribe(([
+                        edge1,
+                        edge2
+                    ]) => {
+                        expect(edge1.fromNode).to.deep.equal('1');
+                        expect(edge1.toNode).to.deep.equal('2');
+                        expect(edge2.fromNode).to.deep.equal('2');
+                        expect(edge2.toNode).to.deep.equal('1');
+                    }, null, done);
+            });
+        });
+    });
+
+    describe('deleteByNode', () => {
+        beforeEach(done => {
+            rx.forkJoin(
+                    edge.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    }),
+                    edge.link({
+                        entity: 'entity',
+                        direction: 'IN',
+                        fromNode: '2',
+                        toNode: '3'
+                    })
+                )
+                .subscribe(null, null, done);
+        });
+
+        after(done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '2'
+                    })
+                    .pipe(
+                        rxop.toArray()
                     )
-                    .subscribe(response => {
-                        expect(response[1]).to.deep.equal({
-                            direction: null,
-                            distance: 0.999999999999998,
-                            entity: 'entity',
-                            fromNode: '1',
-                            namespace: app.namespace,
-                            toNode: '3'
-                        });
+                )
+                .subscribe(null, null, done);
+        });
 
-                        expect(response[0]).to.deep.equal({
-                            direction: null,
-                            distance: 0.999999999999999,
-                            entity: 'entity',
-                            fromNode: '1',
-                            namespace: app.namespace,
-                            toNode: '2'
-                        });
-                    }, null, done);
-            });
+        it('should delete by fromNode', done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
+                        fromNode: '1'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '3'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                )
+                .subscribe(([
+                    fromNode1,
+                    fromNode3
+                ]) => {
+                    expect(fromNode1).to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '2'
+                    }]);
+
+                    expect(fromNode1).to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }]);
+
+                    expect(fromNode3).to.containSubset([{
+                        direction: 'IN',
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: 'spec',
+                        toNode: '3'
+                    }]);
+
+                    expect(fromNode3).to.containSubset([{
+                        direction: 'OUT',
+                        entity: 'entity',
+                        fromNode: '3',
+                        namespace: 'spec',
+                        toNode: '2'
+                    }]);
+                }, null, done);
+        });
+
+        it('should delete by fromNode and entity', done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
+                        fromNode: '1',
+                        entity: 'entity'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '2',
+                        entity: 'inexistent'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                )
+                .subscribe(([
+                    fromNode1,
+                    fromNode2
+                ]) => {
+                    expect(fromNode1).to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '2'
+                    }]);
+
+                    expect(fromNode1).to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }]);
+
+                    expect(fromNode2).to.deep.equal([]);
+                }, null, done);
+        });
+
+        it('should delete by fromNode, entity and direction', done => {
+            rx.forkJoin(
+                    edge.deleteByNode({
+                        fromNode: '1',
+                        entity: 'entity',
+                        direction: 'IN'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edge.deleteByNode({
+                        fromNode: '2',
+                        entity: 'entity',
+                        direction: 'IN'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                )
+                .subscribe(([
+                    fromNode1,
+                    fromNode2
+                ]) => {
+                    expect(fromNode1).to.deep.equal([]);
+
+                    expect(fromNode2).not.to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }]);
+
+                    expect(fromNode2).not.to.containSubset([{
+                        direction: null,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '2'
+                    }]);
+
+                    expect(fromNode2).to.containSubset([{
+                        direction: 'IN',
+                        entity: 'entity',
+                        fromNode: '2',
+                        namespace: 'spec',
+                        toNode: '3'
+                    }]);
+
+                    expect(fromNode2).to.containSubset([{
+                        direction: 'OUT',
+                        entity: 'entity',
+                        fromNode: '3',
+                        namespace: 'spec',
+                        toNode: '2'
+                    }]);
+                }, null, done);
         });
     });
 
@@ -1386,78 +1172,6 @@ describe('models/Edge.js', () => {
                     )
                 )
                 .subscribe(null, null, done);
-        });
-
-        it('should throw if wrong absoluteDistance', done => {
-            edge.link({
-                    absoluteDistance: 'string'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('absoluteDistance should be a number.');
-                    done();
-                });
-        });
-
-        it('should throw if absoluteDistance less than 0', done => {
-            edge.link({
-                    absoluteDistance: -0.0000000001
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('distances should be >= 0.');
-                    done();
-                });
-        });
-
-        it('should throw if wrong direction', done => {
-            edge.link({
-                    direction: 'OTHER'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('direction should be "IN" or "OUT", not "OTHER".');
-                    done();
-                });
-        });
-
-        it('should throw if wrong distance', done => {
-            edge.link({
-                    distance: 'string',
-                    entity: 'entity',
-                    fromNode: '1',
-                    toNode: '2'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('distance should be a number.');
-                    done();
-                });
-        });
-
-        it('should throw if no entity', done => {
-            edge.link()
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('entity is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no fromNode', done => {
-            edge.link({
-                    entity: 'entity'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
-                    done();
-                });
-        });
-
-        it('should throw if no toNode', done => {
-            edge.link({
-                    entity: 'entity',
-                    fromNode: '1'
-                })
-                .subscribe(null, err => {
-                    expect(err.message).to.equal('toNode is missing.');
-                    done();
-                });
         });
 
         it('should insert two edges with absoluteDistance', done => {
@@ -1651,7 +1365,9 @@ describe('models/Edge.js', () => {
 
     describe('traverse', () => {
         it('should return empty if no jobs', done => {
-            edge.traverse()
+            edge.traverse({
+                    jobs: []
+                })
                 .subscribe(response => {
                     expect(response).to.deep.equal([]);
                 }, null, done);
@@ -1664,7 +1380,7 @@ describe('models/Edge.js', () => {
                     }]
                 })
                 .subscribe(null, err => {
-                    expect(err.message).to.equal('fromNode is missing.');
+                    expect(err.message).to.equal('"fromNode" is required');
                     done();
                 });
         });

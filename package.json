@@ -4,6 +4,7 @@
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...)",
     "main": "index.js",
     "dependencies": {
+        "@hapi/joi": "^16.1.8",
         "aws-sdk": "^2.568.0",
         "lodash": "^4.17.15",
         "rxjs": "^6.5.3",
