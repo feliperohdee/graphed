@@ -1,3 +1,5 @@
+![](https://github.com/feliperohdee/graphed/workflows/CI/badge.svg)
+
 # Graphed
 
 ## Node API

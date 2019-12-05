@@ -3,36 +3,36 @@ const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
 const {
+    AWS
+} = require('../libs');
+const {
     edge,
     validate
 } = require('./schema');
 
 module.exports = class Edge {
-    constructor(args = {}) {
+    constructor(args = {}, options = {}) {
         const {
             value,
             error
         } = edge.constructor.validate(args);
 
-        if (error) {
-            throw error;
+        const {
+            value: valueOptions,
+            error: errorOptions
+        } = edge.constructorOptions.validate(options);
+
+        if (error || errorOptions) {
+            throw error || errorOptions;
         }
 
-        const {
-            decrementPath,
-            defaultDirection,
-            defaultEntity,
-            namespace,
-            store
-        } = value;
+        this.options = valueOptions;
+        this.decrementPath = value.decrementPath;
+        this.defaultDirection = value.defaultDirection;
+        this.defaultEntity = value.defaultEntity;
+        this.namespace = value.namespace;
+        this.store = value.store;
 
-        this.decrementPath = decrementPath;
-        this.defaultDirection = defaultDirection;
-        this.defaultEntity = defaultEntity;
-        this.namespace = namespace;
-        this.link = this.link.bind(this);
-
-        this.store = store;
         this.countEdges = this.store.countEdges.bind(this.store);
         this.deleteEdge = this.store.deleteEdge.bind(this.store);
         this.deleteEdges = this.store.deleteEdges.bind(this.store);
@@ -77,7 +77,9 @@ module.exports = class Edge {
                                         rxop.filter(response => !_.isNull(response))
                                     );
                             }),
-                            rxop.mergeMap(this.link)
+                            rxop.mergeMap(response => {
+                                return this.link(response);
+                            })
                         );
                 })
             );
@@ -173,7 +175,7 @@ module.exports = class Edge {
             );
     }
 
-    link(args = {}) {
+    link(args = {}, fromFirehose = false) {
         args = _.defaults({}, args, {
             direction: this.defaultDirection,
             entity: this.defaultEntity
@@ -182,12 +184,84 @@ module.exports = class Edge {
         return validate(edge.link, args)
             .pipe(
                 rxop.mergeMap(args => {
+                    if (this.options.firehose && !fromFirehose) {
+                        return new rx.Observable(subscriber => {
+                            AWS.firehose.putRecord({
+                                    DeliveryStreamName: this.options.firehose.stream,
+                                    Record: {
+                                        Data: JSON.stringify(args) + '\n'
+                                    }
+                                })
+                                .promise()
+                                .then(() => {
+                                    subscriber.next(args);
+                                    subscriber.complete(args);
+                                })
+                                .catch(err => {
+                                    subscriber.error(err);
+                                });
+                        });
+                    }
+
                     return this.setEdge(_.extend({}, args, {
                         distance: args.absoluteDistance ? args.absoluteDistance : -(args.distance * this.decrementPath),
                         namespace: this.namespace + args.prefix
-                    }), !args.absoluteDistance);
+                    }));
                 })
             );
+    }
+
+    processFirehose(stream) {
+        if (!this.options.firehose) {
+            return rx.throwError(new Error('no firehose configured.'));
+        }
+
+        let absoluteEdge = 0;
+
+        return stream.pipe(
+            rxop.mergeMap(args => {
+                return validate(edge.link, args)
+                    .pipe(
+                        rxop.catchError(() => rx.empty())
+                    );
+            }),
+            rxop.reduce((reduction, args) => {
+                if (args.absoluteDistance) {
+                    absoluteEdge += 1;
+                }
+
+                const id = [
+                        args.prefix,
+                        args.fromNode,
+                        args.entity,
+                        args.direction,
+                        args.toNode,
+                        absoluteEdge
+                    ]
+                    .filter(Boolean)
+                    .join(':');
+
+                if (!reduction[id]) {
+                    reduction[id] = args;
+                } else {
+                    reduction[id] = _.extend({}, reduction[id], args, {
+                        distance: reduction[id].distance + args.distance
+                    });
+                }
+
+                if (args.absoluteDistance) {
+                    absoluteEdge += 1;
+                }
+
+                return reduction;
+            }, {}),
+            rxop.mergeMap(response => {
+                return rx.from(_.values(response));
+            }),
+            rxop.mergeMap(args => {
+                return this.link(args, true);
+            }, this.options.firehose.concurrency)
+        );
     }
 
     traverse(args = {}) {

@@ -8,6 +8,9 @@ const rxop = require('rxjs/operators');
 
 const app = require('../testing/dynamoDb');
 const {
+    AWS
+} = require('../libs');
+const {
     Edge
 } = require('../');
 
@@ -1360,6 +1363,314 @@ describe('models/Edge.js', () => {
                         expect(secondEdge.toNode).to.equal('1');
                     }, null, done);
             });
+        });
+
+        describe('with firehose', () => {
+            const edgeFirehose = new Edge({
+                namespace: app.namespace,
+                store: app.store
+            }, {
+                firehose: {
+                    concurrency: 1,
+                    stream: 'stream'
+                }
+            });
+
+            beforeEach(() => {
+                sinon.stub(AWS.firehose, 'putRecord')
+                    .returns({
+                        promise: () => Promise.resolve({
+                            RecordId: 'RecordId',
+                            Encrypted: false
+                        })
+                    });
+            });
+    
+            afterEach(() => {
+                AWS.firehose.putRecord.restore();
+            });
+
+            it('should call putRecord', done => {
+                edgeFirehose.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    })
+                    .subscribe(response => {
+                        expect(AWS.firehose.putRecord).to.have.been.calledOnceWithExactly({
+                            DeliveryStreamName: 'stream',
+                            Record: {
+                                Data: JSON.stringify({
+                                    entity: 'entity',
+                                    fromNode: '1',
+                                    toNode: '2',
+                                    direction: null,
+                                    distance: 1,
+                                    prefix: ''
+                                }) + '\n'
+                            }
+                        });
+                    }, null, done);
+            });
+            
+            it('should not call putRecord if fromFirehose = true', done => {
+                edgeFirehose.link({
+                        entity: 'entity',
+                        fromNode: '1',
+                        toNode: '2'
+                    }, true)
+                    .subscribe(response => {
+                        expect(AWS.firehose.putRecord).to.not.have.been.called;
+                    }, null, done);
+            });
+        });
+    });
+
+    describe('processFirehose', () => {
+        const edgeFirehose = new Edge({
+            namespace: app.namespace,
+            store: app.store
+        }, {
+            firehose: {
+                concurrency: 1,
+                stream: 'stream'
+            }
+        });
+
+        beforeEach(() => {
+            sinon.spy(edgeFirehose, 'link');
+        });
+
+        afterEach(done => {
+            edgeFirehose.link.restore();
+
+            rx.forkJoin(
+                    edgeFirehose.deleteByNode({
+                        fromNode: '0'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    edgeFirehose.deleteByNode({
+                        fromNode: '0',
+                        prefix: 'prefix'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                )
+                .subscribe(null, null, done);
+        });
+
+        it('should throw if no firehose configured', done => {
+            edge.processFirehose()
+                .subscribe(null, err => {
+                    expect(err.message).to.equal('no firehose configured.');
+                    done();
+                });
+        });
+
+        it('should process', done => {
+            const stream = rx.from([{
+                distance: 2,
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            }, {
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            }, {
+                absoluteDistance: 1,
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            }, {
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            }, {
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            }, {
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1',
+                prefix: 'prefix'
+            }, {
+                direction: 'OUT',
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1',
+                prefix: 'prefix'
+            }, {
+                direction: 'OUT',
+                entity: 'entity',
+                fromNode: '1',
+                toNode: '0',
+                prefix: 'prefix'
+            }]);
+
+            edgeFirehose.processFirehose(stream)
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(edgeFirehose.link).to.have.callCount(6);
+                    expect(edgeFirehose.link).to.have.been.calledWith(sinon.match.object, true);
+
+                    // 0 <-> (2 + 1) <-> 1
+                    expect(response[0]).to.deep.equal([{
+                        direction: null,
+                        distance: 0.999999999999997,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }, {
+                        direction: null,
+                        distance: 0.999999999999997,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '0'
+                    }]);
+
+                    // 0 <-> abs(1) <-> 1
+                    expect(response[1]).to.deep.equal([{
+                        direction: null,
+                        distance: 1,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }, {
+                        direction: null,
+                        distance: 1,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '0'
+                    }]);
+
+                    // 0 <-> (1 + 1) <-> 1
+                    expect(response[2]).to.deep.equal([{
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }, {
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '0'
+                    }]);
+
+                    // prefix 0 <-> (1) <-> 1
+                    expect(response[3]).to.deep.equal([{
+                        direction: null,
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'specprefix',
+                        toNode: '1'
+                    }, {
+                        direction: null,
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'specprefix',
+                        toNode: '0'
+                    }]);
+
+                    // prefix 0 -> (1) -> 1
+                    expect(response[4]).to.deep.equal([{
+                        direction: 'OUT',
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'specprefix',
+                        toNode: '1'
+                    }, {
+                        direction: 'IN',
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'specprefix',
+                        toNode: '0'
+                    }]);
+
+                    // prefix 1 -> (1) -> 0
+                    expect(response[5]).to.deep.equal([{
+                        direction: 'OUT',
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'specprefix',
+                        toNode: '0'
+                    }, {
+                        direction: 'IN',
+                        distance: 0.999999999999999,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'specprefix',
+                        toNode: '1'
+                    }]);
+                }, null, done);
+        });
+
+        it('should process and merge', done => {
+            const link = {
+                entity: 'entity',
+                fromNode: '0',
+                toNode: '1'
+            };
+
+            edgeFirehose.link(link, true)
+                .pipe(
+                    rxop.mergeMap(() => {
+                        return edgeFirehose.processFirehose(rx.of(link));
+                    }),
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(edgeFirehose.link).to.have.callCount(2);
+
+                    // 0 <-> (2 + 1) <-> 1
+                    expect(response[0]).to.deep.equal([{
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '0',
+                        namespace: 'spec',
+                        toNode: '1'
+                    }, {
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace: 'spec',
+                        toNode: '0'
+                    }]);
+                }, null, done);
+        });
+
+        it('should skip invalid streams', done => {
+            edgeFirehose.processFirehose(rx.of({
+                    fromNode: '0',
+                    toNode: '1'
+                }))
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(response).to.deep.equal([]);
+                }, null, done);
         });
     });
 

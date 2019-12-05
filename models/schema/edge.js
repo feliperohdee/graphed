@@ -71,6 +71,17 @@ const constructor = joi.object({
         .required()
 });
 
+const constructorOptions = joi.object({
+    firehose: joi.object({
+        concurrency: joi.number()
+            .min(0)
+            .max(1000)
+            .default(100),
+        stream: joi.string()
+            .required()
+    })
+});
+
 const count = joi.object({
     direction: common.direction,
     entity: joi.string()
@@ -109,7 +120,8 @@ const delByNode = joi.object({
 
 const link = joi.object({
     absoluteDistance: joi.number()
-        .min(0),
+        .min(0)
+        .max(1),
     direction: common.direction,
     distance: joi.number()
         .default(1),
@@ -148,6 +160,7 @@ module.exports = {
     allByNode,
     closest,
     constructor,
+    constructorOptions,
     count,
     del,
     delByNode,

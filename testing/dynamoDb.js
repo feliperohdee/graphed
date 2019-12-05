@@ -3,8 +3,8 @@ const {
     DynamoDB
 } = require('rxjs-dynamodb-client');
 const {
-    DynamoDBStore
-} = require('../');
+    DynamoDbStore
+} = require('../models');
 
 class App {
     constructor() {
@@ -16,7 +16,7 @@ class App {
             })
         });
 
-        this.store = new DynamoDBStore({
+        this.store = new DynamoDbStore({
             dynamoDb: this.dynamoDb,
             tableName: 'graph'
         });

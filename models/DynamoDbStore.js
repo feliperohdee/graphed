@@ -15,7 +15,7 @@ const {
     pickEdgeData
 } = require('./util');
 
-module.exports = class DynamoDBStore extends Crud {
+module.exports = class DynamoDbStore extends Crud {
     constructor(args = {}) {
         const {
             value,

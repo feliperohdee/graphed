@@ -6,7 +6,7 @@ const rxop = require('rxjs/operators');
 
 const app = require('../testing/dynamoDb');
 const {
-    DynamoDBStore
+    DynamoDbStore
 } = require('../');
 
 chai.use(chaiSubset);
@@ -14,7 +14,7 @@ chai.use(chaiSubset);
 const expect = chai.expect;
 const store = app.store;
 
-describe('models/DynamoDBStore.js', () => {
+describe('models/DynamoDbStore.js', () => {
     beforeEach(done => {
         rx.forkJoin(
                 store.setEdge({
@@ -79,11 +79,11 @@ describe('models/DynamoDBStore.js', () => {
 
     describe('constructor', () => {
         it('should throw if no dynamodb provided', () => {
-            expect(() => new DynamoDBStore({})).to.throw('"dynamoDb" is required');
+            expect(() => new DynamoDbStore({})).to.throw('"dynamoDb" is required');
         });
 
         it('should throw if no tableName provided', () => {
-            expect(() => new DynamoDBStore({
+            expect(() => new DynamoDbStore({
                 dynamoDb: app.dynamoDb
             })).to.throw('"tableName" is required');
         });
