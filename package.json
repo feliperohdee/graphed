@@ -1,7 +1,7 @@
 {
     "name": "graphed",
-    "version": "1.0.1",
-    "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...)",
+    "version": "1.0.2",
+    "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...) and compatible with AWS Firehose",
     "main": "index.js",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
