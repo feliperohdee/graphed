@@ -32,6 +32,10 @@ const allByNode = joi.object({
 
 const closest = joi.object({
     direction: common.direction,
+    distance: joi.array()
+        .items(joi.number())
+        .min(1)
+        .max(2),
     desc: joi.boolean(),
     entity: joi.string()
         .required(),
