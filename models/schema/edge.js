@@ -15,9 +15,7 @@ const allAll = joi.object({
         ),
     entity: joi.string()
         .required(),
-    prefix: joi.string()
-        .allow('')
-        .default('')
+    namespace: joi.string()
 });
 
 const allByNode = joi.object({
@@ -27,10 +25,8 @@ const allByNode = joi.object({
         .required(),
     inverse: joi.boolean()
         .default(true),
+    namespace: joi.string(),
     onlyNodes: joi.boolean(),
-    prefix: joi.string()
-        .allow('')
-        .default(''),
     toNode: joi.string()
 });
 
@@ -41,9 +37,7 @@ const closest = joi.object({
         .required(),
     fromNode: joi.string()
         .required(),
-    prefix: joi.string()
-        .allow('')
-        .default('')
+    namespace: joi.string()
 });
 
 const constructor = joi.object({
@@ -51,7 +45,7 @@ const constructor = joi.object({
         .default(1 / (10 ** 15)),
     defaultDirection: common.direction,
     defaultEntity: joi.string(),
-    namespace: joi.string()
+    prefix: joi.string()
         .required(),
     store: joi.object({
             countEdges: joi.function()
@@ -88,9 +82,7 @@ const count = joi.object({
         .required(),
     fromNode: joi.string()
         .required(),
-    prefix: joi.string()
-        .allow('')
-        .default('')
+    namespace: joi.string()
 });
 
 const del = joi.object({
@@ -100,9 +92,7 @@ const del = joi.object({
     fromNode: joi.string()
         .required(),
     inverse: joi.boolean(),
-    prefix: joi.string()
-        .allow('')
-        .default(''),
+    namespace: joi.string(),
     toNode: joi.string()
         .required()
 });
@@ -112,9 +102,7 @@ const delByNode = joi.object({
     entity: joi.string(),
     fromNode: joi.string()
         .required(),
-    prefix: joi.string()
-        .allow('')
-        .default(''),
+    namespace: joi.string(),
     toNode: joi.string()
 });
 
@@ -129,9 +117,7 @@ const link = joi.object({
         .required(),
     entity: joi.string()
         .required(),
-    prefix: joi.string()
-        .allow('')
-        .default(''),
+    namespace: joi.string(),
     toNode: joi.string()
         .required()
 });

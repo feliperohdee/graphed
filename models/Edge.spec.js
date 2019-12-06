@@ -18,20 +18,21 @@ chai.use(chaiSubset);
 chai.use(sinonChai);
 
 const expect = chai.expect;
+const namespace = 'spec';
 
 describe('models/Edge.js', () => {
     let edge;
 
     before(() => {
         edge = new Edge({
-            namespace: app.namespace,
+            prefix: app.prefix,
             store: app.store
         });
     });
 
     beforeEach(() => {
         edge = new Edge({
-            namespace: app.namespace,
+            prefix: app.prefix,
             store: app.store
         });
     });
@@ -380,7 +381,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -388,7 +389,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -396,7 +397,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -404,7 +405,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -412,7 +413,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
 
@@ -420,7 +421,7 @@ describe('models/Edge.js', () => {
                         direction: 'IN',
                         entity: 'entity',
                         fromNode: '3',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -455,7 +456,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
 
@@ -463,7 +464,7 @@ describe('models/Edge.js', () => {
                         direction: 'IN',
                         entity: 'entity',
                         fromNode: '3',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -492,7 +493,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -500,7 +501,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -508,7 +509,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -516,7 +517,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -524,7 +525,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
 
@@ -532,7 +533,7 @@ describe('models/Edge.js', () => {
                         direction: 'IN',
                         entity: 'entity',
                         fromNode: '3',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -563,7 +564,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -571,7 +572,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -579,7 +580,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
                 }, null, done);
@@ -689,7 +690,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '3'
                     });
 
@@ -698,7 +699,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '2'
                     });
                 }, null, done);
@@ -719,7 +720,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '4'
                     });
 
@@ -728,7 +729,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '3'
                     });
                 }, null, done);
@@ -749,7 +750,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '3'
                     });
 
@@ -758,7 +759,7 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: app.namespace,
+                        namespace,
                         toNode: '2'
                     });
                 }, null, done);
@@ -1027,7 +1028,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -1035,7 +1036,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -1043,7 +1044,7 @@ describe('models/Edge.js', () => {
                         direction: 'IN',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
 
@@ -1051,7 +1052,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '3',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -1082,7 +1083,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -1090,7 +1091,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -1127,7 +1128,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }]);
 
@@ -1135,7 +1136,7 @@ describe('models/Edge.js', () => {
                         direction: null,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
 
@@ -1143,7 +1144,7 @@ describe('models/Edge.js', () => {
                         direction: 'IN',
                         entity: 'entity',
                         fromNode: '2',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '3'
                     }]);
 
@@ -1151,7 +1152,7 @@ describe('models/Edge.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '3',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '2'
                     }]);
                 }, null, done);
@@ -1367,7 +1368,7 @@ describe('models/Edge.js', () => {
 
         describe('with firehose', () => {
             const edgeFirehose = new Edge({
-                namespace: app.namespace,
+                prefix: app.prefix,
                 store: app.store
             }, {
                 firehose: {
@@ -1405,8 +1406,7 @@ describe('models/Edge.js', () => {
                                     fromNode: '1',
                                     toNode: '2',
                                     direction: null,
-                                    distance: 1,
-                                    prefix: ''
+                                    distance: 1
                                 }) + '\n'
                             }
                         });
@@ -1428,7 +1428,7 @@ describe('models/Edge.js', () => {
 
     describe('processFirehose', () => {
         const edgeFirehose = new Edge({
-            namespace: app.namespace,
+            prefix: app.prefix,
             store: app.store
         }, {
             firehose: {
@@ -1453,7 +1453,7 @@ describe('models/Edge.js', () => {
                     ),
                     edgeFirehose.deleteByNode({
                         fromNode: '0',
-                        prefix: 'prefix'
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1497,19 +1497,19 @@ describe('models/Edge.js', () => {
                 entity: 'entity',
                 fromNode: '0',
                 toNode: '1',
-                prefix: 'prefix'
+                namespace
             }, {
                 direction: 'OUT',
                 entity: 'entity',
                 fromNode: '0',
                 toNode: '1',
-                prefix: 'prefix'
+                namespace
             }, {
                 direction: 'OUT',
                 entity: 'entity',
                 fromNode: '1',
                 toNode: '0',
-                prefix: 'prefix'
+                namespace
             }]);
 
             edgeFirehose.processFirehose(stream)
@@ -1526,14 +1526,14 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999997,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 0.999999999999997,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '0'
                     }]);
 
@@ -1543,14 +1543,14 @@ describe('models/Edge.js', () => {
                         distance: 1,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 1,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '0'
                     }]);
 
@@ -1560,65 +1560,65 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '0'
                     }]);
 
-                    // prefix 0 <-> (1) <-> 1
+                    // namespace 0 <-> (1) <-> 1
                     expect(response[3]).to.deep.equal([{
                         direction: null,
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '0'
                     }]);
 
-                    // prefix 0 -> (1) -> 1
+                    // namespace 0 -> (1) -> 1
                     expect(response[4]).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '1'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '0'
                     }]);
 
-                    // prefix 1 -> (1) -> 0
+                    // namespace 1 -> (1) -> 0
                     expect(response[5]).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '0'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'specprefix',
+                        namespace: `${namespace}.${namespace}`,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -1647,14 +1647,14 @@ describe('models/Edge.js', () => {
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: 'spec',
+                        namespace,
                         toNode: '0'
                     }]);
                 }, null, done);

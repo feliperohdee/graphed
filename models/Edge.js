@@ -30,7 +30,7 @@ module.exports = class Edge {
         this.decrementPath = value.decrementPath;
         this.defaultDirection = value.defaultDirection;
         this.defaultEntity = value.defaultEntity;
-        this.namespace = value.namespace;
+        this.prefix = value.prefix;
         this.store = value.store;
 
         this.countEdges = this.store.countEdges.bind(this.store);
@@ -70,7 +70,7 @@ module.exports = class Edge {
                                                 distance: _.isFunction(args.distance) ? args.distance(collectionSize, fromNodeIndex, toNodeIndex) : args.distance,
                                                 entity: args.entity,
                                                 fromNode,
-                                                prefix: args.prefix,
+                                                namespace: args.namespace,
                                                 toNode
                                             };
                                         }),
@@ -94,10 +94,10 @@ module.exports = class Edge {
         return validate(edge.allByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.getAll(_.extend({
-                            namespace: this.namespace + args.prefix,
+                    return this.getAll(_.extend({}, args, {
+                            namespace: _.compact([this.prefix, args.namespace]).join('.'),
                             inverse: args.onlyNodes ? false : args.inverse
-                        }, args))
+                        }))
                         .pipe(
                             rxop.map(response => {
                                 if (args.onlyNodes) {
@@ -120,9 +120,9 @@ module.exports = class Edge {
         return validate(edge.closest, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.getAllByDistance(_.extend({
-                        namespace: this.namespace + args.prefix
-                    }, args));
+                    return this.getAllByDistance(_.extend({}, args, {
+                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                    }));
                 })
             );
     }
@@ -136,9 +136,9 @@ module.exports = class Edge {
         return validate(edge.count, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.countEdges(_.extend({
-                        namespace: this.namespace + args.prefix
-                    }, args));
+                    return this.countEdges(_.extend({}, args, {
+                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                    }));
                 })
             );
     }
@@ -152,9 +152,9 @@ module.exports = class Edge {
         return validate(edge.del, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.deleteEdge(_.extend({
-                        namespace: this.namespace + args.prefix
-                    }, args));
+                    return this.deleteEdge(_.extend({}, args, {
+                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                    }));
                 })
             );
     }
@@ -168,9 +168,9 @@ module.exports = class Edge {
         return validate(edge.delByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.deleteEdges(_.extend({
-                        namespace: this.namespace + args.prefix
-                    }, args));
+                    return this.deleteEdges(_.extend({}, args, {
+                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                    }));
                 })
             );
     }
@@ -205,7 +205,7 @@ module.exports = class Edge {
 
                     return this.setEdge(_.extend({}, args, {
                         distance: args.absoluteDistance ? args.absoluteDistance : -(args.distance * this.decrementPath),
-                        namespace: this.namespace + args.prefix
+                        namespace: _.compact([this.prefix, args.namespace]).join('.')
                     }));
                 })
             );
@@ -231,7 +231,7 @@ module.exports = class Edge {
                 }
 
                 const id = [
-                        args.prefix,
+                        args.namespace,
                         args.fromNode,
                         args.entity,
                         args.direction,

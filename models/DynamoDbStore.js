@@ -42,7 +42,7 @@ module.exports = class DynamoDbStore extends Crud {
         });
 
         this.createTable(value.tableName)
-            .subscribe(() => null, console.error);
+            .subscribe(() => null);
     }
 
     _composeBase(args = {}, indeterminateDirection = false) {
