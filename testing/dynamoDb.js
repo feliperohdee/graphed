@@ -8,7 +8,7 @@ const {
 
 class App {
     constructor() {
-        this.prefix = 'spec';
+        this.partition = 'spec';
         this.dynamoDb = new DynamoDB({
             client: new AWS.DynamoDB({
                 endpoint: 'http://localhost:9090',

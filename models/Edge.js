@@ -30,7 +30,7 @@ module.exports = class Edge {
         this.decrementPath = value.decrementPath;
         this.defaultDirection = value.defaultDirection;
         this.defaultEntity = value.defaultEntity;
-        this.prefix = value.prefix;
+        this.partition = value.partition;
         this.store = value.store;
 
         this.countEdges = this.store.countEdges.bind(this.store);
@@ -95,7 +95,7 @@ module.exports = class Edge {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAll(_.extend({}, args, {
-                            namespace: _.compact([this.prefix, args.namespace]).join('.'),
+                            namespace: _.compact([this.partition, args.namespace]).join('.'),
                             inverse: args.onlyNodes ? false : args.inverse
                         }))
                         .pipe(
@@ -121,7 +121,7 @@ module.exports = class Edge {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAllByDistance(_.extend({}, args, {
-                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                        namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
                 })
             );
@@ -137,7 +137,7 @@ module.exports = class Edge {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.countEdges(_.extend({}, args, {
-                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                        namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
                 })
             );
@@ -153,7 +153,7 @@ module.exports = class Edge {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdge(_.extend({}, args, {
-                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                        namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
                 })
             );
@@ -169,7 +169,7 @@ module.exports = class Edge {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdges(_.extend({}, args, {
-                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                        namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
                 })
             );
@@ -205,7 +205,7 @@ module.exports = class Edge {
 
                     return this.setEdge(_.extend({}, args, {
                         distance: args.absoluteDistance ? args.absoluteDistance : -(args.distance * this.decrementPath),
-                        namespace: _.compact([this.prefix, args.namespace]).join('.')
+                        namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
                 })
             );

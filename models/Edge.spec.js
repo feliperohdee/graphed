@@ -25,14 +25,14 @@ describe('models/Edge.js', () => {
 
     before(() => {
         edge = new Edge({
-            prefix: app.prefix,
+            partition: app.partition,
             store: app.store
         });
     });
 
     beforeEach(() => {
         edge = new Edge({
-            prefix: app.prefix,
+            partition: app.partition,
             store: app.store
         });
     });
@@ -1368,7 +1368,7 @@ describe('models/Edge.js', () => {
 
         describe('with firehose', () => {
             const edgeFirehose = new Edge({
-                prefix: app.prefix,
+                partition: app.partition,
                 store: app.store
             }, {
                 firehose: {
@@ -1428,7 +1428,7 @@ describe('models/Edge.js', () => {
 
     describe('processFirehose', () => {
         const edgeFirehose = new Edge({
-            prefix: app.prefix,
+            partition: app.partition,
             store: app.store
         }, {
             firehose: {

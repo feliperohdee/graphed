@@ -14,7 +14,7 @@ const {
 
 const expect = chai.expect;
 const edge = new Edge({
-    prefix: app.prefix,
+    partition: app.partition,
     store: app.store
 }, {
     firehose: {
@@ -40,7 +40,7 @@ describe('handlers/linkFirehose.js', () => {
 
     it('should throw if no firehose configured', () => {
         expect(() => linkFirehose(new Edge({
-            prefix: app.prefix,
+            partition: app.partition,
             store: app.store
         }))).to.throw('no firehose configured.');
     });

@@ -45,7 +45,7 @@ const constructor = joi.object({
         .default(1 / (10 ** 15)),
     defaultDirection: common.direction,
     defaultEntity: joi.string(),
-    prefix: joi.string()
+    partition: joi.string()
         .required(),
     store: joi.object({
             countEdges: joi.function()
