@@ -41,7 +41,8 @@ const closest = joi.object({
         .required(),
     fromNode: joi.string()
         .required(),
-    namespace: joi.string()
+    namespace: joi.string(),
+    limit: joi.number()
 });
 
 const constructor = joi.object({

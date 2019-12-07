@@ -764,6 +764,27 @@ describe('models/Edge.js', () => {
                     });
                 }, null, done);
         });
+        
+        it('should get closest nodes with limit', done => {
+            edge.closest({
+                    limit: 1,
+                    entity: 'entity',
+                    fromNode: '1'
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(response[0]).to.deep.equal({
+                        direction: null,
+                        distance: 0.999999999999998,
+                        entity: 'entity',
+                        fromNode: '1',
+                        namespace,
+                        toNode: '3'
+                    });
+                }, null, done);
+        });
     });
 
     describe('count', () => {
