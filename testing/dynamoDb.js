@@ -18,7 +18,7 @@ class App {
 
         this.store = new DynamoDbStore({
             dynamoDb: this.dynamoDb,
-            tableName: 'graph'
+            tableName: 'specGraph'
         });
     }
 }
