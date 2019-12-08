@@ -79,9 +79,32 @@ describe('models/Edge.js', () => {
                 .subscribe(null, null, done);
         });
 
+        it('should not add multiple single edge', done => {
+            edge.allAll({
+                    collection: [
+                        '0'
+                    ],
+                    distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
+                        return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    },
+                    entity: 'entity'
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(_.size(response)).to.equal(0);
+                }, null, done);
+        });
+
         it('should add multiple edges', done => {
             edge.allAll({
-                    collection: ['0', '1', '2', '3'],
+                    collection: [
+                        '0',
+                        '1',
+                        '2',
+                        '3'
+                    ],
                     distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
                         return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
                     },
@@ -764,7 +787,7 @@ describe('models/Edge.js', () => {
                     });
                 }, null, done);
         });
-        
+
         it('should get closest nodes with limit', done => {
             edge.closest({
                     limit: 1,
@@ -1407,7 +1430,7 @@ describe('models/Edge.js', () => {
                         })
                     });
             });
-    
+
             afterEach(() => {
                 AWS.firehose.putRecord.restore();
             });
@@ -1433,7 +1456,7 @@ describe('models/Edge.js', () => {
                         });
                     }, null, done);
             });
-            
+
             it('should not call putRecord if fromFirehose = true', done => {
                 edgeFirehose.link({
                         entity: 'entity',

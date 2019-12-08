@@ -55,6 +55,10 @@ module.exports = class Edge {
                 rxop.mergeMap(args => {
                     const collectionSize = _.size(args.collection);
 
+                    if (collectionSize <= 1) {
+                        return rx.empty();
+                    }
+
                     return rx.from(args.collection)
                         .pipe(
                             rxop.mergeMap((fromNode, fromNodeIndex) => {
