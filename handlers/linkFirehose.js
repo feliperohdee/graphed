@@ -22,7 +22,7 @@ module.exports = (argsOrEdge, options) => {
             .pipe(
                 rxop.toArray()
             )
-            .subscribe(response => {
+            .subscribe(() => {
                 callback(null, {
                     records: _.map(event.records, ({
                         data,
