@@ -131,7 +131,9 @@ const link = joi.object({
 
 const traverse = joi.object({
     concurrency: joi.number()
-        .default(Number.MAX_SAFE_INTEGER),
+        .min(0)
+        .max(50000)
+        .default(50000),
     jobs: joi.array()
         .items(closest.fork([
             'fromNode'
