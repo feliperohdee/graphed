@@ -345,7 +345,7 @@ module.exports = class Edge {
                                                 return closest(_.extend({}, nextJob, {
                                                     fromNode: toNode
                                                 }), index + 1);
-                                            }, null, args.concurrency),
+                                            }, args.concurrency),
                                             rxop.reduce((reduction, items) => {
                                                 return reduction.concat(items);
                                             }, [])
