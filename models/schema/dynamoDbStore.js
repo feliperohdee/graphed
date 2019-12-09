@@ -7,7 +7,10 @@ const constructor = joi.object({
         .unknown()
         .required(),
     tableName: joi.string()
-        .required()
+        .required(),
+    ttl: joi.number()
+        .min(0)
+        .default(365 * 24 * 60 * 60 * 1000) // 1 year
 });
 
 const countEdges = joi.object({

@@ -16,11 +16,11 @@ const {
 } = require('./util');
 
 module.exports = class DynamoDbStore extends Crud {
-    constructor(args = {}) {
+    constructor(options = {}) {
         const {
             value,
             error
-        } = dynamoDbStore.constructor.validate(args);
+        } = dynamoDbStore.constructor.validate(options);
 
         if (error) {
             throw error;
@@ -41,6 +41,7 @@ module.exports = class DynamoDbStore extends Crud {
             dynamoDb: value.dynamoDb
         });
 
+        this.options = value;
         this.createTable(value.tableName)
             .subscribe(() => null);
     }
@@ -317,14 +318,16 @@ module.exports = class DynamoDbStore extends Crud {
                                         'base',
                                         'distance',
                                         'createdAt',
+                                        'ttl',
                                         'updatedAt'
                                     ])
                                     .addPlaceholderValue({
                                         base,
-                                        now
+                                        now,
+                                        ttl: _.floor((now + this.options.ttl) / 1000)
                                     });
 
-                                let expression = '#base = :base, #createdAt = if_not_exists(#createdAt, :now), #updatedAt = :now';
+                                let expression = '#base = :base, #ttl = :ttl, #createdAt = if_not_exists(#createdAt, :now), #updatedAt = :now';
 
                                 if (args.distance > 0) {
                                     request.addPlaceholderValue({
