@@ -1,6 +1,4 @@
-[![CircleCI](https://circleci.com/gh/feliperohdee/smallorange-redis-edge-graph.svg?style=svg)](https://circleci.com/gh/feliperohdee/smallorange-graph)
-
-# Small Orange Graph
+# Graphed
 
 ## Node API
 		delete({
@@ -33,14 +31,6 @@
 		}): Observable<object>;
 
 ## Edge API
-		allAll({
-			collection: Array<string>,
-			direction?: string
-			distance?: (collectionSize, fromNodeIndex, toNodeIndex) => number, 
-			entity? string,
-			noTimestamp?: boolean
-		}): Observable<object>;
-
 		count({
 			direction?: string
 			entity? string,
@@ -61,7 +51,6 @@
 		}): Observable<object>;
 
 		allByNode({
-			by?: 'distance' | 'timestamp',
 			direction?: string
 			entity? string,
 			fromNode: string,
@@ -71,15 +60,13 @@
 		}): Observable<object>;
 
 		closest({
-			by?: 'distance' | 'timestamp',
 			desc?: boolean,
 			direction?: string
 			distance?: [min?: number, max?: number], // with RedisStore
 			entity? string,
 			filter? string,
 			fromNode: string,
-			limit: [min?: number, max?: number],
-			timestamp: [min?: number, max?: number] // with RedisStore
+			limit: [min?: number, max?: number]
 		}): Observable<object>;
 
 		link({
@@ -88,7 +75,6 @@
 			distance?: number,
 			entity? string,
 			fromNode: string,
-			noTimestamp?: boolean,
 			toNode: string
 		}): Observable<object>;
 
@@ -100,7 +86,6 @@
 				distance?: number,
 				entity? string,
 				fromNode: string,
-				noTimestamp?: boolean,
 				toNode: string
 			}>,
 			maxPath: number,
@@ -108,37 +93,3 @@
 			remoteClosest: function,
 			remoteClosestIndex: number
 		}): Observable<object>;
-
-## Sample
-		const Redis = require('smallorange-redis-client');
-		const {
-			Edge,
-			Node,
-			RedisStore
-		} = require('smallorange-graph');
-
-		class App {
-			constructor() {
-				const store = new RedisStore({
-					redis: new Redis({
-						connection: {
-							port: 6380
-						}
-					})
-				});
-
-				this.store = store;
-				this.namespace = 'graph-1';
-				
-				this.node = new Node({
-					namespace: 'graphName',
-					store
-				});
-
-				this.edge = new Edge({
-					namespace: 'graphName',
-					node: this.node,
-					store
-				});
-			}
-		}

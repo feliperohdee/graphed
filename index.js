@@ -1,11 +1,15 @@
-const Edge = require('./lib/Edge');
-const Node = require('./lib/Node');
-const RedisStore = require('./lib/RedisStore');
-const util = require('./lib/util');
+const {
+	linkFirehose
+} = require('./handlers');
+const {
+	DynamoDbStore,
+	Edge,
+	util
+} = require('./models');
 
 module.exports = {
+	DynamoDbStore,
 	Edge,
-	Node,
-	RedisStore,
+	linkFirehose,
 	util
 };
