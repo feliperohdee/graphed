@@ -1,6 +1,6 @@
 {
     "name": "graphed",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...) and compatible with AWS Firehose",
     "main": "index.js",
     "dependencies": {
@@ -8,7 +8,8 @@
         "aws-sdk": "^2.585.0",
         "lodash": "^4.17.15",
         "rxjs": "^6.5.3",
-        "rxjs-dynamodb-client": "^1.0.8"
+        "rxjs-dynamodb-client": "^1.0.8",
+        "simple-beauty-error": "^1.0.1"
     },
     "devDependencies": {
         "chai": "^4.2.0",

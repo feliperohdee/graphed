@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const error = require('simple-beauty-error');
 const rxop = require('rxjs/operators');
 
 const {
@@ -34,6 +35,7 @@ module.exports = (argsOrEdge, options) => {
                     }))
                 });
             }, err => {
+                console.log(JSON.stringify(error(err, {}, 5), null, 2));
                 callback(err);
             });
     };
