@@ -6,21 +6,21 @@ const {
     AWS
 } = require('../libs');
 const {
-    edge,
+    graph,
     validate
 } = require('./schema');
 
-module.exports = class Edge {
+module.exports = class Graph {
     constructor(args = {}, options = {}) {
         const {
             value,
             error
-        } = edge.constructor.validate(args);
+        } = graph.constructor.validate(args);
 
         const {
             value: valueOptions,
             error: errorOptions
-        } = edge.constructorOptions.validate(options);
+        } = graph.constructorOptions.validate(options);
 
         if (error || errorOptions) {
             throw error || errorOptions;
@@ -50,7 +50,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.allAll, args)
+        return validate(graph.allAll, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const collectionSize = _.size(args.collection);
@@ -95,7 +95,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.allByNode, args)
+        return validate(graph.allByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAll(_.extend({}, args, {
@@ -121,7 +121,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.closest, args)
+        return validate(graph.closest, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAllByDistance(_.extend({}, args, {
@@ -137,7 +137,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.count, args)
+        return validate(graph.count, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.countEdges(_.extend({}, args, {
@@ -153,7 +153,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.del, args)
+        return validate(graph.del, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdge(_.extend({}, args, {
@@ -169,7 +169,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.delByNode, args)
+        return validate(graph.delByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdges(_.extend({}, args, {
@@ -185,7 +185,7 @@ module.exports = class Edge {
             entity: this.defaultEntity
         });
 
-        return validate(edge.link, args)
+        return validate(graph.link, args)
             .pipe(
                 rxop.mergeMap(args => {
                     if (this.options.firehose && !fromFirehose) {
@@ -224,7 +224,7 @@ module.exports = class Edge {
 
         return stream.pipe(
             rxop.mergeMap(args => {
-                return validate(edge.link, args)
+                return validate(graph.link, args)
                     .pipe(
                         rxop.catchError(() => rx.empty())
                     );
@@ -269,7 +269,7 @@ module.exports = class Edge {
     }
 
     traverse(args = {}) {
-        return validate(edge.traverse, args)
+        return validate(graph.traverse, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const initialJob = args.jobs[0];

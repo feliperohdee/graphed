@@ -11,7 +11,7 @@ const {
     AWS
 } = require('../libs');
 const {
-    Edge
+    Graph
 } = require('../');
 
 chai.use(chaiSubset);
@@ -20,18 +20,18 @@ chai.use(sinonChai);
 const expect = chai.expect;
 const namespace = 'spec';
 
-describe('models/Edge.js', () => {
-    let edge;
+describe('models/Graph.js', () => {
+    let graph;
 
     before(() => {
-        edge = new Edge({
+        graph = new Graph({
             partition: app.partition,
             store: app.store
         });
     });
 
     beforeEach(() => {
-        edge = new Edge({
+        graph = new Graph({
             partition: app.partition,
             store: app.store
         });
@@ -39,37 +39,37 @@ describe('models/Edge.js', () => {
 
     describe('constructor', () => {
         it('should have store based functions', () => {
-            expect(edge.countEdges).not.to.be.undefined;
-            expect(edge.deleteEdge).not.to.be.undefined;
-            expect(edge.deleteEdges).not.to.be.undefined;
-            expect(edge.getAll).not.to.be.undefined;
-            expect(edge.getAllByDistance).not.to.be.undefined;
-            expect(edge.setEdge).not.to.be.undefined;
+            expect(graph.countEdges).not.to.be.undefined;
+            expect(graph.deleteEdge).not.to.be.undefined;
+            expect(graph.deleteEdges).not.to.be.undefined;
+            expect(graph.getAll).not.to.be.undefined;
+            expect(graph.getAllByDistance).not.to.be.undefined;
+            expect(graph.setEdge).not.to.be.undefined;
         });
     });
 
     describe('allAll', () => {
         afterEach(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '0'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '3'
                     })
                     .pipe(
@@ -80,7 +80,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should not add multiple single edge', done => {
-            edge.allAll({
+            graph.allAll({
                     collection: [
                         '0'
                     ],
@@ -98,7 +98,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should add multiple edges', done => {
-            edge.allAll({
+            graph.allAll({
                     collection: [
                         '0',
                         '1',
@@ -156,7 +156,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should add multiple edges with direction', done => {
-            edge.allAll({
+            graph.allAll({
                     collection: ['0', '1', '2', '3'],
                     direction: 'OUT',
                     distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
@@ -348,12 +348,12 @@ describe('models/Edge.js', () => {
     describe('allByNode', () => {
         before(done => {
             rx.forkJoin(
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
                     }),
-                    edge.link({
+                    graph.link({
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
@@ -365,13 +365,13 @@ describe('models/Edge.js', () => {
 
         after(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -383,13 +383,13 @@ describe('models/Edge.js', () => {
 
         it('should fetch all by node', done => {
             rx.forkJoin(
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -452,7 +452,7 @@ describe('models/Edge.js', () => {
 
         it('should fetch all by node only by entity and direction', done => {
             rx.forkJoin(
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '1',
                         direction: 'OUT',
                         entity: 'entity'
@@ -460,7 +460,7 @@ describe('models/Edge.js', () => {
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '2',
                         direction: 'OUT',
                         entity: 'entity'
@@ -495,13 +495,13 @@ describe('models/Edge.js', () => {
 
         it('should fetch all by node only by distance', done => {
             rx.forkJoin(
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -564,14 +564,14 @@ describe('models/Edge.js', () => {
 
         it('should fetch all by node without inverse', done => {
             rx.forkJoin(
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '1',
                         noInverse: true
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '2',
                         noInverse: true
                     })
@@ -611,14 +611,14 @@ describe('models/Edge.js', () => {
 
         it('should fetch all by node returning only nodes', done => {
             rx.forkJoin(
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '1',
                         onlyNodes: true
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.allByNode({
+                    graph.allByNode({
                         fromNode: '2',
                         noInverse: true,
                         onlyNodes: true
@@ -641,24 +641,24 @@ describe('models/Edge.js', () => {
     describe('closest', () => {
         before(done => {
             rx.forkJoin(
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
                     }),
-                    edge.link({
+                    graph.link({
                         absoluteDistance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '3'
                     }),
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
                         toNode: '3'
                     }),
-                    edge.link({
+                    graph.link({
                         absoluteDistance: 0.999999999999998,
                         entity: 'entity',
                         direction: 'OUT',
@@ -671,25 +671,25 @@ describe('models/Edge.js', () => {
 
         after(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '3'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '4'
                     })
                     .pipe(
@@ -700,7 +700,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should get closest nodes', done => {
-            edge.closest({
+            graph.closest({
                     entity: 'entity',
                     fromNode: '1'
                 })
@@ -729,7 +729,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should get closest nodes with direction', done => {
-            edge.closest({
+            graph.closest({
                     direction: 'OUT',
                     entity: 'entity',
                     fromNode: '2'
@@ -759,7 +759,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should get closest nodes desc', done => {
-            edge.closest({
+            graph.closest({
                     desc: true,
                     entity: 'entity',
                     fromNode: '1'
@@ -789,7 +789,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should get closest nodes with limit', done => {
-            edge.closest({
+            graph.closest({
                     limit: 1,
                     entity: 'entity',
                     fromNode: '1'
@@ -813,17 +813,17 @@ describe('models/Edge.js', () => {
     describe('count', () => {
         before(done => {
             rx.forkJoin(
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
                     }),
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '3'
                     }),
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
@@ -835,19 +835,19 @@ describe('models/Edge.js', () => {
 
         after(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '3'
                     })
                     .pipe(
@@ -859,44 +859,44 @@ describe('models/Edge.js', () => {
 
         it('should return elements count', done => {
             rx.forkJoin(
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         fromNode: '1'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '1'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'IN',
                         fromNode: '1'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         fromNode: '2'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'IN',
                         fromNode: '2'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         fromNode: '3'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '3'
                     }),
-                    edge.count({
+                    graph.count({
                         entity: 'entity',
                         direction: 'IN',
                         fromNode: '3'
@@ -915,12 +915,12 @@ describe('models/Edge.js', () => {
     describe('delete', () => {
         beforeEach(done => {
             rx.forkJoin(
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
                     }),
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
@@ -932,13 +932,13 @@ describe('models/Edge.js', () => {
 
         after(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -950,7 +950,7 @@ describe('models/Edge.js', () => {
 
         describe('with direction', () => {
             it('should delete a edge', done => {
-                edge.delete({
+                graph.delete({
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
@@ -962,7 +962,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should delete two edges', done => {
-                edge.delete({
+                graph.delete({
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
@@ -983,7 +983,7 @@ describe('models/Edge.js', () => {
 
         describe('without direction', () => {
             it('should delete a edge', done => {
-                edge.delete({
+                graph.delete({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
@@ -994,7 +994,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should delete two edges', done => {
-                edge.delete({
+                graph.delete({
                         entity: 'entity',
                         fromNode: '1',
                         inverse: true,
@@ -1016,12 +1016,12 @@ describe('models/Edge.js', () => {
     describe('deleteByNode', () => {
         beforeEach(done => {
             rx.forkJoin(
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
                     }),
-                    edge.link({
+                    graph.link({
                         entity: 'entity',
                         direction: 'IN',
                         fromNode: '2',
@@ -1033,13 +1033,13 @@ describe('models/Edge.js', () => {
 
         after(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -1051,13 +1051,13 @@ describe('models/Edge.js', () => {
 
         it('should delete by fromNode', done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '3'
                     })
                     .pipe(
@@ -1104,14 +1104,14 @@ describe('models/Edge.js', () => {
 
         it('should delete by fromNode and entity', done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1',
                         entity: 'entity'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2',
                         entity: 'inexistent'
                     })
@@ -1145,7 +1145,7 @@ describe('models/Edge.js', () => {
 
         it('should delete by fromNode, entity and direction', done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1',
                         entity: 'entity',
                         direction: 'IN'
@@ -1153,7 +1153,7 @@ describe('models/Edge.js', () => {
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2',
                         entity: 'entity',
                         direction: 'IN'
@@ -1206,13 +1206,13 @@ describe('models/Edge.js', () => {
     describe('link', () => {
         afterEach(done => {
             rx.forkJoin(
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '1'
                     })
                     .pipe(
                         rxop.toArray()
                     ),
-                    edge.deleteByNode({
+                    graph.deleteByNode({
                         fromNode: '2'
                     })
                     .pipe(
@@ -1223,7 +1223,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should insert two edges with absoluteDistance', done => {
-            edge.link({
+            graph.link({
                     absoluteDistance: 0.999999999999999,
                     entity: 'entity',
                     fromNode: '1',
@@ -1241,7 +1241,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should decrement edges distance', done => {
-            edge.link({
+            graph.link({
                     entity: 'entity',
                     fromNode: '1',
                     toNode: '2'
@@ -1258,7 +1258,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should decrement edges distance with custom distance', done => {
-            edge.link({
+            graph.link({
                     distance: 5,
                     entity: 'entity',
                     fromNode: '1',
@@ -1276,7 +1276,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should not decrement edges distance (without previous edge)', done => {
-            edge.link({
+            graph.link({
                     distance: 0,
                     entity: 'entity',
                     fromNode: '1',
@@ -1294,14 +1294,14 @@ describe('models/Edge.js', () => {
         });
 
         it('should not decrement edges distance', done => {
-            edge.link({
+            graph.link({
                     distance: 5,
                     entity: 'entity',
                     fromNode: '1',
                     toNode: '2'
                 })
                 .pipe(
-                    rxop.mergeMap(() => edge.link({
+                    rxop.mergeMap(() => graph.link({
                         distance: 0,
                         entity: 'entity',
                         fromNode: '1',
@@ -1320,8 +1320,8 @@ describe('models/Edge.js', () => {
         });
 
         it('should decrement edges distance with custom decrementPath', done => {
-            edge.decrementPath = 0.1;
-            edge.link({
+            graph.decrementPath = 0.1;
+            graph.link({
                     entity: 'entity',
                     fromNode: '1',
                     toNode: '2'
@@ -1338,7 +1338,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should increment edges distance', done => {
-            edge.link({
+            graph.link({
                     distance: 1,
                     entity: 'entity',
                     fromNode: '1',
@@ -1357,7 +1357,7 @@ describe('models/Edge.js', () => {
 
         describe('without direction', () => {
             it('should insert two edges', done => {
-                edge.link({
+                graph.link({
                         entity: 'entity',
                         fromNode: '1',
                         toNode: '2'
@@ -1383,7 +1383,7 @@ describe('models/Edge.js', () => {
 
         describe('with direction', () => {
             it('should insert two edges', done => {
-                edge.link({
+                graph.link({
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '1',
@@ -1411,7 +1411,7 @@ describe('models/Edge.js', () => {
         });
 
         describe('with firehose', () => {
-            const edgeFirehose = new Edge({
+            const edgeFirehose = new Graph({
                 partition: app.partition,
                 store: app.store
             }, {
@@ -1471,7 +1471,7 @@ describe('models/Edge.js', () => {
     });
 
     describe('processFirehose', () => {
-        const edgeFirehose = new Edge({
+        const edgeFirehose = new Graph({
             partition: app.partition,
             store: app.store
         }, {
@@ -1507,7 +1507,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should throw if no firehose configured', done => {
-            edge.processFirehose()
+            graph.processFirehose()
                 .subscribe(null, err => {
                     expect(err.message).to.equal('no firehose configured.');
                     done();
@@ -1720,7 +1720,7 @@ describe('models/Edge.js', () => {
 
     describe('traverse', () => {
         it('should return empty if no jobs', done => {
-            edge.traverse({
+            graph.traverse({
                     jobs: []
                 })
                 .subscribe(response => {
@@ -1729,7 +1729,7 @@ describe('models/Edge.js', () => {
         });
 
         it('should handle errors', done => {
-            edge.traverse({
+            graph.traverse({
                     jobs: [{
                         entity: 'entity'
                     }]
@@ -1743,28 +1743,28 @@ describe('models/Edge.js', () => {
         describe('without direction', () => {
             before(done => {
                 rx.forkJoin(
-                        edge.link({
+                        graph.link({
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '1'
                         }),
-                        edge.link({
+                        graph.link({
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '2'
                         }),
-                        edge.link({
+                        graph.link({
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '4'
                         }),
-                        edge.link({
+                        graph.link({
                             absoluteDistance: 0.999999999999998,
                             entity: 'entity',
                             fromNode: '2',
                             toNode: '3'
                         }),
-                        edge.link({
+                        graph.link({
                             entity: 'entity',
                             fromNode: '4',
                             toNode: '3'
@@ -1775,31 +1775,31 @@ describe('models/Edge.js', () => {
 
             after(done => {
                 rx.forkJoin(
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '0'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '1'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '2'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '3'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '4'
                         })
                         .pipe(
@@ -1810,15 +1810,15 @@ describe('models/Edge.js', () => {
             });
 
             beforeEach(() => {
-                sinon.spy(edge, 'closest');
+                sinon.spy(graph, 'closest');
             });
 
             afterEach(() => {
-                edge.closest.restore();
+                graph.closest.restore();
             });
 
             it('should traverse once', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -1879,7 +1879,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse twice', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -1974,7 +1974,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse filtering minPath', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -2037,7 +2037,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse filtering minPath and maxPath', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -2104,7 +2104,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should not traverse same edge more than once', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -2115,23 +2115,23 @@ describe('models/Edge.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(edge.closest.callCount).to.equal(6);
+                        expect(graph.closest.callCount).to.equal(6);
 
-                        expect(edge.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
-                        expect(edge.closest.getCall(1).args[0].fromNode).to.equal('1'); // 0 - 1
-                        expect(edge.closest.getCall(2).args[0].fromNode).to.equal('2'); // 0 - 2
-                        expect(edge.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
-                        expect(edge.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
-                        expect(edge.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
+                        expect(graph.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
+                        expect(graph.closest.getCall(1).args[0].fromNode).to.equal('1'); // 0 - 1
+                        expect(graph.closest.getCall(2).args[0].fromNode).to.equal('2'); // 0 - 2
+                        expect(graph.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
+                        expect(graph.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
+                        expect(graph.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
                     }, null, done);
             });
 
             it('should traverse using remote closest', done => {
                 const remoteClosest = sinon.spy(args => {
-                    return edge.closest(args);
+                    return graph.closest(args);
                 });
 
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             entity: 'entity',
                             fromNode: '0'
@@ -2149,32 +2149,32 @@ describe('models/Edge.js', () => {
         describe('with direction', () => {
             before(done => {
                 rx.forkJoin(
-                        edge.link({
+                        graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '1'
                         }),
-                        edge.link({
+                        graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '2'
                         }),
-                        edge.link({
+                        graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
                             toNode: '4'
                         }),
-                        edge.link({
+                        graph.link({
                             absoluteDistance: 0.999999999999998,
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '2',
                             toNode: '3'
                         }),
-                        edge.link({
+                        graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '4',
@@ -2186,31 +2186,31 @@ describe('models/Edge.js', () => {
 
             after(done => {
                 rx.forkJoin(
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '0'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '1'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '2'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '3'
                         })
                         .pipe(
                             rxop.toArray()
                         ),
-                        edge.deleteByNode({
+                        graph.deleteByNode({
                             fromNode: '4'
                         })
                         .pipe(
@@ -2221,15 +2221,15 @@ describe('models/Edge.js', () => {
             });
 
             beforeEach(() => {
-                sinon.spy(edge, 'closest');
+                sinon.spy(graph, 'closest');
             });
 
             afterEach(() => {
-                edge.closest.restore();
+                graph.closest.restore();
             });
 
             it('should traverse once', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
@@ -2289,7 +2289,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse twice', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
@@ -2384,7 +2384,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse filtering minPath', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
@@ -2447,7 +2447,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should traverse filtering minPath and maxPath', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
@@ -2514,7 +2514,7 @@ describe('models/Edge.js', () => {
             });
 
             it('should not traverse same edge more than once', done => {
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
@@ -2528,23 +2528,23 @@ describe('models/Edge.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(edge.closest.callCount).to.equal(6);
+                        expect(graph.closest.callCount).to.equal(6);
 
-                        expect(edge.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
-                        expect(edge.closest.getCall(1).args[0].fromNode).to.equal('1'); // 0 - 1
-                        expect(edge.closest.getCall(2).args[0].fromNode).to.equal('2'); // 0 - 2
-                        expect(edge.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
-                        expect(edge.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
-                        expect(edge.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
+                        expect(graph.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
+                        expect(graph.closest.getCall(1).args[0].fromNode).to.equal('1'); // 0 - 1
+                        expect(graph.closest.getCall(2).args[0].fromNode).to.equal('2'); // 0 - 2
+                        expect(graph.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
+                        expect(graph.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
+                        expect(graph.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
                     }, null, done);
             });
 
             it('should traverse using remote closest', done => {
                 const remoteClosest = sinon.spy(args => {
-                    return edge.closest(args);
+                    return graph.closest(args);
                 });
 
-                edge.traverse({
+                graph.traverse({
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',

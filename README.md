@@ -1,36 +1,6 @@
 # Graphed
 
-## Node API
-		delete({
-			id: string
-		}): Observable<object>;
-
-		get({
-			id: string
-		}): Observable<object>;
-
-		multiGet({
-			ids: Array<string>
-		}): Observable<Array<object>>;
-
-		set({
-			id: string,
-			data: object
-		}): Observable<object>;
-
-		multiSet({
-			values: Array<{
-				id: string,
-				data?: object
-			}>,
-		}): Observable<Array<object>>;
-
-		update({
-			id: string,
-			data: object
-		}): Observable<object>;
-
-## Edge API
+## API
 		count({
 			direction?: string
 			entity? string,

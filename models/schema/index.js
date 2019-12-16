@@ -1,7 +1,7 @@
 const rx = require('rxjs');
 
 const dynamoDbStore = require('./dynamoDbStore');
-const edge = require('./edge');
+const graph = require('./graph');
 const validate = (schema, value) => {
     return rx.from(schema.validateAsync(value, {
         abortEarly: false,
@@ -14,6 +14,6 @@ const validate = (schema, value) => {
 
 module.exports = {
     dynamoDbStore,
-    edge,
+    graph,
     validate
 };

@@ -6,14 +6,14 @@ const rxop = require('rxjs/operators');
 const app = require('../testing/dynamoDb');
 const linkFirehose = require('./linkFirehose');
 const {
-    Edge
+    Graph
 } = require('../models');
 const {
     toBase64
 } = require('./util');
 
 const expect = chai.expect;
-const edge = new Edge({
+const graph = new Graph({
     partition: app.partition,
     store: app.store
 }, {
@@ -23,12 +23,12 @@ const edge = new Edge({
     }
 });
 
-const handler = linkFirehose(edge);
+const handler = linkFirehose(graph);
 
 describe('handlers/linkFirehose.js', () => {
     after(done => {
         rx.forkJoin(
-                edge.deleteByNode({
+                graph.deleteByNode({
                     fromNode: '0'
                 })
                 .pipe(
@@ -39,7 +39,7 @@ describe('handlers/linkFirehose.js', () => {
     });
 
     it('should throw if no firehose configured', () => {
-        expect(() => linkFirehose(new Edge({
+        expect(() => linkFirehose(new Graph({
             partition: app.partition,
             store: app.store
         }))).to.throw('no firehose configured.');

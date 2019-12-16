@@ -1,9 +1,9 @@
 const DynamoDbStore = require('./DynamoDbStore');
-const Edge = require('./Edge');
+const Graph = require('./Graph');
 const util = require('./util');
 
 module.exports = {
     DynamoDbStore,
-    Edge,
+    Graph,
     util
 };

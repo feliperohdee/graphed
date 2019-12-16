@@ -3,21 +3,21 @@ const error = require('simple-beauty-error');
 const rxop = require('rxjs/operators');
 
 const {
-    Edge
+    Graph
 } = require('../models');
 const {
     parseFirehoseRecordsData
 } = require('./util');
 
-module.exports = (argsOrEdge, options) => {
-    const edge = argsOrEdge instanceof Edge ? argsOrEdge : new Edge(argsOrEdge, options);
+module.exports = (argsOrGraph, options) => {
+    const graph = argsOrGraph instanceof Graph ? argsOrGraph : new Graph(argsOrGraph, options);
 
-    if(!edge.options.firehose) {
+    if(!graph.options.firehose) {
         throw new Error('no firehose configured.');
     }
 
     return (event, context, callback) => {
-        edge.processFirehose(
+        graph.processFirehose(
                 parseFirehoseRecordsData(event.records)
             )
             .pipe(

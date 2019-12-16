@@ -3,13 +3,13 @@ const {
 } = require('./handlers');
 const {
 	DynamoDbStore,
-	Edge,
+	Graph,
 	util
 } = require('./models');
 
 module.exports = {
 	DynamoDbStore,
-	Edge,
+	Graph,
 	linkFirehose,
 	util
 };
