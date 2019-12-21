@@ -3,10 +3,6 @@ const joi = require('@hapi/joi');
 const common = require('./common');
 
 const allAll = joi.object({
-    collection: joi.array()
-        .items(joi.string())
-        .min(1)
-        .required(),
     direction: common.direction,
     distance: joi.alternatives()
         .try(
@@ -15,7 +11,11 @@ const allAll = joi.object({
         ),
     entity: joi.string()
         .required(),
-    namespace: joi.string()
+    namespace: joi.string(),
+    value: joi.array()
+        .items(joi.string())
+        .min(1)
+        .required()
 });
 
 const allByNode = joi.object({

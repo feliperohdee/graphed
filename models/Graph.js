@@ -44,8 +44,8 @@ module.exports = class Graph {
     allAll(args = {}) {
         args = _.defaults({}, args, {
             direction: this.defaultDirection,
-            distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
-                return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+            distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
             },
             entity: this.defaultEntity
         });
@@ -53,16 +53,16 @@ module.exports = class Graph {
         return validate(graph.allAll, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    const collectionSize = _.size(args.collection);
+                    const valueSize = _.size(args.value);
 
-                    if (collectionSize <= 1) {
+                    if (valueSize <= 1) {
                         return rx.empty();
                     }
 
-                    return rx.from(args.collection)
+                    return rx.from(args.value)
                         .pipe(
                             rxop.mergeMap((fromNode, fromNodeIndex) => {
-                                return rx.from(args.collection)
+                                return rx.from(args.value)
                                     .pipe(
                                         rxop.map((toNode, toNodeIndex) => {
                                             if ((args.direction && fromNodeIndex === toNodeIndex) || (!args.direction && toNodeIndex <= fromNodeIndex)) {
@@ -71,7 +71,7 @@ module.exports = class Graph {
 
                                             return {
                                                 direction: args.direction,
-                                                distance: _.isFunction(args.distance) ? args.distance(collectionSize, fromNodeIndex, toNodeIndex) : args.distance,
+                                                distance: _.isFunction(args.distance) ? args.distance(valueSize, fromNodeIndex, toNodeIndex) : args.distance,
                                                 entity: args.entity,
                                                 fromNode,
                                                 namespace: args.namespace,

@@ -81,13 +81,13 @@ describe('models/Graph.js', () => {
 
         it('should not add multiple single edge', done => {
             graph.allAll({
-                    collection: [
-                        '0'
-                    ],
-                    distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
-                        return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
                     },
-                    entity: 'entity'
+                    entity: 'entity',
+                    value: [
+                        '0'
+                    ]
                 })
                 .pipe(
                     rxop.toArray()
@@ -99,16 +99,16 @@ describe('models/Graph.js', () => {
 
         it('should add multiple edges', done => {
             graph.allAll({
-                    collection: [
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    },
+                    entity: 'entity',
+                    value: [
                         '0',
                         '1',
                         '2',
                         '3'
-                    ],
-                    distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
-                        return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
-                    entity: 'entity'
+                    ]
                 })
                 .pipe(
                     rxop.toArray()
@@ -157,12 +157,17 @@ describe('models/Graph.js', () => {
 
         it('should add multiple edges with direction', done => {
             graph.allAll({
-                    collection: ['0', '1', '2', '3'],
                     direction: 'OUT',
-                    distance: (collectionSize, fromNodeIndex, toNodeIndex) => {
-                        return collectionSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
                     },
-                    entity: 'entity'
+                    entity: 'entity',
+                    value: [
+                        '0',
+                        '1',
+                        '2',
+                        '3'
+                    ]
                 })
                 .pipe(
                     rxop.toArray()
