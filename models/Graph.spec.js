@@ -648,9 +648,6 @@ describe('models/Graph.js', () => {
 
         it('should not add multiple single edge', done => {
             graph.crossLink({
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
                     entity: 'entity',
                     value: [
                         '0'
@@ -666,9 +663,6 @@ describe('models/Graph.js', () => {
 
         it('should add multiple edges', done => {
             graph.crossLink({
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
                     entity: 'entity',
                     value: [
                         '0',
@@ -686,25 +680,25 @@ describe('models/Graph.js', () => {
 
                     expect(!!_.find(response, {
                         fromNode: '0',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '0',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
@@ -722,37 +716,37 @@ describe('models/Graph.js', () => {
 
                     expect(!!_.find(response, {
                         fromNode: '1',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '3',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '3',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
                 }, null, done);
@@ -761,9 +755,6 @@ describe('models/Graph.js', () => {
         it('should add multiple edges with direction', done => {
             graph.crossLink({
                     direction: 'OUT',
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
                     entity: 'entity',
                     value: [
                         '0',
@@ -782,28 +773,28 @@ describe('models/Graph.js', () => {
                     expect(!!_.find(response, {
                         fromNode: '0',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '0',
                         direction: 'OUT',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'IN',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
@@ -825,42 +816,42 @@ describe('models/Graph.js', () => {
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '0',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'OUT',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '3',
                         direction: 'IN',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
@@ -868,42 +859,42 @@ describe('models/Graph.js', () => {
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'OUT',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '0',
                         direction: 'IN',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '3',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
@@ -925,28 +916,28 @@ describe('models/Graph.js', () => {
                     expect(!!_.find(response, {
                         fromNode: '3',
                         direction: 'OUT',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '1',
                         direction: 'IN',
-                        distance: 0.999999999999998,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '3',
                         direction: 'OUT',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
                         fromNode: '2',
                         direction: 'IN',
-                        distance: 0.999999999999997,
+                        distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
                 }, null, done);
@@ -2017,56 +2008,40 @@ describe('models/Graph.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 1,
-                                    '4': 1
-                                },
-                                entity: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 1,
-                                    '4': 1
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
-                            }]
-                        });
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }]);
                     }, null, done);
             });
 
@@ -2080,91 +2055,118 @@ describe('models/Graph.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                },
-                                entity: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999997,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }, {
-                                    distance: 0.999999999999998,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }, {
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999998,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
-                            }]
-                        });
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
                     }, null, done);
             });
 
+            it('should traverse with filter', done => {
+                graph.traverse({
+                        filter: '3+',
+                        jobs: [{
+                            entity: 'entity',
+                            fromNode: '0'
+                        }, {
+                            entity: 'entity'
+                        }]
+                    })
+                    .subscribe(response => {
+                        expect(response).to.deep.equal([{
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
+                    }, null, done);
+            });
+            
             it('should traverse filtering minPath', done => {
                 graph.traverse({
                         jobs: [{
@@ -2176,59 +2178,86 @@ describe('models/Graph.js', () => {
                         minPath: 3
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                },
-                                entity: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                }
-                            },
-                            paths: [{
-                                distance: 1.999999999999997,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }, {
-                                    distance: 0.999999999999998,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
+                        expect(response).to.deep.equal([{
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999998,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
-                            }]
-                        });
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
+                    }, null, done);
+            });
+            
+            it('should traverse filtering modPath', done => {
+                graph.traverse({
+                        jobs: [{
+                            entity: 'entity',
+                            fromNode: '0'
+                        }, {
+                            entity: 'entity'
+                        }],
+                        modPath: 3
+                    })
+                    .subscribe(response => {
+                        expect(response).to.deep.equal([{
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
                     }, null, done);
             });
 
-            it('should traverse filtering minPath and maxPath', done => {
+            it('should traverse filtering minPath, modPath and maxPath', done => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
@@ -2237,61 +2266,44 @@ describe('models/Graph.js', () => {
                             entity: 'entity'
                         }],
                         minPath: 2,
+                        modPath: 2,
                         maxPath: 2
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                },
-                                entity: {
-                                    '0': 3,
-                                    '1': 1,
-                                    '2': 2,
-                                    '3': 2,
-                                    '4': 2
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
-                            }]
-                        });
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }]);
                     }, null, done);
             });
 
@@ -2429,54 +2441,40 @@ describe('models/Graph.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '4': 1
-                                },
-                                entity: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '4': 1
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
-                            }]
-                        });
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }]);
                     }, null, done);
             });
 
@@ -2492,86 +2490,70 @@ describe('models/Graph.js', () => {
                         }]
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                },
-                                entity: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999997,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }, {
-                                    distance: 0.999999999999998,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }, {
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999998,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
-                            }]
-                        });
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
                     }, null, done);
             });
 
@@ -2588,53 +2570,37 @@ describe('models/Graph.js', () => {
                         minPath: 3
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                },
-                                entity: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                }
-                            },
-                            paths: [{
-                                distance: 1.999999999999997,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }, {
-                                    distance: 0.999999999999998,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
+                        expect(response).to.deep.equal([{
+                            distance: 1.999999999999997,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
-                                distance: 1.999999999999998,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '3'
-                                }],
-                                toNode: '3'
-                            }]
-                        });
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '2'
+                            }, {
+                                distance: 0.999999999999998,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }, {
+                            distance: 1.999999999999998,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '3'
+                            }],
+                            toNode: '3'
+                        }]);
                     }, null, done);
             });
 
@@ -2652,56 +2618,40 @@ describe('models/Graph.js', () => {
                         maxPath: 2
                     })
                     .subscribe(response => {
-                        expect(response).to.deep.equal({
-                            frequency: {
-                                all: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                },
-                                entity: {
-                                    '1': 1,
-                                    '2': 1,
-                                    '3': 2,
-                                    '4': 1
-                                }
-                            },
-                            paths: [{
-                                distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '1'
-                                }],
-                                toNode: '1'
+                        expect(response).to.deep.equal([{
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '2'
-                                }],
-                                toNode: '2'
+                                entity: 'entity',
+                                node: '1'
+                            }],
+                            toNode: '1'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
                             }, {
                                 distance: 0.999999999999999,
-                                fromNode: '0',
-                                path: [{
-                                    node: '0'
-                                }, {
-                                    distance: 0.999999999999999,
-                                    entity: 'entity',
-                                    node: '4'
-                                }],
-                                toNode: '4'
-                            }]
-                        });
+                                entity: 'entity',
+                                node: '2'
+                            }],
+                            toNode: '2'
+                        }, {
+                            distance: 0.999999999999999,
+                            fromNode: '0',
+                            path: [{
+                                node: '0'
+                            }, {
+                                distance: 0.999999999999999,
+                                entity: 'entity',
+                                node: '4'
+                            }],
+                            toNode: '4'
+                        }]);
                     }, null, done);
             });
 

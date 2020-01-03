@@ -102,9 +102,6 @@ module.exports = class Graph {
     crossLink(args = {}) {
         args = _.defaults({}, args, {
             direction: this.defaultDirection,
-            distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-            },
             entity: this.defaultEntity
         });
 
@@ -125,15 +122,17 @@ module.exports = class Graph {
                                         rxop.map((toNode, toNodeIndex) => {
                                             if (
                                                 !args.origin &&
-                                                ((args.direction && fromNodeIndex === toNodeIndex) ||
-                                                (!args.direction && toNodeIndex <= fromNodeIndex))
+                                                (
+                                                    (args.direction && fromNodeIndex === toNodeIndex) ||
+                                                    (!args.direction && toNodeIndex <= fromNodeIndex)
+                                                )
                                             ) {
                                                 return null;
                                             }
 
                                             return {
                                                 direction: args.direction,
-                                                distance: _.isFunction(args.distance) ? args.distance(valueSize, fromNodeIndex, toNodeIndex) : args.distance,
+                                                distance: args.distance,
                                                 entity: args.entity,
                                                 fromNode,
                                                 namespace: args.namespace,
@@ -278,9 +277,6 @@ module.exports = class Graph {
                 rxop.mergeMap(args => {
                     const initialJob = args.jobs[0];
                     const processedEdges = new Set();
-                    const frequency = {
-                        all: {}
-                    };
 
                     if (!initialJob) {
                         return rx.of([]);
@@ -306,26 +302,6 @@ module.exports = class Graph {
 
                                 if (!wasProcessed) {
                                     processedEdges.add(key);
-
-                                    if (!direction || direction === 'IN') {
-                                        frequency.all[fromNode] = frequency.all[fromNode] ? (frequency.all[fromNode] + 1) : 1;
-                                    }
-
-                                    if (!direction || direction === 'OUT') {
-                                        frequency.all[toNode] = frequency.all[toNode] ? (frequency.all[toNode] + 1) : 1;
-                                    }
-
-                                    if (!frequency[entity]) {
-                                        frequency[entity] = {};
-                                    }
-
-                                    if (!direction || direction === 'IN') {
-                                        frequency[entity][fromNode] = frequency[entity][fromNode] ? (frequency[entity][fromNode] + 1) : 1;
-                                    }
-
-                                    if (!direction || direction === 'OUT') {
-                                        frequency[entity][toNode] = frequency[entity][toNode] ? (frequency[entity][toNode] + 1) : 1;
-                                    }
                                 }
 
                                 return !wasProcessed;
@@ -401,17 +377,28 @@ module.exports = class Graph {
                                     };
                                 }));
                             }, []),
-                            rxop.map(items => _.filter(items, ({
-                                path
-                            }) => {
-                                const length = _.size(path);
+                            rxop.map(items => {
+                                return _.filter(items, ({
+                                    path,
+                                    toNode
+                                }) => {
+                                    let truthy = true;
+                                    let length = _.size(path);
 
-                                return length >= args.minPath && length <= args.maxPath;
-                            })),
-                            rxop.map(items => ({
-                                frequency,
-                                paths: _.sortBy(items, ['distance'])
-                            }))
+                                    truthy = length >= args.minPath && length <= args.maxPath && (args.modPath ? !(length % args.modPath) : true);
+
+                                    if (args.filter && truthy) {
+                                        const regex = new RegExp(args.filter, 'g');
+
+                                        truthy = toNode.match(regex);
+                                    }
+
+                                    return truthy;
+                                });
+                            }),
+                            rxop.map(items => {
+                                return _.sortBy(items, ['distance']);
+                            })
                         );
                 })
             );

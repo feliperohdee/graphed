@@ -78,11 +78,8 @@ const count = joi.object({
 
 const crossLink = joi.object({
     direction: common.direction,
-    distance: joi.alternatives()
-        .try(
-            joi.function(),
-            joi.number()
-        ),
+    distance: joi.number()
+        .default(1),
     entity: joi.string()
         .required(),
     namespace: joi.string(),
@@ -135,6 +132,7 @@ const traverse = joi.object({
         .min(0)
         .max(50000)
         .default(50000),
+    filter: joi.string(),
     jobs: joi.array()
         .items(closest.fork([
             'fromNode'
@@ -146,6 +144,7 @@ const traverse = joi.object({
         .default(30),
     minPath: joi.number()
         .default(2),
+    modPath: joi.number(),
     remoteClosest: joi.function(),
     remoteClosestIndex: joi.number()
         .default(1)
