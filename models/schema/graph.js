@@ -77,6 +77,8 @@ const count = joi.object({
 });
 
 const crossLink = joi.object({
+    cross: joi.boolean()
+        .default(true),
     direction: common.direction,
     distance: joi.number()
         .default(1),

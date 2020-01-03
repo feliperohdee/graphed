@@ -114,38 +114,55 @@ module.exports = class Graph {
                         return rx.empty();
                     }
 
-                    return rx.from(args.origin ? [args.origin] : args.value)
-                        .pipe(
-                            rxop.mergeMap((fromNode, fromNodeIndex) => {
-                                return rx.from(args.value)
-                                    .pipe(
-                                        rxop.map((toNode, toNodeIndex) => {
-                                            if (
-                                                !args.origin &&
-                                                (
-                                                    (args.direction && fromNodeIndex === toNodeIndex) ||
-                                                    (!args.direction && toNodeIndex <= fromNodeIndex)
-                                                )
-                                            ) {
-                                                return null;
-                                            }
+                    const crossLink = (value, entity) => {
+                        const origin = !_.isArray(value);
 
-                                            return {
-                                                direction: args.direction,
-                                                distance: args.distance,
-                                                entity: args.entity,
-                                                fromNode,
-                                                namespace: args.namespace,
-                                                toNode
-                                            };
-                                        }),
-                                        rxop.filter(response => !_.isNull(response))
-                                    );
-                            }),
-                            rxop.mergeMap(response => {
-                                return this.link(response);
-                            })
-                        );
+                        return rx.from(origin ? [value] : value)
+                            .pipe(
+                                rxop.mergeMap((fromNode, fromNodeIndex) => {
+                                    return rx.from(args.value)
+                                        .pipe(
+                                            rxop.map((toNode, toNodeIndex) => {
+                                                if (
+                                                    !origin &&
+                                                    (
+                                                        (args.direction && fromNodeIndex === toNodeIndex) ||
+                                                        (!args.direction && toNodeIndex <= fromNodeIndex)
+                                                    )
+                                                ) {
+                                                    return null;
+                                                }
+
+                                                return {
+                                                    direction: args.direction,
+                                                    distance: args.distance,
+                                                    entity,
+                                                    fromNode,
+                                                    namespace: args.namespace,
+                                                    toNode
+                                                };
+                                            }),
+                                            rxop.filter(response => !_.isNull(response))
+                                        );
+                                }),
+                                rxop.mergeMap(response => {
+                                    return this.link(response);
+                                })
+                            );
+                    };
+
+                    if (args.origin) {
+                        if (args.cross) {
+                            return rx.merge(
+                                crossLink(args.origin, args.entity),
+                                crossLink(args.value, `x-${args.entity}`)
+                            );
+                        }
+
+                        return crossLink(args.origin, args.entity);
+                    }
+
+                    return crossLink(args.value, args.entity);
                 })
             );
     }

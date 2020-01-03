@@ -679,72 +679,84 @@ describe('models/Graph.js', () => {
                     expect(_.size(response)).to.equal(12);
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         distance: 0.999999999999999,
                         toNode: '0'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         distance: 0.999999999999999,
                         toNode: '1'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         distance: 0.999999999999999,
                         toNode: '2'
@@ -771,6 +783,7 @@ describe('models/Graph.js', () => {
                     expect(_.size(response)).to.equal(24);
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -778,6 +791,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -785,6 +799,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -792,6 +807,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -799,6 +815,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -806,6 +823,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -814,6 +832,7 @@ describe('models/Graph.js', () => {
 
                     // 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -821,6 +840,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -828,6 +848,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -835,6 +856,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -842,6 +864,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -849,6 +872,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -857,6 +881,7 @@ describe('models/Graph.js', () => {
 
                     // 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -864,6 +889,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -871,6 +897,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -878,6 +905,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -885,6 +913,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -892,6 +921,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -900,6 +930,7 @@ describe('models/Graph.js', () => {
 
                     // 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -907,6 +938,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '0',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -914,6 +946,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -921,6 +954,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '1',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -928,6 +962,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '3',
                         direction: 'OUT',
                         distance: 0.999999999999999,
@@ -935,6 +970,7 @@ describe('models/Graph.js', () => {
                     })).to.be.true;
 
                     expect(!!_.find(response, {
+                        entity: 'entity',
                         fromNode: '2',
                         direction: 'IN',
                         distance: 0.999999999999999,
@@ -961,12 +997,14 @@ describe('models/Graph.js', () => {
                         expect(_.size(response)).to.equal(2);
                         
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '1',
                             distance: 0.999999999999999,
                             toNode: '0'
@@ -990,39 +1028,150 @@ describe('models/Graph.js', () => {
                     )
                     .subscribe(response => {
                         response = _.flattenDeep(response);
-                        expect(_.size(response)).to.equal(6);
+                        expect(_.size(response)).to.equal(12);
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '1',
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             distance: 0.999999999999999,
                             toNode: '2'
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '2',
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             distance: 0.999999999999999,
                             toNode: '3'
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '3',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+                        
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+                    }, null, done);
+            });
+            
+            it('should add multiple edges no crossing', done => {
+                graph.crossLink({
+                        cross: false,
+                        distance: 1,
+                        entity: 'entity',
+                        origin: '0',
+                        value: [
+                            '1',
+                            '2',
+                            '3'
+                        ]
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                    .subscribe(response => {
+                        response = _.flattenDeep(response);
+                        expect(_.size(response)).to.equal(6);
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '1',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '2',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '3',
                             distance: 0.999999999999999,
                             toNode: '0'
@@ -1047,9 +1196,10 @@ describe('models/Graph.js', () => {
                     )
                     .subscribe(response => {
                         response = _.flattenDeep(response);
-                        expect(_.size(response)).to.equal(6);
+                        expect(_.size(response)).to.equal(18);
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             direction: 'OUT',
                             distance: 0.999999999999999,
@@ -1057,6 +1207,7 @@ describe('models/Graph.js', () => {
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '1',
                             direction: 'IN',
                             distance: 0.999999999999999,
@@ -1064,6 +1215,7 @@ describe('models/Graph.js', () => {
                         })).to.be.true;
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             direction: 'OUT',
                             distance: 0.999999999999999,
@@ -1071,6 +1223,7 @@ describe('models/Graph.js', () => {
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '2',
                             direction: 'IN',
                             distance: 0.999999999999999,
@@ -1078,6 +1231,7 @@ describe('models/Graph.js', () => {
                         })).to.be.true;
     
                         expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '0',
                             direction: 'OUT',
                             distance: 0.999999999999999,
@@ -1085,6 +1239,176 @@ describe('models/Graph.js', () => {
                         })).to.be.true;
 
                         expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '3',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        //     
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        //     
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+    
+                        //     
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '1',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '3',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'x-entity',
+                            fromNode: '2',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+                    }, null, done);
+            });
+            
+            it('should add multiple edges with direction no crossing', done => {
+                graph.crossLink({
+                        cross: false,
+                        direction: 'OUT',
+                        distance: 1,
+                        entity: 'entity',
+                        origin: '0',
+                        value: [
+                            '1',
+                            '2',
+                            '3'
+                        ]
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                    .subscribe(response => {
+                        response = _.flattenDeep(response);
+                        expect(_.size(response)).to.equal(6);
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '1',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '2',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            entity: 'entity',
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            entity: 'entity',
                             fromNode: '3',
                             direction: 'IN',
                             distance: 0.999999999999999,
