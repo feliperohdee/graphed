@@ -41,54 +41,6 @@ module.exports = class Graph {
         this.setEdge = this.store.setEdge.bind(this.store);
     }
 
-    allAll(args = {}) {
-        args = _.defaults({}, args, {
-            direction: this.defaultDirection,
-            distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-            },
-            entity: this.defaultEntity
-        });
-
-        return validate(graph.allAll, args)
-            .pipe(
-                rxop.mergeMap(args => {
-                    const valueSize = _.size(args.value);
-
-                    if (valueSize <= 1) {
-                        return rx.empty();
-                    }
-
-                    return rx.from(args.value)
-                        .pipe(
-                            rxop.mergeMap((fromNode, fromNodeIndex) => {
-                                return rx.from(args.value)
-                                    .pipe(
-                                        rxop.map((toNode, toNodeIndex) => {
-                                            if ((args.direction && fromNodeIndex === toNodeIndex) || (!args.direction && toNodeIndex <= fromNodeIndex)) {
-                                                return null;
-                                            }
-
-                                            return {
-                                                direction: args.direction,
-                                                distance: _.isFunction(args.distance) ? args.distance(valueSize, fromNodeIndex, toNodeIndex) : args.distance,
-                                                entity: args.entity,
-                                                fromNode,
-                                                namespace: args.namespace,
-                                                toNode
-                                            };
-                                        }),
-                                        rxop.filter(response => !_.isNull(response))
-                                    );
-                            }),
-                            rxop.mergeMap(response => {
-                                return this.link(response);
-                            })
-                        );
-                })
-            );
-    }
-
     allByNode(args = {}) {
         args = _.defaults({}, args, {
             direction: this.defaultDirection,
@@ -143,6 +95,58 @@ module.exports = class Graph {
                     return this.countEdges(_.extend({}, args, {
                         namespace: _.compact([this.partition, args.namespace]).join('.')
                     }));
+                })
+            );
+    }
+
+    crossLink(args = {}) {
+        args = _.defaults({}, args, {
+            direction: this.defaultDirection,
+            distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
+            },
+            entity: this.defaultEntity
+        });
+
+        return validate(graph.crossLink, args)
+            .pipe(
+                rxop.mergeMap(args => {
+                    const valueSize = _.size(args.value);
+
+                    if (!args.origin && valueSize <= 1) {
+                        return rx.empty();
+                    }
+
+                    return rx.from(args.origin ? [args.origin] : args.value)
+                        .pipe(
+                            rxop.mergeMap((fromNode, fromNodeIndex) => {
+                                return rx.from(args.value)
+                                    .pipe(
+                                        rxop.map((toNode, toNodeIndex) => {
+                                            if (
+                                                !args.origin &&
+                                                ((args.direction && fromNodeIndex === toNodeIndex) ||
+                                                (!args.direction && toNodeIndex <= fromNodeIndex))
+                                            ) {
+                                                return null;
+                                            }
+
+                                            return {
+                                                direction: args.direction,
+                                                distance: _.isFunction(args.distance) ? args.distance(valueSize, fromNodeIndex, toNodeIndex) : args.distance,
+                                                entity: args.entity,
+                                                fromNode,
+                                                namespace: args.namespace,
+                                                toNode
+                                            };
+                                        }),
+                                        rxop.filter(response => !_.isNull(response))
+                                    );
+                            }),
+                            rxop.mergeMap(response => {
+                                return this.link(response);
+                            })
+                        );
                 })
             );
     }

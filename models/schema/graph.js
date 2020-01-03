@@ -2,22 +2,6 @@ const joi = require('@hapi/joi');
 
 const common = require('./common');
 
-const allAll = joi.object({
-    direction: common.direction,
-    distance: joi.alternatives()
-        .try(
-            joi.function(),
-            joi.number()
-        ),
-    entity: joi.string()
-        .required(),
-    namespace: joi.string(),
-    value: joi.array()
-        .items(joi.string())
-        .min(1)
-        .required()
-});
-
 const allByNode = joi.object({
     direction: common.direction,
     entity: joi.string(),
@@ -92,6 +76,23 @@ const count = joi.object({
     namespace: joi.string()
 });
 
+const crossLink = joi.object({
+    direction: common.direction,
+    distance: joi.alternatives()
+        .try(
+            joi.function(),
+            joi.number()
+        ),
+    entity: joi.string()
+        .required(),
+    namespace: joi.string(),
+    origin: joi.string(),
+    value: joi.array()
+        .items(joi.string())
+        .min(1)
+        .required()
+});
+
 const del = joi.object({
     direction: common.direction,
     entity: joi.string()
@@ -151,12 +152,12 @@ const traverse = joi.object({
 });
 
 module.exports = {
-    allAll,
     allByNode,
     closest,
     constructor,
     constructorOptions,
     count,
+    crossLink,
     del,
     delByNode,
     link,

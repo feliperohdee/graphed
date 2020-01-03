@@ -48,308 +48,6 @@ describe('models/Graph.js', () => {
         });
     });
 
-    describe('allAll', () => {
-        afterEach(done => {
-            rx.forkJoin(
-                    graph.deleteByNode({
-                        fromNode: '0'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    graph.deleteByNode({
-                        fromNode: '1'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    graph.deleteByNode({
-                        fromNode: '2'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    ),
-                    graph.deleteByNode({
-                        fromNode: '3'
-                    })
-                    .pipe(
-                        rxop.toArray()
-                    )
-                )
-                .subscribe(null, null, done);
-        });
-
-        it('should not add multiple single edge', done => {
-            graph.allAll({
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
-                    entity: 'entity',
-                    value: [
-                        '0'
-                    ]
-                })
-                .pipe(
-                    rxop.toArray()
-                )
-                .subscribe(response => {
-                    expect(_.size(response)).to.equal(0);
-                }, null, done);
-        });
-
-        it('should add multiple edges', done => {
-            graph.allAll({
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
-                    entity: 'entity',
-                    value: [
-                        '0',
-                        '1',
-                        '2',
-                        '3'
-                    ]
-                })
-                .pipe(
-                    rxop.toArray()
-                )
-                .subscribe(response => {
-                    response = _.flattenDeep(response);
-                    expect(_.size(response)).to.equal(12);
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        distance: 0.999999999999997,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        distance: 0.999999999999998,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        distance: 0.999999999999999,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        distance: 0.999999999999997,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        distance: 0.999999999999998,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        distance: 0.999999999999997,
-                        toNode: '3'
-                    })).to.be.true;
-                }, null, done);
-        });
-
-        it('should add multiple edges with direction', done => {
-            graph.allAll({
-                    direction: 'OUT',
-                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
-                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
-                    },
-                    entity: 'entity',
-                    value: [
-                        '0',
-                        '1',
-                        '2',
-                        '3'
-                    ]
-                })
-                .pipe(
-                    rxop.toArray()
-                )
-                .subscribe(response => {
-                    response = _.flattenDeep(response);
-                    expect(_.size(response)).to.equal(24);
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'OUT',
-                        distance: 0.999999999999998,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'IN',
-                        distance: 0.999999999999998,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'OUT',
-                        distance: 0.999999999999999,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'IN',
-                        distance: 0.999999999999999,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    // 
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'OUT',
-                        distance: 0.999999999999998,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'IN',
-                        distance: 0.999999999999998,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    // 
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'OUT',
-                        distance: 0.999999999999998,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'IN',
-                        distance: 0.999999999999998,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    // 
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'OUT',
-                        distance: 0.999999999999999,
-                        toNode: '0'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '0',
-                        direction: 'IN',
-                        distance: 0.999999999999999,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'OUT',
-                        distance: 0.999999999999998,
-                        toNode: '1'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '1',
-                        direction: 'IN',
-                        distance: 0.999999999999998,
-                        toNode: '3'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '3',
-                        direction: 'OUT',
-                        distance: 0.999999999999997,
-                        toNode: '2'
-                    })).to.be.true;
-
-                    expect(!!_.find(response, {
-                        fromNode: '2',
-                        direction: 'IN',
-                        distance: 0.999999999999997,
-                        toNode: '3'
-                    })).to.be.true;
-                }, null, done);
-        });
-    });
-
     describe('allByNode', () => {
         before(done => {
             rx.forkJoin(
@@ -914,6 +612,495 @@ describe('models/Graph.js', () => {
                         1, 0, 1
                     ]);
                 }, null, done);
+        });
+    });
+
+    describe('crossLink', () => {
+        afterEach(done => {
+            rx.forkJoin(
+                    graph.deleteByNode({
+                        fromNode: '0'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    graph.deleteByNode({
+                        fromNode: '1'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    graph.deleteByNode({
+                        fromNode: '2'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    ),
+                    graph.deleteByNode({
+                        fromNode: '3'
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                )
+                .subscribe(null, null, done);
+        });
+
+        it('should not add multiple single edge', done => {
+            graph.crossLink({
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    },
+                    entity: 'entity',
+                    value: [
+                        '0'
+                    ]
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    expect(_.size(response)).to.equal(0);
+                }, null, done);
+        });
+
+        it('should add multiple edges', done => {
+            graph.crossLink({
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    },
+                    entity: 'entity',
+                    value: [
+                        '0',
+                        '1',
+                        '2',
+                        '3'
+                    ]
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    response = _.flattenDeep(response);
+                    expect(_.size(response)).to.equal(12);
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        distance: 0.999999999999997,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        distance: 0.999999999999998,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        distance: 0.999999999999998,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        distance: 0.999999999999999,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        distance: 0.999999999999999,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        distance: 0.999999999999998,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        distance: 0.999999999999998,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        distance: 0.999999999999997,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+                }, null, done);
+        });
+
+        it('should add multiple edges with direction', done => {
+            graph.crossLink({
+                    direction: 'OUT',
+                    distance: (valueSize, fromNodeIndex, toNodeIndex) => {
+                        return valueSize - Math.abs(fromNodeIndex - toNodeIndex);
+                    },
+                    entity: 'entity',
+                    value: [
+                        '0',
+                        '1',
+                        '2',
+                        '3'
+                    ]
+                })
+                .pipe(
+                    rxop.toArray()
+                )
+                .subscribe(response => {
+                    response = _.flattenDeep(response);
+                    expect(_.size(response)).to.equal(24);
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'OUT',
+                        distance: 0.999999999999998,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'IN',
+                        distance: 0.999999999999998,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'OUT',
+                        distance: 0.999999999999999,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'IN',
+                        distance: 0.999999999999999,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    // 
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'OUT',
+                        distance: 0.999999999999998,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'IN',
+                        distance: 0.999999999999998,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    // 
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'OUT',
+                        distance: 0.999999999999998,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'IN',
+                        distance: 0.999999999999998,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    // 
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'OUT',
+                        distance: 0.999999999999999,
+                        toNode: '0'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '0',
+                        direction: 'IN',
+                        distance: 0.999999999999999,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'OUT',
+                        distance: 0.999999999999998,
+                        toNode: '1'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '1',
+                        direction: 'IN',
+                        distance: 0.999999999999998,
+                        toNode: '3'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '3',
+                        direction: 'OUT',
+                        distance: 0.999999999999997,
+                        toNode: '2'
+                    })).to.be.true;
+
+                    expect(!!_.find(response, {
+                        fromNode: '2',
+                        direction: 'IN',
+                        distance: 0.999999999999997,
+                        toNode: '3'
+                    })).to.be.true;
+                }, null, done);
+        });
+
+        describe('origin', () => {
+            it('should add multiple single edge', done => {
+                graph.crossLink({
+                        distance: 1,
+                        entity: 'entity',
+                        origin: '0',
+                        value: [
+                            '1'
+                        ]
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                    .subscribe(response => {
+                        response = _.flattenDeep(response);
+                        expect(_.size(response)).to.equal(2);
+                        
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            fromNode: '1',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+                    }, null, done);
+            });
+
+            it('should add multiple edges', done => {
+                graph.crossLink({
+                        distance: 1,
+                        entity: 'entity',
+                        origin: '0',
+                        value: [
+                            '1',
+                            '2',
+                            '3'
+                        ]
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                    .subscribe(response => {
+                        response = _.flattenDeep(response);
+                        expect(_.size(response)).to.equal(6);
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '1',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '2',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '3',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+                    }, null, done);
+            });
+            
+            it('should add multiple edges with direction', done => {
+                graph.crossLink({
+                        direction: 'OUT',
+                        distance: 1,
+                        entity: 'entity',
+                        origin: '0',
+                        value: [
+                            '1',
+                            '2',
+                            '3'
+                        ]
+                    })
+                    .pipe(
+                        rxop.toArray()
+                    )
+                    .subscribe(response => {
+                        response = _.flattenDeep(response);
+                        expect(_.size(response)).to.equal(6);
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '1'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '1',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '2'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '2',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+    
+                        expect(!!_.find(response, {
+                            fromNode: '0',
+                            direction: 'OUT',
+                            distance: 0.999999999999999,
+                            toNode: '3'
+                        })).to.be.true;
+
+                        expect(!!_.find(response, {
+                            fromNode: '3',
+                            direction: 'IN',
+                            distance: 0.999999999999999,
+                            toNode: '0'
+                        })).to.be.true;
+                    }, null, done);
+            });
         });
     });
 
