@@ -57,14 +57,15 @@ const constructor = joi.object({
 });
 
 const constructorOptions = joi.object({
-    firehose: joi.object({
-        concurrency: joi.number()
-            .min(0)
-            .max(1000)
-            .default(100),
-        stream: joi.string()
-            .required()
-    })
+    firehose: joi.alternatives()
+        .try(null, joi.object({
+            concurrency: joi.number()
+                .min(0)
+                .max(1000)
+                .default(100),
+            stream: joi.string()
+                .required()
+        }))
 });
 
 const count = joi.object({
