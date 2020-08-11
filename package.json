@@ -1,31 +1,31 @@
 {
     "name": "graphed",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...) and compatible with AWS Firehose",
     "main": "index.js",
     "dependencies": {
-        "@hapi/joi": "^16.1.8",
-        "aws-sdk": "^2.585.0",
-        "lodash": "^4.17.15",
-        "rxjs": "^6.5.3",
-        "rxjs-dynamodb-client": "^1.0.8",
+        "aws-sdk": "^2.731.0",
+        "joi": "^17.2.0",
+        "lodash": "^4.17.19",
+        "rxjs": "^6.6.2",
+        "rxjs-dynamodb-client": "^2.0.1",
         "simple-beauty-error": "^1.0.1"
     },
     "devDependencies": {
         "chai": "^4.2.0",
         "chai-subset": "^1.6.0",
-        "eslint": "^6.7.2",
-        "mocha": "^6.2.2",
-        "nyc": "^14.1.1",
-        "sinon": "^7.5.0",
-        "sinon-chai": "^3.3.0"
+        "eslint": "^7.6.0",
+        "mocha": "^8.1.1",
+        "nyc": "^15.1.0",
+        "sinon": "^9.0.3",
+        "sinon-chai": "^3.5.0"
     },
     "scripts": {
         "coverage": "rm -rf coverage; NODE_ENV=test nyc ./node_modules/.bin/_mocha **/*.spec.js --recursive --timeout 5000; rm -rf .nyc_output",
         "deploy": "npm version patch -m 'Bump %s' && git push origin master && npm publish",
         "dynamo": "java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar ./dynamodb/DynamoDBLocal.jar -dbPath ./dynamodb/graphed -port 9090",
         "eslint": "eslint . --ext .js --config node_modules/eslint-config/index.js",
-        "test": "NODE_ENV=test ./node_modules/.bin/_mocha **/*.spec.js --recursive --watch --timeout 5000"
+        "test": "NODE_ENV=test ./node_modules/.bin/_mocha **/*.spec.js --recursive --timeout 5000"
     },
     "repository": {
         "type": "git",

@@ -342,7 +342,7 @@ describe('models/DynamoDbStore.js', () => {
                     })
                 )
                 .subscribe(response => {
-                    expect(_.size(response.data)).to.equal(0);
+                    expect(_.size(response.items)).to.equal(0);
                 }, null, done);
         });
 
@@ -394,9 +394,9 @@ describe('models/DynamoDbStore.js', () => {
                     })
                 )
                 .subscribe(response => {
-                    expect(_.size(response.data)).to.equal(2);
-                    expect(response.data[0].base).to.deep.include('spec:0:entity');
-                    expect(response.data[1].base).to.deep.include('spec:2:entity');
+                    expect(_.size(response.items)).to.equal(2);
+                    expect(response.items[0].base).to.deep.include('spec:0:entity');
+                    expect(response.items[1].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
 
@@ -432,10 +432,10 @@ describe('models/DynamoDbStore.js', () => {
                     })
                 )
                 .subscribe(response => {
-                    expect(_.size(response.data)).to.equal(4);
-                    expect(response.data[0].base).to.deep.include('spec:0:entity');
-                    expect(response.data[2].base).to.deep.include('spec:1:entity');
-                    expect(response.data[3].base).to.deep.include('spec:2:entity');
+                    expect(_.size(response.items)).to.equal(4);
+                    expect(response.items[0].base).to.deep.include('spec:0:entity');
+                    expect(response.items[2].base).to.deep.include('spec:1:entity');
+                    expect(response.items[3].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
 
@@ -472,10 +472,10 @@ describe('models/DynamoDbStore.js', () => {
                     })
                 )
                 .subscribe(response => {
-                    expect(_.size(response.data)).to.equal(4);
-                    expect(response.data[0].base).to.deep.include('spec:0:entity');
-                    expect(response.data[2].base).to.deep.include('spec:1:entity');
-                    expect(response.data[3].base).to.deep.include('spec:2:entity');
+                    expect(_.size(response.items)).to.equal(4);
+                    expect(response.items[0].base).to.deep.include('spec:0:entity');
+                    expect(response.items[2].base).to.deep.include('spec:1:entity');
+                    expect(response.items[3].base).to.deep.include('spec:2:entity');
                 }, null, done);
         });
     });

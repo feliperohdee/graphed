@@ -123,7 +123,7 @@ module.exports = class DynamoDbStore extends Crud {
                         })
                         .pipe(
                             rxop.map(response => {
-                                return response.stats.count;
+                                return response.count;
                             })
                         );
                 })
@@ -204,7 +204,7 @@ module.exports = class DynamoDbStore extends Crud {
                         }))
                         .pipe(
                             rxop.mergeMap(response => {
-                                return rx.from(response.data)
+                                return rx.from(response.items)
                                     .pipe(
                                         rxop.map(response => {
                                             return _.extend({}, response, this._parseId(response.id));
@@ -281,7 +281,7 @@ module.exports = class DynamoDbStore extends Crud {
                         }, hook)
                         .pipe(
                             rxop.mergeMap(response => {
-                                return rx.from(response.data)
+                                return rx.from(response.items)
                                     .pipe(
                                         rxop.map(response => {
                                             return _.extend({}, response, this._parseId(response.id));
