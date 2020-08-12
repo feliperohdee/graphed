@@ -9,7 +9,8 @@ const allByNode = joi.object({
         .required(),
     inverse: joi.boolean()
         .default(true),
-    namespace: joi.string(),
+    namespace: joi.string()
+        .required(),
     onlyNodes: joi.boolean(),
     toNode: joi.string()
 });
@@ -27,7 +28,8 @@ const closest = joi.object({
         .required(),
     fromNode: joi.string()
         .required(),
-    namespace: joi.string(),
+    namespace: joi.string()
+        .required(),
     limit: joi.number()
 });
 
@@ -36,8 +38,6 @@ const constructor = joi.object({
         .default(1 / (10 ** 15)),
     defaultDirection: common.direction,
     defaultEntity: joi.string(),
-    partition: joi.string()
-        .required(),
     store: joi.object({
             countEdges: joi.function()
                 .required(),
@@ -75,6 +75,7 @@ const count = joi.object({
     fromNode: joi.string()
         .required(),
     namespace: joi.string()
+        .required()
 });
 
 const crossLink = joi.object({
@@ -85,7 +86,8 @@ const crossLink = joi.object({
         .default(1),
     entity: joi.string()
         .required(),
-    namespace: joi.string(),
+    namespace: joi.string()
+        .required(),
     origin: joi.string(),
     value: joi.array()
         .items(joi.string())
@@ -100,7 +102,8 @@ const del = joi.object({
     fromNode: joi.string()
         .required(),
     inverse: joi.boolean(),
-    namespace: joi.string(),
+    namespace: joi.string()
+        .required(),
     toNode: joi.string()
         .required()
 });
@@ -110,7 +113,8 @@ const delByNode = joi.object({
     entity: joi.string(),
     fromNode: joi.string()
         .required(),
-    namespace: joi.string(),
+    namespace: joi.string()
+        .required(),
     toNode: joi.string()
 });
 
@@ -126,6 +130,7 @@ const link = joi.object({
     entity: joi.string()
         .required(),
     namespace: joi.string(),
+        // .required(),
     toNode: joi.string()
         .required()
 });

@@ -1,6 +1,6 @@
 {
     "name": "graphed",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...) and compatible with AWS Firehose",
     "main": "index.js",
     "dependencies": {
@@ -15,7 +15,7 @@
         "chai": "^4.2.0",
         "chai-subset": "^1.6.0",
         "eslint": "^7.6.0",
-        "mocha": "^8.1.1",
+        "mocha": "7.2.0",
         "nyc": "^15.1.0",
         "sinon": "^9.0.3",
         "sinon-chai": "^3.5.0"

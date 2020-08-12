@@ -13,8 +13,8 @@ const {
 } = require('./util');
 
 const expect = chai.expect;
+const namespace = 'spec';
 const graph = new Graph({
-    partition: app.partition,
     store: app.store
 }, {
     firehose: {
@@ -29,7 +29,8 @@ describe('handlers/linkFirehose.js', () => {
     after(done => {
         rx.forkJoin(
                 graph.deleteByNode({
-                    fromNode: '0'
+                    fromNode: '0',
+                    namespace
                 })
                 .pipe(
                     rxop.toArray()
@@ -40,7 +41,6 @@ describe('handlers/linkFirehose.js', () => {
 
     it('should throw if no firehose configured', () => {
         expect(() => linkFirehose(new Graph({
-            partition: app.partition,
             store: app.store
         }))).to.throw('no firehose configured.');
     });
@@ -61,6 +61,7 @@ describe('handlers/linkFirehose.js', () => {
                 data: toBase64({
                     entity: 'entity',
                     fromNode: '0',
+                    namespace,
                     toNode: '1'
                 })
             }, {
@@ -68,6 +69,7 @@ describe('handlers/linkFirehose.js', () => {
                 data: toBase64({
                     entity: 'entity',
                     fromNode: '0',
+                    namespace,
                     toNode: '1'
                 })
             }, {
@@ -75,6 +77,7 @@ describe('handlers/linkFirehose.js', () => {
                 data: toBase64({
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '0'
                 })
             }]

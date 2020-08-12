@@ -25,14 +25,12 @@ describe('models/Graph.js', () => {
 
     before(() => {
         graph = new Graph({
-            partition: app.partition,
             store: app.store
         });
     });
 
     beforeEach(() => {
         graph = new Graph({
-            partition: app.partition,
             store: app.store
         });
     });
@@ -54,12 +52,14 @@ describe('models/Graph.js', () => {
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }),
                     graph.link({
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     })
                 )
@@ -69,13 +69,15 @@ describe('models/Graph.js', () => {
         after(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -87,13 +89,15 @@ describe('models/Graph.js', () => {
         it('should fetch all by node', done => {
             rx.forkJoin(
                     graph.allByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.allByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -158,7 +162,8 @@ describe('models/Graph.js', () => {
                     graph.allByNode({
                         fromNode: '1',
                         direction: 'OUT',
-                        entity: 'entity'
+                        entity: 'entity',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -166,7 +171,8 @@ describe('models/Graph.js', () => {
                     graph.allByNode({
                         fromNode: '2',
                         direction: 'OUT',
-                        entity: 'entity'
+                        entity: 'entity',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -199,13 +205,15 @@ describe('models/Graph.js', () => {
         it('should fetch all by node only by distance', done => {
             rx.forkJoin(
                     graph.allByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.allByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -269,14 +277,16 @@ describe('models/Graph.js', () => {
             rx.forkJoin(
                     graph.allByNode({
                         fromNode: '1',
-                        noInverse: true
+                        noInverse: true,
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.allByNode({
                         fromNode: '2',
-                        noInverse: true
+                        noInverse: true,
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -316,6 +326,7 @@ describe('models/Graph.js', () => {
             rx.forkJoin(
                     graph.allByNode({
                         fromNode: '1',
+                        namespace,
                         onlyNodes: true
                     })
                     .pipe(
@@ -323,6 +334,7 @@ describe('models/Graph.js', () => {
                     ),
                     graph.allByNode({
                         fromNode: '2',
+                        namespace,
                         noInverse: true,
                         onlyNodes: true
                     })
@@ -347,18 +359,21 @@ describe('models/Graph.js', () => {
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }),
                     graph.link({
                         absoluteDistance: 0.999999999999998,
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '3'
                     }),
                     graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     }),
                     graph.link({
@@ -366,6 +381,7 @@ describe('models/Graph.js', () => {
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
+                        namespace,
                         toNode: '4'
                     })
                 )
@@ -375,25 +391,29 @@ describe('models/Graph.js', () => {
         after(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '4'
+                        fromNode: '4',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -405,7 +425,8 @@ describe('models/Graph.js', () => {
         it('should get closest nodes', done => {
             graph.closest({
                     entity: 'entity',
-                    fromNode: '1'
+                    fromNode: '1',
+                    namespace
                 })
                 .pipe(
                     rxop.toArray()
@@ -435,7 +456,8 @@ describe('models/Graph.js', () => {
             graph.closest({
                     direction: 'OUT',
                     entity: 'entity',
-                    fromNode: '2'
+                    fromNode: '2',
+                    namespace
                 })
                 .pipe(
                     rxop.toArray()
@@ -465,7 +487,8 @@ describe('models/Graph.js', () => {
             graph.closest({
                     desc: true,
                     entity: 'entity',
-                    fromNode: '1'
+                    fromNode: '1',
+                    namespace
                 })
                 .pipe(
                     rxop.toArray()
@@ -495,7 +518,8 @@ describe('models/Graph.js', () => {
             graph.closest({
                     limit: 1,
                     entity: 'entity',
-                    fromNode: '1'
+                    fromNode: '1',
+                    namespace
                 })
                 .pipe(
                     rxop.toArray()
@@ -519,17 +543,20 @@ describe('models/Graph.js', () => {
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }),
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '3'
                     }),
                     graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     })
                 )
@@ -539,19 +566,22 @@ describe('models/Graph.js', () => {
         after(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -564,45 +594,54 @@ describe('models/Graph.js', () => {
             rx.forkJoin(
                     graph.count({
                         entity: 'entity',
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'OUT',
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'IN',
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'OUT',
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'IN',
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'OUT',
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     }),
                     graph.count({
                         entity: 'entity',
                         direction: 'IN',
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     })
                 )
                 .subscribe(response => {
@@ -619,25 +658,29 @@ describe('models/Graph.js', () => {
         afterEach(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '0'
+                        fromNode: '0',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -649,6 +692,7 @@ describe('models/Graph.js', () => {
         it('should not add multiple single edge', done => {
             graph.crossLink({
                     entity: 'entity',
+                    namespace,
                     value: [
                         '0'
                     ]
@@ -664,6 +708,7 @@ describe('models/Graph.js', () => {
         it('should add multiple edges', done => {
             graph.crossLink({
                     entity: 'entity',
+                    namespace,
                     value: [
                         '0',
                         '1',
@@ -768,6 +813,7 @@ describe('models/Graph.js', () => {
             graph.crossLink({
                     direction: 'OUT',
                     entity: 'entity',
+                    namespace,
                     value: [
                         '0',
                         '1',
@@ -984,6 +1030,7 @@ describe('models/Graph.js', () => {
                 graph.crossLink({
                         distance: 1,
                         entity: 'entity',
+                        namespace,
                         origin: '0',
                         value: [
                             '1'
@@ -1016,6 +1063,7 @@ describe('models/Graph.js', () => {
                 graph.crossLink({
                         distance: 1,
                         entity: 'entity',
+                        namespace,
                         origin: '0',
                         value: [
                             '1',
@@ -1121,6 +1169,7 @@ describe('models/Graph.js', () => {
                         cross: false,
                         distance: 1,
                         entity: 'entity',
+                        namespace,
                         origin: '0',
                         value: [
                             '1',
@@ -1184,6 +1233,7 @@ describe('models/Graph.js', () => {
                         direction: 'OUT',
                         distance: 1,
                         entity: 'entity',
+                        namespace,
                         origin: '0',
                         value: [
                             '1',
@@ -1353,6 +1403,7 @@ describe('models/Graph.js', () => {
                         direction: 'OUT',
                         distance: 1,
                         entity: 'entity',
+                        namespace,
                         origin: '0',
                         value: [
                             '1',
@@ -1425,12 +1476,14 @@ describe('models/Graph.js', () => {
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }),
                     graph.link({
                         entity: 'entity',
                         direction: 'OUT',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     })
                 )
@@ -1440,13 +1493,15 @@ describe('models/Graph.js', () => {
         after(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1461,6 +1516,7 @@ describe('models/Graph.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     })
                     .subscribe(response => {
@@ -1474,6 +1530,7 @@ describe('models/Graph.js', () => {
                         entity: 'entity',
                         fromNode: '2',
                         inverse: true,
+                        namespace,
                         toNode: '3'
                     })
                     .subscribe(([
@@ -1493,6 +1550,7 @@ describe('models/Graph.js', () => {
                 graph.delete({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     })
                     .subscribe(response => {
@@ -1505,6 +1563,7 @@ describe('models/Graph.js', () => {
                         entity: 'entity',
                         fromNode: '1',
                         inverse: true,
+                        namespace,
                         toNode: '2'
                     })
                     .subscribe(([
@@ -1526,12 +1585,14 @@ describe('models/Graph.js', () => {
                     graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }),
                     graph.link({
                         entity: 'entity',
                         direction: 'IN',
                         fromNode: '2',
+                        namespace,
                         toNode: '3'
                     })
                 )
@@ -1541,13 +1602,15 @@ describe('models/Graph.js', () => {
         after(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1559,13 +1622,15 @@ describe('models/Graph.js', () => {
         it('should delete by fromNode', done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '3'
+                        fromNode: '3',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1613,14 +1678,16 @@ describe('models/Graph.js', () => {
             rx.forkJoin(
                     graph.deleteByNode({
                         fromNode: '1',
-                        entity: 'entity'
+                        entity: 'entity',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
                         fromNode: '2',
-                        entity: 'inexistent'
+                        entity: 'inexistent',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1655,7 +1722,8 @@ describe('models/Graph.js', () => {
                     graph.deleteByNode({
                         fromNode: '1',
                         entity: 'entity',
-                        direction: 'IN'
+                        direction: 'IN',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1663,7 +1731,8 @@ describe('models/Graph.js', () => {
                     graph.deleteByNode({
                         fromNode: '2',
                         entity: 'entity',
-                        direction: 'IN'
+                        direction: 'IN',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1714,13 +1783,15 @@ describe('models/Graph.js', () => {
         afterEach(done => {
             rx.forkJoin(
                     graph.deleteByNode({
-                        fromNode: '1'
+                        fromNode: '1',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
                     ),
                     graph.deleteByNode({
-                        fromNode: '2'
+                        fromNode: '2',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -1734,6 +1805,7 @@ describe('models/Graph.js', () => {
                     absoluteDistance: 0.999999999999999,
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1751,6 +1823,7 @@ describe('models/Graph.js', () => {
             graph.link({
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1769,6 +1842,7 @@ describe('models/Graph.js', () => {
                     distance: 5,
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1787,6 +1861,7 @@ describe('models/Graph.js', () => {
                     distance: 0,
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1805,6 +1880,7 @@ describe('models/Graph.js', () => {
                     distance: 5,
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .pipe(
@@ -1812,6 +1888,7 @@ describe('models/Graph.js', () => {
                         distance: 0,
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }))
                 )
@@ -1831,6 +1908,7 @@ describe('models/Graph.js', () => {
             graph.link({
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1849,6 +1927,7 @@ describe('models/Graph.js', () => {
                     distance: 1,
                     entity: 'entity',
                     fromNode: '1',
+                    namespace,
                     toNode: '2'
                 })
                 .subscribe(response => {
@@ -1867,6 +1946,7 @@ describe('models/Graph.js', () => {
                 graph.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     })
                     .subscribe(response => {
@@ -1894,6 +1974,7 @@ describe('models/Graph.js', () => {
                         direction: 'OUT',
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     })
                     .subscribe(response => {
@@ -1919,7 +2000,6 @@ describe('models/Graph.js', () => {
 
         describe('with firehose', () => {
             const edgeFirehose = new Graph({
-                partition: app.partition,
                 store: app.store
             }, {
                 firehose: {
@@ -1946,6 +2026,7 @@ describe('models/Graph.js', () => {
                 edgeFirehose.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     })
                     .subscribe(response => {
@@ -1955,6 +2036,7 @@ describe('models/Graph.js', () => {
                                 Data: JSON.stringify({
                                     entity: 'entity',
                                     fromNode: '1',
+                                    namespace,
                                     toNode: '2',
                                     direction: null,
                                     distance: 1
@@ -1968,6 +2050,7 @@ describe('models/Graph.js', () => {
                 edgeFirehose.link({
                         entity: 'entity',
                         fromNode: '1',
+                        namespace,
                         toNode: '2'
                     }, true)
                     .subscribe(response => {
@@ -1979,7 +2062,6 @@ describe('models/Graph.js', () => {
 
     describe('processFirehose', () => {
         const edgeFirehose = new Graph({
-            partition: app.partition,
             store: app.store
         }, {
             firehose: {
@@ -1997,7 +2079,8 @@ describe('models/Graph.js', () => {
 
             rx.forkJoin(
                     edgeFirehose.deleteByNode({
-                        fromNode: '0'
+                        fromNode: '0',
+                        namespace
                     })
                     .pipe(
                         rxop.toArray()
@@ -2026,41 +2109,41 @@ describe('models/Graph.js', () => {
                 distance: 2,
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
             }, {
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
             }, {
                 absoluteDistance: 1,
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
             }, {
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
             }, {
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
-            }, {
-                entity: 'entity',
-                fromNode: '0',
-                toNode: '1',
-                namespace
             }, {
                 direction: 'OUT',
                 entity: 'entity',
                 fromNode: '0',
-                toNode: '1',
-                namespace
+                namespace,
+                toNode: '1'
             }, {
                 direction: 'OUT',
                 entity: 'entity',
                 fromNode: '1',
-                toNode: '0',
-                namespace
+                namespace,
+                toNode: '0'
             }]);
 
             edgeFirehose.processFirehose(stream)
@@ -2068,7 +2151,7 @@ describe('models/Graph.js', () => {
                     rxop.toArray()
                 )
                 .subscribe(response => {
-                    expect(edgeFirehose.link).to.have.callCount(6);
+                    expect(edgeFirehose.link).to.have.callCount(5);
                     expect(edgeFirehose.link).to.have.been.calledWith(sinon.match.object, true);
 
                     // 0 <-> (2 + 1) <-> 1
@@ -2122,54 +2205,37 @@ describe('models/Graph.js', () => {
                         toNode: '0'
                     }]);
 
-                    // namespace 0 <-> (1) <-> 1
-                    expect(response[3]).to.deep.equal([{
-                        direction: null,
-                        distance: 0.999999999999999,
-                        entity: 'entity',
-                        fromNode: '0',
-                        namespace: `${namespace}:${namespace}`,
-                        toNode: '1'
-                    }, {
-                        direction: null,
-                        distance: 0.999999999999999,
-                        entity: 'entity',
-                        fromNode: '1',
-                        namespace: `${namespace}:${namespace}`,
-                        toNode: '0'
-                    }]);
-
                     // namespace 0 -> (1) -> 1
-                    expect(response[4]).to.deep.equal([{
+                    expect(response[3]).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: `${namespace}:${namespace}`,
+                        namespace,
                         toNode: '1'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: `${namespace}:${namespace}`,
+                        namespace,
                         toNode: '0'
                     }]);
 
                     // namespace 1 -> (1) -> 0
-                    expect(response[5]).to.deep.equal([{
+                    expect(response[4]).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: `${namespace}:${namespace}`,
+                        namespace,
                         toNode: '0'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: `${namespace}:${namespace}`,
+                        namespace,
                         toNode: '1'
                     }]);
                 }, null, done);
@@ -2179,6 +2245,7 @@ describe('models/Graph.js', () => {
             const link = {
                 entity: 'entity',
                 fromNode: '0',
+                namespace,
                 toNode: '1'
             };
 
@@ -2238,7 +2305,8 @@ describe('models/Graph.js', () => {
         it('should handle errors', done => {
             graph.traverse({
                     jobs: [{
-                        entity: 'entity'
+                        entity: 'entity',
+                        namespace
                     }]
                 })
                 .subscribe(null, err => {
@@ -2253,27 +2321,32 @@ describe('models/Graph.js', () => {
                         graph.link({
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '1'
                         }),
                         graph.link({
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '2'
                         }),
                         graph.link({
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '4'
                         }),
                         graph.link({
                             absoluteDistance: 0.999999999999998,
                             entity: 'entity',
                             fromNode: '2',
+                            namespace,
                             toNode: '3'
                         }),
                         graph.link({
                             entity: 'entity',
                             fromNode: '4',
+                            namespace,
                             toNode: '3'
                         })
                     )
@@ -2283,31 +2356,36 @@ describe('models/Graph.js', () => {
             after(done => {
                 rx.forkJoin(
                         graph.deleteByNode({
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '1'
+                            fromNode: '1',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '2'
+                            fromNode: '2',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '3'
+                            fromNode: '3',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '4'
+                            fromNode: '4',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
@@ -2328,7 +2406,8 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2373,9 +2452,11 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2451,9 +2532,11 @@ describe('models/Graph.js', () => {
                         filter: '3+',
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2495,9 +2578,11 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         minPath: 3
                     })
@@ -2540,9 +2625,11 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         modPath: 3
                     })
@@ -2585,9 +2672,11 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         minPath: 2,
                         modPath: 2,
@@ -2635,11 +2724,14 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2662,9 +2754,11 @@ describe('models/Graph.js', () => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         remoteClosest
                     })
@@ -2681,18 +2775,21 @@ describe('models/Graph.js', () => {
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '1'
                         }),
                         graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '2'
                         }),
                         graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '0',
+                            namespace,
                             toNode: '4'
                         }),
                         graph.link({
@@ -2700,12 +2797,14 @@ describe('models/Graph.js', () => {
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '2',
+                            namespace,
                             toNode: '3'
                         }),
                         graph.link({
                             direction: 'OUT',
                             entity: 'entity',
                             fromNode: '4',
+                            namespace,
                             toNode: '3'
                         })
                     )
@@ -2715,31 +2814,36 @@ describe('models/Graph.js', () => {
             after(done => {
                 rx.forkJoin(
                         graph.deleteByNode({
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '1'
+                            fromNode: '1',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '2'
+                            fromNode: '2',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '3'
+                            fromNode: '3',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
                         ),
                         graph.deleteByNode({
-                            fromNode: '4'
+                            fromNode: '4',
+                            namespace
                         })
                         .pipe(
                             rxop.toArray()
@@ -2761,7 +2865,8 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2807,10 +2912,12 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -2886,10 +2993,12 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         minPath: 3
                     })
@@ -2933,10 +3042,12 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         minPath: 2,
                         maxPath: 2
@@ -2984,13 +3095,16 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }]
                     })
                     .subscribe(response => {
@@ -3014,10 +3128,12 @@ describe('models/Graph.js', () => {
                         jobs: [{
                             direction: 'OUT',
                             entity: 'entity',
-                            fromNode: '0'
+                            fromNode: '0',
+                            namespace
                         }, {
                             direction: 'OUT',
-                            entity: 'entity'
+                            entity: 'entity',
+                            namespace
                         }],
                         remoteClosest
                     })

@@ -30,7 +30,6 @@ module.exports = class Graph {
         this.decrementPath = value.decrementPath;
         this.defaultDirection = value.defaultDirection;
         this.defaultEntity = value.defaultEntity;
-        this.partition = value.partition;
         this.store = value.store;
 
         this.countEdges = this.store.countEdges.bind(this.store);
@@ -51,7 +50,7 @@ module.exports = class Graph {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAll(_.extend({}, args, {
-                            namespace: _.compact([this.partition, args.namespace]).join(':'),
+                            namespace: args.namespace,
                             inverse: args.onlyNodes ? false : args.inverse
                         }))
                         .pipe(
@@ -77,7 +76,7 @@ module.exports = class Graph {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getAllByDistance(_.extend({}, args, {
-                        namespace: _.compact([this.partition, args.namespace]).join(':')
+                        namespace: args.namespace
                     }));
                 })
             );
@@ -93,7 +92,7 @@ module.exports = class Graph {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.countEdges(_.extend({}, args, {
-                        namespace: _.compact([this.partition, args.namespace]).join(':')
+                        namespace: args.namespace
                     }));
                 })
             );
@@ -177,7 +176,7 @@ module.exports = class Graph {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdge(_.extend({}, args, {
-                        namespace: _.compact([this.partition, args.namespace]).join(':')
+                        namespace: args.namespace
                     }));
                 })
             );
@@ -193,7 +192,7 @@ module.exports = class Graph {
             .pipe(
                 rxop.mergeMap(args => {
                     return this.deleteEdges(_.extend({}, args, {
-                        namespace: _.compact([this.partition, args.namespace]).join(':')
+                        namespace: args.namespace
                     }));
                 })
             );
@@ -229,7 +228,7 @@ module.exports = class Graph {
 
                     return this.setEdge(_.extend({}, args, {
                         distance: args.absoluteDistance ? args.absoluteDistance : -(args.distance * this.decrementPath),
-                        namespace: _.compact([this.partition, args.namespace]).join(':')
+                        namespace: args.namespace
                     }));
                 })
             );
