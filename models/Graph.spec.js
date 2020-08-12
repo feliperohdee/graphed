@@ -2128,14 +2128,14 @@ describe('models/Graph.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '1'
                     }, {
                         direction: null,
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '0'
                     }]);
 
@@ -2145,14 +2145,14 @@ describe('models/Graph.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '1'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '0'
                     }]);
 
@@ -2162,14 +2162,14 @@ describe('models/Graph.js', () => {
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '1',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '0'
                     }, {
                         direction: 'IN',
                         distance: 0.999999999999999,
                         entity: 'entity',
                         fromNode: '0',
-                        namespace: `${namespace}.${namespace}`,
+                        namespace: `${namespace}:${namespace}`,
                         toNode: '1'
                     }]);
                 }, null, done);
