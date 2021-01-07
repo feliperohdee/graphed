@@ -49,10 +49,11 @@ module.exports = class Graph {
         return validate(graph.allByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.getAll(_.extend({}, args, {
+                    return this.getAll({
+                            ...args,
                             namespace: args.namespace,
                             inverse: args.onlyNodes ? false : args.inverse
-                        }))
+                        })
                         .pipe(
                             rxop.map(response => {
                                 if (args.onlyNodes) {
@@ -75,9 +76,10 @@ module.exports = class Graph {
         return validate(graph.closest, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.getAllByDistance(_.extend({}, args, {
+                    return this.getAllByDistance({
+                        ...args,
                         namespace: args.namespace
-                    }));
+                    });
                 })
             );
     }
@@ -91,9 +93,10 @@ module.exports = class Graph {
         return validate(graph.count, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.countEdges(_.extend({}, args, {
+                    return this.countEdges({
+                        ...args,
                         namespace: args.namespace
-                    }));
+                    });
                 })
             );
     }
@@ -175,9 +178,10 @@ module.exports = class Graph {
         return validate(graph.del, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.deleteEdge(_.extend({}, args, {
+                    return this.deleteEdge({
+                        ...args,
                         namespace: args.namespace
-                    }));
+                    });
                 })
             );
     }
@@ -191,9 +195,10 @@ module.exports = class Graph {
         return validate(graph.delByNode, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return this.deleteEdges(_.extend({}, args, {
+                    return this.deleteEdges({
+                        ...args,
                         namespace: args.namespace
-                    }));
+                    });
                 })
             );
     }
@@ -226,10 +231,11 @@ module.exports = class Graph {
                         });
                     }
 
-                    return this.setEdge(_.extend({}, args, {
+                    return this.setEdge({
+                        ...args,
                         distance: args.absoluteDistance ? args.absoluteDistance : -(args.distance * this.decrementPath),
                         namespace: args.namespace
-                    }));
+                    });
                 })
             );
     }
@@ -267,9 +273,11 @@ module.exports = class Graph {
                 if (!reduction[id]) {
                     reduction[id] = args;
                 } else {
-                    reduction[id] = _.extend({}, reduction[id], args, {
+                    reduction[id] = {
+                        ...reduction[id],
+                        ...args,
                         distance: reduction[id].distance + args.distance
-                    });
+                    };
                 }
 
                 if (args.absoluteDistance) {
@@ -338,9 +346,10 @@ module.exports = class Graph {
                                                 fromNode,
                                                 toNode
                                             }) => {
-                                                return closest(_.extend({}, nextJob, {
+                                                return closest({
+                                                    ...nextJob,
                                                     fromNode: toNode
-                                                }), index + 1);
+                                                }, index + 1);
                                             }, args.concurrency),
                                             rxop.reduce((reduction, items) => {
                                                 return reduction.concat(items);

@@ -143,11 +143,12 @@ module.exports = class DynamoDbStore extends Crud {
                     } = args;
 
                     const remove = (fromNode, toNode, direction) => {
-                        const fromNodeId = this._composeId(_.extend({}, args, {
+                        const fromNodeId = this._composeId({
+                            ...args,
                             direction,
                             fromNode,
                             toNode
-                        }), true);
+                        }, true);
 
                         return this.delete({
                                 namespace,
@@ -198,26 +199,31 @@ module.exports = class DynamoDbStore extends Crud {
         return validate(dynamoDbStore.getEdges, args)
             .pipe(
                 rxop.mergeMap(args => {
-                    return super.fetch(_.extend({}, args, {
+                    return super.fetch({
+                            ...args,
                             id: this._composeId(args),
                             prefix: true
-                        }))
+                        })
                         .pipe(
                             rxop.mergeMap(response => {
                                 return rx.from(response.items)
                                     .pipe(
                                         rxop.map(response => {
-                                            return _.extend({}, response, this._parseId(response.id));
+                                            return {
+                                                ...response,
+                                                ...this._parseId(response.id)
+                                            };
                                         })
                                     );
                             }),
                             rxop.mergeMap(response => {
                                 if (args.inverse && args.fromNode) {
-                                    return rx.of(response, _.extend({}, response, {
+                                    return rx.of(response, {
+                                            ...response,
                                             direction: invertDirection(response.direction),
                                             fromNode: response.toNode,
                                             toNode: response.fromNode
-                                        }))
+                                        })
                                         .pipe(
                                             rxop.map(response => pickEdgeData(args, response))
                                         );
@@ -284,7 +290,10 @@ module.exports = class DynamoDbStore extends Crud {
                                 return rx.from(response.items)
                                     .pipe(
                                         rxop.map(response => {
-                                            return _.extend({}, response, this._parseId(response.id));
+                                            return {
+                                                ...response,
+                                                ...this._parseId(response.id)
+                                            };
                                         })
                                     );
                             }),
@@ -301,11 +310,12 @@ module.exports = class DynamoDbStore extends Crud {
             .pipe(
                 rxop.mergeMap(args => {
                     const set = (fromNode, toNode, direction = null) => {
-                        args = _.extend({}, args, {
+                        args = {
+                            ...args,
                             fromNode,
                             toNode,
                             direction
-                        });
+                        };
 
                         return super.insertOrUpdate({}, 'ALL_NEW', ({
                                 request
