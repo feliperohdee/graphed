@@ -148,11 +148,11 @@ const traverse = joi.object({
             return schema.optional();
         }))
         .required(),
-    maxPath: joi.number()
+    maxEdges: joi.number()
         .default(30),
-    minPath: joi.number()
-        .default(2),
-    modPath: joi.number(),
+    minEdges: joi.number()
+        .default(1),
+    modEdges: joi.number(),
     remoteClosest: joi.function(),
     remoteClosestIndex: joi.number()
         .default(1)

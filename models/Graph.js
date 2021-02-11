@@ -408,9 +408,9 @@ module.exports = class Graph {
                                     toNode
                                 }) => {
                                     let truthy = true;
-                                    let length = _.size(path);
+                                    let length = _.size(path) - 1;
 
-                                    truthy = length >= args.minPath && length <= args.maxPath && (args.modPath ? !(length % args.modPath) : true);
+                                    truthy = length >= args.minEdges && length <= args.maxEdges && (args.modEdges ? !(length % args.modEdges) : true);
 
                                     if (args.filter && truthy) {
                                         const regex = new RegExp(args.filter, 'g');

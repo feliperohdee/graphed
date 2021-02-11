@@ -2574,7 +2574,7 @@ describe('models/Graph.js', () => {
                     }, null, done);
             });
             
-            it('should traverse filtering minPath', done => {
+            it('should traverse filtering minEdges', done => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
@@ -2584,7 +2584,7 @@ describe('models/Graph.js', () => {
                             entity: 'entity',
                             namespace
                         }],
-                        minPath: 3
+                        minEdges: 2
                     })
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
@@ -2621,7 +2621,7 @@ describe('models/Graph.js', () => {
                     }, null, done);
             });
             
-            it('should traverse filtering modPath', done => {
+            it('should traverse filtering modEdges', done => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
@@ -2631,7 +2631,7 @@ describe('models/Graph.js', () => {
                             entity: 'entity',
                             namespace
                         }],
-                        modPath: 3
+                        modEdges: 2
                     })
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
@@ -2668,7 +2668,7 @@ describe('models/Graph.js', () => {
                     }, null, done);
             });
 
-            it('should traverse filtering minPath, modPath and maxPath', done => {
+            it('should traverse filtering minEdges, modEdges and maxEdges', done => {
                 graph.traverse({
                         jobs: [{
                             entity: 'entity',
@@ -2678,9 +2678,9 @@ describe('models/Graph.js', () => {
                             entity: 'entity',
                             namespace
                         }],
-                        minPath: 2,
-                        modPath: 2,
-                        maxPath: 2
+                        minEdges: 1,
+                        modEdges: 1,
+                        maxEdges: 1
                     })
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
@@ -2988,7 +2988,7 @@ describe('models/Graph.js', () => {
                     }, null, done);
             });
 
-            it('should traverse filtering minPath', done => {
+            it('should traverse filtering minEdges', done => {
                 graph.traverse({
                         jobs: [{
                             direction: 'OUT',
@@ -3000,7 +3000,7 @@ describe('models/Graph.js', () => {
                             entity: 'entity',
                             namespace
                         }],
-                        minPath: 3
+                        minEdges: 2
                     })
                     .subscribe(response => {
                         expect(response).to.deep.equal([{
@@ -3037,7 +3037,7 @@ describe('models/Graph.js', () => {
                     }, null, done);
             });
 
-            it('should traverse filtering minPath and maxPath', done => {
+            it('should traverse filtering minEdges and maxEdges', done => {
                 graph.traverse({
                         jobs: [{
                             direction: 'OUT',
@@ -3049,8 +3049,8 @@ describe('models/Graph.js', () => {
                             entity: 'entity',
                             namespace
                         }],
-                        minPath: 2,
-                        maxPath: 2
+                        minEdges: 1,
+                        maxEdges: 1
                     })
                     .subscribe(response => {
                         expect(response).to.deep.equal([{

@@ -58,8 +58,9 @@
 				fromNode: string,
 				toNode: string
 			}>,
-			maxPath: number,
-			minPath: number,
+			maxEdges?: number,
+			minEdges?: number,
+			modEdges?: number,
 			remoteClosest: function,
 			remoteClosestIndex: number
 		}): Observable<object>;
