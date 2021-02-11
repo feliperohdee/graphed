@@ -2099,7 +2099,7 @@ describe('models/Graph.js', () => {
         it('should throw if no firehose configured', done => {
             graph.processFirehose()
                 .subscribe(null, err => {
-                    expect(err.message).to.equal('no firehose configured.');
+                    expect(err.message).to.equal('NoFirehoseConfiguredError');
                     done();
                 });
         });

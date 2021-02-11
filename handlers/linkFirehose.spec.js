@@ -42,7 +42,7 @@ describe('handlers/linkFirehose.js', () => {
     it('should throw if no firehose configured', () => {
         expect(() => linkFirehose(new Graph({
             store: app.store
-        }))).to.throw('no firehose configured.');
+        }))).to.throw('NoFirehoseConfiguredError');
     });
 
     it('should process empty', done => {

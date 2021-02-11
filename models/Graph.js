@@ -242,7 +242,7 @@ module.exports = class Graph {
 
     processFirehose(stream) {
         if (!this.options.firehose) {
-            return rx.throwError(new Error('no firehose configured.'));
+            return rx.throwError(new Error('NoFirehoseConfiguredError'));
         }
 
         let absoluteEdge = 0;

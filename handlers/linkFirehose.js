@@ -13,7 +13,7 @@ module.exports = (argsOrGraph, options) => {
     const graph = argsOrGraph instanceof Graph ? argsOrGraph : new Graph(argsOrGraph, options);
 
     if(!graph.options.firehose) {
-        throw new Error('no firehose configured.');
+        throw new Error('NoFirehoseConfiguredError');
     }
 
     return (event, context, callback) => {
