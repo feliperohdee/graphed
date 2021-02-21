@@ -7,7 +7,7 @@ const {
 } = require('rxjs-dynamodb-client');
 
 const {
-    dynamoDbStore,
+    dynamoStore,
     validate
 } = require('./schema');
 const {
@@ -15,12 +15,12 @@ const {
     pickEdgeData
 } = require('./util');
 
-module.exports = class DynamoDbStore extends Crud {
+module.exports = class DynamoStore extends Crud {
     constructor(options = {}) {
         const {
             value,
             error
-        } = dynamoDbStore.constructor.validate(options);
+        } = dynamoStore.constructor.validate(options);
 
         if (error) {
             throw error;
@@ -38,7 +38,7 @@ module.exports = class DynamoDbStore extends Crud {
                 }
             }
         }, {
-            dynamoDb: value.dynamoDb
+            dynamodb: value.dynamodb
         });
 
         this.options = value;
@@ -111,7 +111,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     countEdges(args = {}) {
-        return validate(dynamoDbStore.countEdges, args)
+        return validate(dynamoStore.countEdges, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const fromNodeId = this._composeId(args, true);
@@ -131,7 +131,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     deleteEdge(args = {}) {
-        return validate(dynamoDbStore.deleteEdge, args)
+        return validate(dynamoStore.deleteEdge, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const {
@@ -182,7 +182,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     deleteEdges(args = {}) {
-        return validate(dynamoDbStore.deleteEdges, args)
+        return validate(dynamoStore.deleteEdges, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return this.getEdges(args)
@@ -196,7 +196,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     getEdges(args = {}) {
-        return validate(dynamoDbStore.getEdges, args)
+        return validate(dynamoStore.getEdges, args)
             .pipe(
                 rxop.mergeMap(args => {
                     return super.fetch({
@@ -240,7 +240,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     getEdgesByDistance(args = {}) {
-        return validate(dynamoDbStore.getEdgesByDistance, args)
+        return validate(dynamoStore.getEdgesByDistance, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const hook = args.distance ? (({
@@ -306,7 +306,7 @@ module.exports = class DynamoDbStore extends Crud {
     }
 
     setEdge(args = {}) {
-        return validate(dynamoDbStore.setEdge, args)
+        return validate(dynamoStore.setEdge, args)
             .pipe(
                 rxop.mergeMap(args => {
                     const set = (fromNode, toNode, direction = null) => {

@@ -3,7 +3,7 @@ const joi = require('joi');
 const common = require('./common');
 
 const constructor = joi.object({
-    dynamoDb: joi.object()
+    dynamodb: joi.object()
         .unknown()
         .required(),
     tableName: joi.string()

@@ -6,7 +6,7 @@ const chaiSubset = require('chai-subset');
 const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
-const app = require('../testing/dynamoDb');
+const app = require('../testing/dynamodb');
 const {
     AWS
 } = require('../libs');

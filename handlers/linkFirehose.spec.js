@@ -3,7 +3,7 @@ const chai = require('chai');
 const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
-const app = require('../testing/dynamoDb');
+const app = require('../testing/dynamodb');
 const linkFirehose = require('./linkFirehose');
 const {
     Graph

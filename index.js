@@ -2,13 +2,13 @@ const {
 	linkFirehose
 } = require('./handlers');
 const {
-	DynamoDbStore,
+	DynamoStore,
 	Graph,
 	util
 } = require('./models');
 
 module.exports = {
-	DynamoDbStore,
+	DynamoStore,
 	Graph,
 	linkFirehose,
 	util
