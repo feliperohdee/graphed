@@ -3,8 +3,8 @@ const chai = require('chai');
 const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
-const app = require('../testing/dynamodb');
 const linkFirehose = require('./linkFirehose');
+const testing = require('../testing');
 const {
     Graph
 } = require('../models');
@@ -15,7 +15,7 @@ const {
 const expect = chai.expect;
 const namespace = 'spec';
 const graph = new Graph({
-    store: app.store
+    store: testing.app.store
 }, {
     firehose: {
         concurrency: 1,
@@ -41,7 +41,7 @@ describe('handlers/linkFirehose.js', () => {
 
     it('should throw if no firehose configured', () => {
         expect(() => linkFirehose(new Graph({
-            store: app.store
+            store: testing.app.store
         }))).to.throw('NoFirehoseConfiguredError');
     });
 

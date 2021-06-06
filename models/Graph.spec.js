@@ -6,7 +6,7 @@ const chaiSubset = require('chai-subset');
 const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
-const app = require('../testing/dynamodb');
+const testing = require('../testing');
 const {
     AWS
 } = require('../libs');
@@ -25,13 +25,13 @@ describe('models/Graph.js', () => {
 
     before(() => {
         graph = new Graph({
-            store: app.store
+            store: testing.app.store
         });
     });
 
     beforeEach(() => {
         graph = new Graph({
-            store: app.store
+            store: testing.app.store
         });
     });
 
@@ -63,7 +63,7 @@ describe('models/Graph.js', () => {
                         toNode: '3'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         after(done => {
@@ -83,7 +83,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should fetch all by node', done => {
@@ -103,7 +103,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     operation1,
                     operation2
                 ]) => {
@@ -154,7 +154,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should fetch all by node only by entity and direction', done => {
@@ -178,7 +178,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     operation1,
                     operation2
                 ]) => {
@@ -199,7 +199,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should fetch all by node only by distance', done => {
@@ -219,7 +219,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     operation1,
                     operation2
                 ]) => {
@@ -270,7 +270,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should fetch all by node without inverse', done => {
@@ -292,7 +292,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     operation1,
                     operation2
                 ]) => {
@@ -319,7 +319,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '3'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should fetch all by node returning only nodes', done => {
@@ -342,14 +342,14 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     operation1,
                     operation2
                 ]) => {
                     expect(operation1).to.deep.contain('2');
                     expect(operation2).to.deep.contain('3');
                     expect(operation2).to.deep.contain('1');
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -385,7 +385,7 @@ describe('models/Graph.js', () => {
                         toNode: '4'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         after(done => {
@@ -419,7 +419,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should get closest nodes', done => {
@@ -431,7 +431,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response[0]).to.deep.equal({
                         direction: null,
                         distance: 0.999999999999998,
@@ -449,7 +449,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     });
-                }, null, done);
+                }, null, done));
         });
 
         it('should get closest nodes with direction', done => {
@@ -462,7 +462,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response[0]).to.deep.equal({
                         direction: 'OUT',
                         distance: 0.999999999999998,
@@ -480,7 +480,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '3'
                     });
-                }, null, done);
+                }, null, done));
         });
 
         it('should get closest nodes desc', done => {
@@ -493,7 +493,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response[1]).to.deep.equal({
                         direction: null,
                         distance: 0.999999999999998,
@@ -511,7 +511,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     });
-                }, null, done);
+                }, null, done));
         });
 
         it('should get closest nodes with limit', done => {
@@ -524,7 +524,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response[0]).to.deep.equal({
                         direction: null,
                         distance: 0.999999999999998,
@@ -533,7 +533,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '3'
                     });
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -560,7 +560,7 @@ describe('models/Graph.js', () => {
                         toNode: '3'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         after(done => {
@@ -587,7 +587,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should return elements count', done => {
@@ -644,13 +644,13 @@ describe('models/Graph.js', () => {
                         namespace
                     })
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([
                         2, 0, 0,
                         1, 1, 0,
                         1, 0, 1
                     ]);
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -686,7 +686,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should not add multiple single edge', done => {
@@ -700,9 +700,9 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(0);
-                }, null, done);
+                }, null, done));
         });
 
         it('should add multiple edges', done => {
@@ -719,7 +719,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     response = _.flattenDeep(response);
                     expect(_.size(response)).to.equal(12);
 
@@ -806,7 +806,7 @@ describe('models/Graph.js', () => {
                         distance: 0.999999999999999,
                         toNode: '2'
                     })).to.be.true;
-                }, null, done);
+                }, null, done));
         });
 
         it('should add multiple edges with direction', done => {
@@ -824,7 +824,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     response = _.flattenDeep(response);
                     expect(_.size(response)).to.equal(24);
 
@@ -1022,7 +1022,7 @@ describe('models/Graph.js', () => {
                         distance: 0.999999999999999,
                         toNode: '3'
                     })).to.be.true;
-                }, null, done);
+                }, null, done));
         });
 
         describe('origin', () => {
@@ -1039,24 +1039,24 @@ describe('models/Graph.js', () => {
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         response = _.flattenDeep(response);
                         expect(_.size(response)).to.equal(2);
-                        
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '1',
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should add multiple edges', done => {
@@ -1074,10 +1074,10 @@ describe('models/Graph.js', () => {
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         response = _.flattenDeep(response);
                         expect(_.size(response)).to.equal(12);
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1091,7 +1091,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1105,7 +1105,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1119,7 +1119,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-                        
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '1',
@@ -1133,7 +1133,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '2',
@@ -1161,9 +1161,9 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-                    }, null, done);
+                    }, null, done));
             });
-            
+
             it('should add multiple edges no crossing', done => {
                 graph.crossLink({
                         cross: false,
@@ -1180,10 +1180,10 @@ describe('models/Graph.js', () => {
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         response = _.flattenDeep(response);
                         expect(_.size(response)).to.equal(6);
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1197,7 +1197,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1211,7 +1211,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1225,9 +1225,9 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-                    }, null, done);
+                    }, null, done));
             });
-            
+
             it('should add multiple edges with direction', done => {
                 graph.crossLink({
                         direction: 'OUT',
@@ -1244,10 +1244,10 @@ describe('models/Graph.js', () => {
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         response = _.flattenDeep(response);
                         expect(_.size(response)).to.equal(18);
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1263,7 +1263,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1279,7 +1279,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1295,7 +1295,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         //     
                         expect(!!_.find(response, {
                             entity: 'x-entity',
@@ -1304,7 +1304,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '2'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '2',
@@ -1312,7 +1312,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '1',
@@ -1320,7 +1320,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '3'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '3',
@@ -1328,7 +1328,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         //     
                         expect(!!_.find(response, {
                             entity: 'x-entity',
@@ -1337,7 +1337,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '1',
@@ -1345,7 +1345,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '2'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '2',
@@ -1353,7 +1353,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '3'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '3',
@@ -1361,7 +1361,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '2'
                         })).to.be.true;
-    
+
                         //     
                         expect(!!_.find(response, {
                             entity: 'x-entity',
@@ -1370,7 +1370,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '1'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '1',
@@ -1378,7 +1378,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '3'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '3',
@@ -1386,7 +1386,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '2'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'x-entity',
                             fromNode: '2',
@@ -1394,9 +1394,9 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '3'
                         })).to.be.true;
-                    }, null, done);
+                    }, null, done));
             });
-            
+
             it('should add multiple edges with direction no crossing', done => {
                 graph.crossLink({
                         cross: false,
@@ -1414,10 +1414,10 @@ describe('models/Graph.js', () => {
                     .pipe(
                         rxop.toArray()
                     )
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         response = _.flattenDeep(response);
                         expect(_.size(response)).to.equal(6);
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1433,7 +1433,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1449,7 +1449,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-    
+
                         expect(!!_.find(response, {
                             entity: 'entity',
                             fromNode: '0',
@@ -1465,7 +1465,7 @@ describe('models/Graph.js', () => {
                             distance: 0.999999999999999,
                             toNode: '0'
                         })).to.be.true;
-                    }, null, done);
+                    }, null, done));
             });
         });
     });
@@ -1487,7 +1487,7 @@ describe('models/Graph.js', () => {
                         toNode: '3'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         after(done => {
@@ -1507,7 +1507,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         describe('with direction', () => {
@@ -1519,9 +1519,9 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '3'
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response.fromNode).to.deep.equal('2');
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should delete two edges', done => {
@@ -1533,7 +1533,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '3'
                     })
-                    .subscribe(([
+                    .subscribe(testing.rx(([
                         edge1,
                         edge2
                     ]) => {
@@ -1541,7 +1541,7 @@ describe('models/Graph.js', () => {
                         expect(edge1.toNode).to.deep.equal('3');
                         expect(edge2.fromNode).to.deep.equal('3');
                         expect(edge2.toNode).to.deep.equal('2');
-                    }, null, done);
+                    }, null, done));
             });
         });
 
@@ -1553,9 +1553,9 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response.fromNode).to.deep.equal('1');
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should delete two edges', done => {
@@ -1566,7 +1566,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     })
-                    .subscribe(([
+                    .subscribe(testing.rx(([
                         edge1,
                         edge2
                     ]) => {
@@ -1574,7 +1574,7 @@ describe('models/Graph.js', () => {
                         expect(edge1.toNode).to.deep.equal('2');
                         expect(edge2.fromNode).to.deep.equal('2');
                         expect(edge2.toNode).to.deep.equal('1');
-                    }, null, done);
+                    }, null, done));
             });
         });
     });
@@ -1596,7 +1596,7 @@ describe('models/Graph.js', () => {
                         toNode: '3'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         after(done => {
@@ -1616,7 +1616,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should delete by fromNode', done => {
@@ -1636,7 +1636,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     fromNode1,
                     fromNode3
                 ]) => {
@@ -1671,7 +1671,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should delete by fromNode and entity', done => {
@@ -1693,7 +1693,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     fromNode1,
                     fromNode2
                 ]) => {
@@ -1714,7 +1714,7 @@ describe('models/Graph.js', () => {
                     }]);
 
                     expect(fromNode2).to.deep.equal([]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should delete by fromNode, entity and direction', done => {
@@ -1738,7 +1738,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(([
+                .subscribe(testing.rx(([
                     fromNode1,
                     fromNode2
                 ]) => {
@@ -1775,7 +1775,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -1797,7 +1797,7 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should insert two edges with absoluteDistance', done => {
@@ -1808,7 +1808,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1816,7 +1816,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.999999999999999);
                     expect(secondEdge.distance).to.equal(0.999999999999999);
-                }, null, done);
+                }, null, done));
         });
 
         it('should decrement edges distance', done => {
@@ -1826,7 +1826,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1834,7 +1834,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.999999999999999);
                     expect(secondEdge.distance).to.equal(0.999999999999999);
-                }, null, done);
+                }, null, done));
         });
 
         it('should decrement edges distance with custom distance', done => {
@@ -1845,7 +1845,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1853,7 +1853,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.999999999999995);
                     expect(secondEdge.distance).to.equal(0.999999999999995);
-                }, null, done);
+                }, null, done));
         });
 
         it('should not decrement edges distance (without previous edge)', done => {
@@ -1864,7 +1864,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1872,7 +1872,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(1);
                     expect(secondEdge.distance).to.equal(1);
-                }, null, done);
+                }, null, done));
         });
 
         it('should not decrement edges distance', done => {
@@ -1892,7 +1892,7 @@ describe('models/Graph.js', () => {
                         toNode: '2'
                     }))
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1900,7 +1900,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.999999999999995);
                     expect(secondEdge.distance).to.equal(0.999999999999995);
-                }, null, done);
+                }, null, done));
         });
 
         it('should decrement edges distance with custom decrementPath', done => {
@@ -1911,7 +1911,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1919,7 +1919,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.9);
                     expect(secondEdge.distance).to.equal(0.9);
-                }, null, done);
+                }, null, done));
         });
 
         it('should increment edges distance', done => {
@@ -1930,7 +1930,7 @@ describe('models/Graph.js', () => {
                     namespace,
                     toNode: '2'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     const [
                         firstEdge,
                         secondEdge
@@ -1938,7 +1938,7 @@ describe('models/Graph.js', () => {
 
                     expect(firstEdge.distance).to.equal(0.999999999999999);
                     expect(secondEdge.distance).to.equal(0.999999999999999);
-                }, null, done);
+                }, null, done));
         });
 
         describe('without direction', () => {
@@ -1949,7 +1949,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         const [
                             firstEdge,
                             secondEdge
@@ -1964,7 +1964,7 @@ describe('models/Graph.js', () => {
                         expect(secondEdge.entity).to.equal('entity');
                         expect(secondEdge.fromNode).to.equal('2');
                         expect(secondEdge.toNode).to.equal('1');
-                    }, null, done);
+                    }, null, done));
             });
         });
 
@@ -1977,7 +1977,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         const [
                             firstEdge,
                             secondEdge
@@ -1994,13 +1994,13 @@ describe('models/Graph.js', () => {
                         expect(secondEdge.entity).to.equal('entity');
                         expect(secondEdge.fromNode).to.equal('2');
                         expect(secondEdge.toNode).to.equal('1');
-                    }, null, done);
+                    }, null, done));
             });
         });
 
         describe('with firehose', () => {
             const edgeFirehose = new Graph({
-                store: app.store
+                store: testing.app.store
             }, {
                 firehose: {
                     concurrency: 1,
@@ -2029,7 +2029,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(AWS.firehose.putRecord).to.have.been.calledOnceWithExactly({
                             DeliveryStreamName: 'stream',
                             Record: {
@@ -2043,7 +2043,7 @@ describe('models/Graph.js', () => {
                                 }) + '\n'
                             }
                         });
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should not call putRecord if fromFirehose = true', done => {
@@ -2053,16 +2053,16 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '2'
                     }, true)
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(AWS.firehose.putRecord).to.not.have.been.called;
-                    }, null, done);
+                    }, null, done));
             });
         });
     });
 
     describe('processFirehose', () => {
         const edgeFirehose = new Graph({
-            store: app.store
+            store: testing.app.store
         }, {
             firehose: {
                 concurrency: 1,
@@ -2093,15 +2093,14 @@ describe('models/Graph.js', () => {
                         rxop.toArray()
                     )
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should throw if no firehose configured', done => {
             graph.processFirehose()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('NoFirehoseConfiguredError');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should process', done => {
@@ -2150,7 +2149,7 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(edgeFirehose.link).to.have.callCount(5);
                     expect(edgeFirehose.link).to.have.been.calledWith(sinon.match.object, true);
 
@@ -2238,7 +2237,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '1'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should process and merge', done => {
@@ -2256,7 +2255,7 @@ describe('models/Graph.js', () => {
                     }),
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(edgeFirehose.link).to.have.callCount(2);
 
                     // 0 <-> (2 + 1) <-> 1
@@ -2275,7 +2274,7 @@ describe('models/Graph.js', () => {
                         namespace,
                         toNode: '0'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should skip invalid streams', done => {
@@ -2286,9 +2285,9 @@ describe('models/Graph.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([]);
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -2297,9 +2296,9 @@ describe('models/Graph.js', () => {
             graph.traverse({
                     jobs: []
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should handle errors', done => {
@@ -2309,10 +2308,9 @@ describe('models/Graph.js', () => {
                         namespace
                     }]
                 })
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"fromNode" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         describe('without direction', () => {
@@ -2350,7 +2348,7 @@ describe('models/Graph.js', () => {
                             toNode: '3'
                         })
                     )
-                    .subscribe(null, null, done);
+                    .subscribe(testing.rx(null, null, done));
             });
 
             after(done => {
@@ -2391,7 +2389,7 @@ describe('models/Graph.js', () => {
                             rxop.toArray()
                         )
                     )
-                    .subscribe(null, null, done);
+                    .subscribe(testing.rx(null, null, done));
             });
 
             beforeEach(() => {
@@ -2410,7 +2408,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -2445,7 +2443,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '4'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse twice', done => {
@@ -2459,7 +2457,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -2524,7 +2522,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse with filter', done => {
@@ -2539,7 +2537,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 1.999999999999997,
                             fromNode: '0',
@@ -2571,9 +2569,9 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
-            
+
             it('should traverse filtering minEdges', done => {
                 graph.traverse({
                         jobs: [{
@@ -2586,7 +2584,7 @@ describe('models/Graph.js', () => {
                         }],
                         minEdges: 2
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 1.999999999999997,
                             fromNode: '0',
@@ -2618,9 +2616,9 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
-            
+
             it('should traverse filtering modEdges', done => {
                 graph.traverse({
                         jobs: [{
@@ -2633,7 +2631,7 @@ describe('models/Graph.js', () => {
                         }],
                         modEdges: 2
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 1.999999999999997,
                             fromNode: '0',
@@ -2665,7 +2663,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse filtering minEdges, modEdges and maxEdges', done => {
@@ -2682,7 +2680,7 @@ describe('models/Graph.js', () => {
                         modEdges: 1,
                         maxEdges: 1
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -2717,7 +2715,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '4'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should not traverse same edge more than once', done => {
@@ -2734,7 +2732,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(graph.closest.callCount).to.equal(6);
 
                         expect(graph.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
@@ -2743,7 +2741,7 @@ describe('models/Graph.js', () => {
                         expect(graph.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
                         expect(graph.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
                         expect(graph.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse using remote closest', done => {
@@ -2762,9 +2760,9 @@ describe('models/Graph.js', () => {
                         }],
                         remoteClosest
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(remoteClosest).to.have.been.calledThrice;
-                    }, null, done);
+                    }, null, done));
             });
         });
 
@@ -2808,7 +2806,7 @@ describe('models/Graph.js', () => {
                             toNode: '3'
                         })
                     )
-                    .subscribe(null, null, done);
+                    .subscribe(testing.rx(null, null, done));
             });
 
             after(done => {
@@ -2849,7 +2847,7 @@ describe('models/Graph.js', () => {
                             rxop.toArray()
                         )
                     )
-                    .subscribe(null, null, done);
+                    .subscribe(testing.rx(null, null, done));
             });
 
             beforeEach(() => {
@@ -2869,7 +2867,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -2904,7 +2902,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '4'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse twice', done => {
@@ -2920,7 +2918,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -2985,7 +2983,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse filtering minEdges', done => {
@@ -3002,7 +3000,7 @@ describe('models/Graph.js', () => {
                         }],
                         minEdges: 2
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 1.999999999999997,
                             fromNode: '0',
@@ -3034,7 +3032,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '3'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse filtering minEdges and maxEdges', done => {
@@ -3052,7 +3050,7 @@ describe('models/Graph.js', () => {
                         minEdges: 1,
                         maxEdges: 1
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             distance: 0.999999999999999,
                             fromNode: '0',
@@ -3087,7 +3085,7 @@ describe('models/Graph.js', () => {
                             }],
                             toNode: '4'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should not traverse same edge more than once', done => {
@@ -3107,7 +3105,7 @@ describe('models/Graph.js', () => {
                             namespace
                         }]
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(graph.closest.callCount).to.equal(6);
 
                         expect(graph.closest.getCall(0).args[0].fromNode).to.equal('0'); // 0
@@ -3116,7 +3114,7 @@ describe('models/Graph.js', () => {
                         expect(graph.closest.getCall(3).args[0].fromNode).to.equal('4'); // 0 - 4
                         expect(graph.closest.getCall(4).args[0].fromNode).to.equal('3'); // 4 -3
                         expect(graph.closest.getCall(5).args[0].fromNode).to.equal('3'); // 2 - 3
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should traverse using remote closest', done => {
@@ -3137,9 +3135,9 @@ describe('models/Graph.js', () => {
                         }],
                         remoteClosest
                     })
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(remoteClosest).to.have.been.calledThrice;
-                    }, null, done);
+                    }, null, done));
             });
         });
     });

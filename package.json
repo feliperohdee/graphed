@@ -4,21 +4,21 @@
     "description": "Minimum graph's data structure implemented with pluggable stores (redis, dynamodb, memory, ...) and compatible with AWS Firehose",
     "main": "index.js",
     "dependencies": {
-        "aws-sdk": "^2.848.0",
+        "aws-sdk": "^2.922.0",
         "joi": "^17.4.0",
         "lodash": "^4.17.21",
-        "rxjs": "^6.6.3",
+        "rxjs": "^7.1.0",
         "rxjs-dynamodb-client": "https://github.com/feliperohdee/rxjs-dynamodb-client",
         "simple-beauty-error": "https://github.com/feliperohdee/simple-beauty-error"
     },
     "devDependencies": {
-        "chai": "^4.3.0",
+        "chai": "^4.3.4",
         "chai-subset": "^1.6.0",
-        "eslint": "^7.20.0",
-        "mocha": "8.3.0",
+        "eslint": "^7.28.0",
+        "mocha": "8.4.0",
         "nyc": "^15.1.0",
-        "sinon": "^9.2.4",
-        "sinon-chai": "^3.5.0"
+        "sinon": "^11.1.1",
+        "sinon-chai": "^3.7.0"
     },
     "scripts": {
         "coverage": "rm -rf coverage; NODE_ENV=test nyc ./node_modules/.bin/_mocha **/*.spec.js --recursive --timeout 5000; rm -rf .nyc_output",

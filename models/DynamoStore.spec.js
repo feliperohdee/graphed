@@ -4,7 +4,7 @@ const chaiSubset = require('chai-subset');
 const rx = require('rxjs');
 const rxop = require('rxjs/operators');
 
-const app = require('../testing/dynamodb');
+const testing = require('../testing');
 const {
     DynamoStore
 } = require('../');
@@ -14,7 +14,9 @@ chai.use(chaiSubset);
 const expect = chai.expect;
 const namespace = 'spec';
 
-const store = app.store;
+const {
+    store
+} = testing.app;
 
 describe('models/DynamoStore.js', () => {
     beforeEach(done => {
@@ -42,7 +44,7 @@ describe('models/DynamoStore.js', () => {
                     toNode: '2'
                 })
             )
-            .subscribe(null, null, done);
+            .subscribe(testing.rx(null, null, done));
     });
 
     afterEach(done => {
@@ -69,14 +71,14 @@ describe('models/DynamoStore.js', () => {
                     rxop.toArray()
                 )
             )
-            .subscribe(null, null, done);
+            .subscribe(testing.rx(null, null, done));
     });
 
     after(done => {
-        app.store.clear({
+        testing.app.store.clear({
                 namespace
             })
-            .subscribe(null, null, done);
+            .subscribe(testing.rx(null, null, done));
     });
 
     describe('constructor', () => {
@@ -86,7 +88,7 @@ describe('models/DynamoStore.js', () => {
 
         it('should throw if no tableName provided', () => {
             expect(() => new DynamoStore({
-                dynamodb: app.dynamodb
+                dynamodb: testing.app.dynamodb
             })).to.throw('"tableName" is required');
         });
     });
@@ -187,10 +189,9 @@ describe('models/DynamoStore.js', () => {
     describe('countEdges', () => {
         it('should throw if invalid', done => {
             store.countEdges()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should return count', done => {
@@ -200,19 +201,18 @@ describe('models/DynamoStore.js', () => {
                     entity: 'entity-2',
                     direction: 'OUT'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.equal(1);
-                }, null, done);
+                }, null, done));
         });
     });
 
     describe('deleteEdge', () => {
         it('should throw if invalid', done => {
             store.deleteEdge()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required. "toNode" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should return deleted edge', done => {
@@ -222,7 +222,7 @@ describe('models/DynamoStore.js', () => {
                     entity: 'entity',
                     toNode: '1'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal({
                         direction: null,
                         entity: 'entity',
@@ -230,7 +230,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '1'
                     });
-                }, null, done);
+                }, null, done));
         });
 
         it('should return deleted edges', done => {
@@ -241,7 +241,7 @@ describe('models/DynamoStore.js', () => {
                     inverse: true,
                     toNode: '1'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: null,
                         entity: 'entity',
@@ -255,7 +255,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '0'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should return null if no edges delete', done => {
@@ -265,19 +265,18 @@ describe('models/DynamoStore.js', () => {
                     entity: 'entity',
                     toNode: '9'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.be.null;
-                }, null, done);
+                }, null, done));
         });
     });
 
     describe('deleteEdges', () => {
         it('should throw if invalid', done => {
             store.deleteEdges()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"namespace" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should delete all edges', done => {
@@ -341,9 +340,9 @@ describe('models/DynamoStore.js', () => {
                         });
                     })
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response.items)).to.equal(0);
-                }, null, done);
+                }, null, done));
         });
 
         it('should delete edges by fromNode', done => {
@@ -393,11 +392,11 @@ describe('models/DynamoStore.js', () => {
                         });
                     })
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response.items)).to.equal(2);
                     expect(response.items[0].base).to.deep.include('spec:0:entity');
                     expect(response.items[1].base).to.deep.include('spec:2:entity');
-                }, null, done);
+                }, null, done));
         });
 
         it('should delete edges by fromNode and entity', done => {
@@ -431,12 +430,12 @@ describe('models/DynamoStore.js', () => {
                         });
                     })
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response.items)).to.equal(4);
                     expect(response.items[0].base).to.deep.include('spec:0:entity');
                     expect(response.items[2].base).to.deep.include('spec:1:entity');
                     expect(response.items[3].base).to.deep.include('spec:2:entity');
-                }, null, done);
+                }, null, done));
         });
 
         it('should delete edges by fromNode, entity and direction', done => {
@@ -471,22 +470,21 @@ describe('models/DynamoStore.js', () => {
                         });
                     })
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response.items)).to.equal(4);
                     expect(response.items[0].base).to.deep.include('spec:0:entity');
                     expect(response.items[2].base).to.deep.include('spec:1:entity');
                     expect(response.items[3].base).to.deep.include('spec:2:entity');
-                }, null, done);
+                }, null, done));
         });
     });
 
     describe('getEdges', () => {
         it('should throw if invalid', done => {
             store.getEdges()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"namespace" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should get all edges', done => {
@@ -496,7 +494,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(6);
                     expect(response).to.containSubset([{
                         direction: null,
@@ -545,7 +543,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '1'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get all edges by fromNode', done => {
@@ -556,7 +554,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(4);
                     expect(response).to.containSubset([{
                         direction: null,
@@ -589,7 +587,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '1'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get all edges by fromNode (without inverse)', done => {
@@ -601,7 +599,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: null,
@@ -618,7 +616,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get all edges by fromNode and entity', done => {
@@ -630,7 +628,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: 'OUT',
@@ -647,7 +645,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '1'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get all edges by fromNode, entity and direction', done => {
@@ -660,7 +658,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(2);
                     expect(response).to.containSubset([{
                         direction: 'OUT',
@@ -677,7 +675,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '1'
                     }]);
-                }, null, done);
+                }, null, done));
         });
     });
 
@@ -701,15 +699,14 @@ describe('models/DynamoStore.js', () => {
                         toNode: '4'
                     })
                 )
-                .subscribe(null, null, done);
+                .subscribe(testing.rx(null, null, done));
         });
 
         it('should throw if invalid', done => {
             store.getEdgesByDistance()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"entity" is required. "fromNode" is required. "namespace" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should throw if wrong distance', done => {
@@ -719,10 +716,9 @@ describe('models/DynamoStore.js', () => {
                     distance: 1,
                     fromNode: '1'
                 })
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"distance" must be an array');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should get edges', done => {
@@ -735,7 +731,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.8,
@@ -758,7 +754,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get edges desc', done => {
@@ -772,7 +768,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 1,
@@ -795,7 +791,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '3'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get by min distance', done => {
@@ -809,7 +805,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 1,
@@ -818,7 +814,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '2'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get by max distance', done => {
@@ -832,7 +828,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.8,
@@ -841,7 +837,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '3'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get by distance range', done => {
@@ -855,7 +851,7 @@ describe('models/DynamoStore.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 0.8,
@@ -871,7 +867,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '4'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should get by limit', done => {
@@ -897,19 +893,18 @@ describe('models/DynamoStore.js', () => {
                     }),
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(_.size(response)).to.equal(2);
-                }, null, done);
+                }, null, done));
         });
     });
 
     describe('setEdge', () => {
         it('should throw if invalid', done => {
             store.setEdge()
-                .subscribe(null, err => {
+                .subscribe(null, testing.rx(err => {
                     expect(err.message).to.equal('"distance" is required. "entity" is required. "fromNode" is required. "namespace" is required. "toNode" is required');
-                    done();
-                });
+                }, null, done));
         });
 
         it('should return inserted edges', done => {
@@ -920,7 +915,7 @@ describe('models/DynamoStore.js', () => {
                     toNode: '1',
                     distance: 1
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: null,
                         distance: 1,
@@ -936,7 +931,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '0'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should return inserted edges with direction', done => {
@@ -948,7 +943,7 @@ describe('models/DynamoStore.js', () => {
                     distance: 1,
                     direction: 'OUT'
                 })
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         direction: 'OUT',
                         distance: 1,
@@ -964,7 +959,7 @@ describe('models/DynamoStore.js', () => {
                         namespace,
                         toNode: '0'
                     }]);
-                }, null, done);
+                }, null, done));
         });
 
         describe('increment', () => {
@@ -976,7 +971,7 @@ describe('models/DynamoStore.js', () => {
                         toNode: '1',
                         distance: -.1
                     }, true)
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             direction: null,
                             distance: 0.9,
@@ -992,7 +987,7 @@ describe('models/DynamoStore.js', () => {
                             namespace,
                             toNode: '0'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should return inserted edges without increment', done => {
@@ -1003,7 +998,7 @@ describe('models/DynamoStore.js', () => {
                         toNode: '1',
                         distance: 0
                     }, true)
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             direction: null,
                             distance: 1,
@@ -1019,7 +1014,7 @@ describe('models/DynamoStore.js', () => {
                             namespace,
                             toNode: '0'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
 
             it('should return inserted edges with direction', done => {
@@ -1031,7 +1026,7 @@ describe('models/DynamoStore.js', () => {
                         distance: -.1,
                         direction: 'OUT'
                     }, true)
-                    .subscribe(response => {
+                    .subscribe(testing.rx(response => {
                         expect(response).to.deep.equal([{
                             direction: 'OUT',
                             distance: .9,
@@ -1047,7 +1042,7 @@ describe('models/DynamoStore.js', () => {
                             namespace,
                             toNode: '0'
                         }]);
-                    }, null, done);
+                    }, null, done));
             });
         });
     });

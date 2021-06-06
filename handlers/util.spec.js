@@ -1,6 +1,7 @@
 const chai = require('chai');
 const rxop = require('rxjs/operators');
 
+const testing = require('../testing');
 const {
     parseFirehoseRecordsData,
     toBase64
@@ -15,9 +16,9 @@ describe('handlers/util.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([]);
-                }, null, done);
+                }, null, done));
         });
 
         it('should process and filter invalid', done => {
@@ -45,13 +46,13 @@ describe('handlers/util.js', () => {
                 .pipe(
                     rxop.toArray()
                 )
-                .subscribe(response => {
+                .subscribe(testing.rx(response => {
                     expect(response).to.deep.equal([{
                         record: 'record'
                     }, {
                         record: 'record'
                     }]);
-                }, null, done);
+                }, null, done));
         });
     });
 
